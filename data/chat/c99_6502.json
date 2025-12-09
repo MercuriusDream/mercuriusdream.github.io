@@ -1,0 +1,55 @@
+{
+    "id": "C99-6502",
+    "name": "C99-6502",
+    "preview": "A MOS 6502 CPU emulator",
+    "avatar": null,
+    "messages": [
+        {
+            "type": "received",
+            "text": "C99-6502 is a cycle-accurate emulator for the MOS 6502 microprocessor, written entirely in C99."
+        },
+        {
+            "type": "sent",
+            "text": "What's the MOS 6502?"
+        },
+        {
+            "type": "received",
+            "text": "MOS 6502 is the CPU that powered classic computers like the Apple II, Commodore 64, and the original NES."
+        },
+        {
+            "type": "received",
+            "text": "My emulator replicates both the original NMOS 6502 and the enhanced CMOS 65C02 variants."
+        },
+        {
+            "type": "sent",
+            "text": "What makes it special?"
+        },
+        {
+            "type": "received",
+            "text": "It's cycle-accurate, meaning it mimics the exact timing behavior of the real hardware."
+        },
+        {
+            "type": "received",
+            "text": "Modular architecture with a flexible bus interface and region-based memory management for RAM, ROM, and I/O."
+        },
+        {
+            "type": "received",
+            "text": "Supports all official opcodes, NMOS undocumented opcodes, and the full 65C02 instruction set with bit manipulation extensions."
+        },
+        {
+            "type": "received",
+            "text": "Also, it passes the Klaus Dormann 6502 functional test suite, which runs about 30.6 million cycles to verify correctness."
+        },
+        {
+            "type": "choices",
+            "label": "C99-6502 Repository",
+            "options": [
+                {
+                    "text": "View on GitHub",
+                    "url": "https://github.com/MercuriusDream/C99-6502",
+                    "variant": "primary"
+                }
+            ]
+        }
+    ]
+}

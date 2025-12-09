@@ -1,0 +1,247 @@
+{
+    "common": {
+        "avatar": "https://avatars.githubusercontent.com/u/57535262?v=4",
+        "socialLinks": [
+            {
+                "icon": "fa-brands fa-x-twitter",
+                "url": "https://x.com/Maraccoontang",
+                "label": "Twitter"
+            },
+            {
+                "icon": "fa-brands fa-github",
+                "url": "https://github.com/MercuriusDream",
+                "label": "GitHub"
+            },
+            {
+                "icon": "fa-solid fa-envelope",
+                "url": "mailto:tjddntjr1@gmail.com",
+                "label": "Email"
+            }
+        ]
+    },
+    "English": {
+        "name": "MercuriusDream",
+        "status": "Wooseok Sung",
+        "birthdate": "July 10",
+        "statsCards": [
+            {
+                "title": "Biographicals",
+                "stats": [
+                    {
+                        "label": "College",
+                        "value": "Chungbuk\nNational University"
+                    },
+                    {
+                        "label": "Majoring in",
+                        "value": "Computer Science"
+                    },
+                    {
+                        "label": "Nationality",
+                        "value": "Republic of Korea"
+                    }
+                ]
+            },
+            {
+                "title": "Languages",
+                "stats": [
+                    {
+                        "label": "English",
+                        "value": "Kinda fluent\nI guess?"
+                    },
+                    {
+                        "label": "Korean",
+                        "value": "Mother tongue"
+                    },
+                    {
+                        "label": "Japanese",
+                        "value": "Got mistaken for\na Japanese once"
+                    }
+                ]
+            },
+            {
+                "title": "Programming Languages",
+                "stats": [
+                    {
+                        "label": "C",
+                        "value": "C99, C11, C17"
+                    },
+                    {
+                        "label": "C++",
+                        "value": "C++03, C++11"
+                    },
+                    {
+                        "label": "Python",
+                        "value": "Python 3.*"
+                    }
+                ]
+            },
+            {
+                "title": "Technical Stack",
+                "stats": [
+                    {
+                        "label": "LLM",
+                        "value": "Prompt Engineering,\nRed-Teaming"
+                    },
+                    {
+                        "label": "Network Engineering",
+                        "value": "Reqable,\nWireshark"
+                    },
+                    {
+                        "label": "Reverse Engineering",
+                        "value": "Black-Box,\nAPI Endpoint"
+                    }
+                ]
+            }
+        ]
+    },
+    "Korean": {
+        "name": "MercuriusDream",
+        "status": "성우석",
+        "birthdate": "7월 10일",
+        "statsCards": [
+            {
+                "title": "Biographicals",
+                "stats": [
+                    {
+                        "label": "소속",
+                        "value": "충북대학교"
+                    },
+                    {
+                        "label": "전공",
+                        "value": "소프트웨어학부"
+                    },
+                    {
+                        "label": "국적",
+                        "value": "대한민국"
+                    }
+                ]
+            },
+            {
+                "title": "Languages",
+                "stats": [
+                    {
+                        "label": "영어",
+                        "value": "본인 주장으로 유창함"
+                    },
+                    {
+                        "label": "한국어",
+                        "value": "모국어"
+                    },
+                    {
+                        "label": "일본어",
+                        "value": "일본인으로 오해받은 적 있음"
+                    }
+                ]
+            },
+            {
+                "title": "Programming Languages",
+                "stats": [
+                    {
+                        "label": "C",
+                        "value": "C99, C11, C17"
+                    },
+                    {
+                        "label": "C++",
+                        "value": "C++03, C++11"
+                    },
+                    {
+                        "label": "Python",
+                        "value": "Python 3.*"
+                    }
+                ]
+            },
+            {
+                "title": "Technical Stack",
+                "stats": [
+                    {
+                        "label": "LLM",
+                        "value": "프롬프트 엔지니어링,\n레드팀"
+                    },
+                    {
+                        "label": "네트워크 엔지니어링",
+                        "value": "Reqable,\nWireshark"
+                    },
+                    {
+                        "label": "리버스 엔지니어링",
+                        "value": "블랙박스,\nAPI 엔드포인트"
+                    }
+                ]
+            }
+        ]
+    },
+    "Japanese": {
+        "name": "MercuriusDream",
+        "status": "ソン・ウソク",
+        "birthdate": "7月 10日",
+        "statsCards": [
+            {
+                "title": "Biographicals",
+                "stats": [
+                    {
+                        "label": "大学",
+                        "value": "忠北大学校"
+                    },
+                    {
+                        "label": "専攻",
+                        "value": "CompSci"
+                    },
+                    {
+                        "label": "国籍",
+                        "value": "大韓民国"
+                    }
+                ]
+            },
+            {
+                "title": "Languages",
+                "stats": [
+                    {
+                        "label": "英語",
+                        "value": "そこそこ話せ...ます？"
+                    },
+                    {
+                        "label": "韓国語",
+                        "value": "母国語"
+                    },
+                    {
+                        "label": "日本語",
+                        "value": "日本人と間違われたことあり"
+                    }
+                ]
+            },
+            {
+                "title": "Programming Languages",
+                "stats": [
+                    {
+                        "label": "C",
+                        "value": "C99, C11, C17"
+                    },
+                    {
+                        "label": "C++",
+                        "value": "C++03, C++11"
+                    },
+                    {
+                        "label": "Python",
+                        "value": "Python 3.*"
+                    }
+                ]
+            },
+            {
+                "title": "Technical Stack",
+                "stats": [
+                    {
+                        "label": "LLM",
+                        "value": "プロンプトエンジニアリング、\nレッドチーム"
+                    },
+                    {
+                        "label": "ネットワーク",
+                        "value": "Reqable,\nWireshark"
+                    },
+                    {
+                        "label": "リバースエンジニアリング",
+                        "value": "ブラックボックス、\nAPIエンドポイント"
+                    }
+                ]
+            }
+        ]
+    }
+}

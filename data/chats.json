@@ -1,0 +1,14 @@
+[
+    {
+        "id": "About",
+        "src": "./data/chat/about.json"
+    },
+    {
+        "id": "C99-6502",
+        "src": "./data/chat/c99_6502.json"
+    },
+    {
+        "id": "Canaria",
+        "src": "./data/chat/canaria.json"
+    }
+]

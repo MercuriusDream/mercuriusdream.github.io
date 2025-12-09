@@ -1,0 +1,67 @@
+{
+    "id": "Canaria",
+    "name": "Canaria",
+    "preview": "Earthquake early warning system",
+    "avatar": null,
+    "messages": [
+        {
+            "type": "received",
+            "text": "Canaria is a lightweight, real-time earthquake early warning system."
+        },
+        {
+            "type": "sent",
+            "text": "How does it work?"
+        },
+        {
+            "type": "received",
+            "text": "It aggregates earthquake data from multiple sources: KMA (Korea), JMA (Japan), WolfX EEW, and P2PQuake."
+        },
+        {
+            "type": "received",
+            "text": "This multi-source approach ensures comprehensive coverage across Asia-Pacific."
+        },
+        {
+            "type": "sent",
+            "text": "What's the architecture?"
+        },
+        {
+            "type": "received",
+            "text": "Two main components: A Parser (Bun/TypeScript) that normalizes event data, and a Worker (Cloudflare Workers) that ingests data and manages state."
+        },
+        {
+            "type": "received",
+            "text": "It uses Durable Objects for state consistency and SQLite for event storage."
+        },
+        {
+            "type": "sent",
+            "text": "Key features?"
+        },
+        {
+            "type": "received",
+            "text": "Real-time WebSocket streaming, persistent history via SQLite, and automatic feed monitoring with backoff strategies."
+        },
+        {
+            "type": "received",
+            "text": "It's globally distributed on Cloudflare's edge network for low latency."
+        },
+        {
+            "type": "sent",
+            "text": "Tech stack?"
+        },
+        {
+            "type": "received",
+            "text": "Bun, TypeScript, Cloudflare Workers, Durable Objects, and ElysiaJS for the API framework."
+        },
+        {
+            "type": "choices",
+            "label": "Canaria Repository",
+            "options": [
+                {
+                    "text": "View on GitHub",
+                    "url": "https://github.com/MercuriusDream/Canaria",
+                    "variant": "primary"
+                }
+            ]
+        }
+    ]
+}

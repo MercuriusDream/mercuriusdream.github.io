@@ -1,0 +1,62 @@
+{
+    "id": "About",
+    "name": "MercuriusDream",
+    "preview": "Hello there!",
+    "avatar": "https://avatars.githubusercontent.com/u/57535262?v=4",
+    "messages": [
+        {
+            "type": "received",
+            "text": "Hello! I'm MercuriusDream, a Computer Science student at Chungbuk National University."
+        },
+        {
+            "type": "sent",
+            "text": "Hi! What do you do?"
+        },
+        {
+            "type": "received",
+            "text": "I mainly delve into low-level systems with C (C99/C11) and modern C++, but I also use Python for scripting and rapid prototyping."
+        },
+        {
+            "type": "received",
+            "text": "My work often involves black-box reverse engineering, network packet analysis, and secure API engineering."
+        },
+        {
+            "type": "sent",
+            "text": "Any other interests?"
+        },
+        {
+            "type": "received",
+            "text": "I'm deeply interested in Large Language Models (LLM), particularly prompt engineering and red-teaming to find vulnerabilities."
+        },
+        {
+            "type": "received",
+            "text": "I also enjoy writing technical documentation to share what I learn."
+        },
+        {
+            "type": "sent",
+            "text": "What projects have you worked on?"
+        },
+        {
+            "type": "received",
+            "text": "Check out my pinned repositories! C99-6502 is a cycle-accurate NES/Apple II CPU emulator."
+        },
+        {
+            "type": "received",
+            "text": "And Canaria is a real-time earthquake early warning system aggregating data from KMA, JMA, and others."
+        },
+        {
+            "type": "choices",
+            "label": "Explore Repositories",
+            "options": [
+                {
+                    "text": "C99-6502",
+                    "action": "C99-6502"
+                },
+                {
+                    "text": "Canaria",
+                    "action": "Canaria"
+                }
+            ]
+        }
+    ]
+}
