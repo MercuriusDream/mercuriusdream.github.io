@@ -11,8 +11,8 @@ const settingsTranslations = {
         disclaimers: 'Disclaimers'
     },
     Japanese: {
-        title: '설정',
-        language: '언어',
+        title: '設定',
+        language: '言語',
         disclaimers: 'Disclaimers'
     }
 };
