@@ -20,7 +20,7 @@ export function renderSettings() {
     const container = document.getElementById('settings-page');
     if (!container) return;
 
-    const currentLanguage = localStorage.getItem('language') || 'English';
+    const currentLanguage = (window.location.search && new URLSearchParams(window.location.search).get('lang')) ? new URLSearchParams(window.location.search).get('lang') : localStorage.getItem('language') || 'English';
     const texts = settingsTranslations[currentLanguage] || settingsTranslations['English'];
 
     const getActiveClass = (lang) => currentLanguage === lang ? 'active' : '';
