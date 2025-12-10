@@ -50,7 +50,6 @@
 
 html,
 body {
-    height: calc(100dvh - env(safe-area-inset-top) - env(safe-area-inset-bottom));
     font-family: 'GyeonggiMillenniumTitle', sans-serif;
     font-weight: 500;
     background: var(--theme-slate);
@@ -528,6 +527,7 @@ body {
     padding: 15px;
     row-gap: 15px;
     overflow-y: auto;
+    overflow-x: hidden;
     width: 100%;
 }
 
@@ -775,13 +775,17 @@ body {
 
 /* Responsive */
 @media (max-width: 768px) {
+    .body {
+        height: calc(100dvh - env(safe-area-inset-top) - env(safe-area-inset-bottom));
+    }
+
     .mobile-break {
         display: inline;
     }
 
     .app-container {
         width: 100vw;
-        height: 100vh;
+        height: calc(100dvh - env(safe-area-inset-top) - env(safe-area-inset-bottom));
         max-width: none;
         max-height: none;
         border: none;
