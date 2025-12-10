@@ -8,7 +8,7 @@ const MOBILE_BREAKPOINT = 768;
 let activeContactId = 'About';
 let contacts = [];
 let bioData = null;
-let currentLanguage = localStorage.getItem('language') || 'English';
+let currentLanguage = window.location.search ? new URLSearchParams(window.location.search).get('lang') : localStorage.getItem('language') || 'English';
 
 function getLocalizedProfile() {
     if (!bioData) return null;
