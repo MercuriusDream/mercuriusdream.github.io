@@ -230,15 +230,15 @@
                 "stats": [
                     {
                         "label": "LLM",
-                        "value": "プロンプトエンジニアリング、\nレッドチーム"
+                        "value": "PromptEngineering,\nRedTeam"
                     },
                     {
-                        "label": "ネットワーク",
+                        "label": "Network Monitoring",
                         "value": "Reqable,\nWireshark"
                     },
                     {
-                        "label": "リバースエンジニアリング",
-                        "value": "BlackBox、\nAPIエンドポイント"
+                        "label": "Reverse Engineering",
+                        "value": "BlackBox,\nAPIEndpoint"
                     }
                 ]
             }
