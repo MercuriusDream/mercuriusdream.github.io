@@ -110,6 +110,9 @@ export function renderMessages(contact, onChoice) {
     container.innerHTML = html;
 
     container.querySelectorAll('.choice-button').forEach(btn => {
-        btn.addEventListener('click', () => onChoice(btn.dataset.action));
+        btn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            onChoice(btn.dataset.action);
+        });
     });
 }
