@@ -13,7 +13,7 @@ let currentLanguage;
 
 function getLocalizedProfile() {
     if (!bioData) return null;
-    return { ...bioData.common, ...(bioData[currentLanguage]) };
+    return { ...bioData.common, ...(bioData[currentLanguage] || bioData['en']) };
 }
 
 function isMobile() {
