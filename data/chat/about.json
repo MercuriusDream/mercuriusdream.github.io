@@ -45,6 +45,10 @@
             "text": "And Canaria is a real-time earthquake early warning system aggregating data from KMA, JMA, and others."
         },
         {
+            "type": "received",
+            "text": "Also, try blaming on your CDN with CloudFront Error Generator!"
+        },
+        {
             "type": "choices",
             "label": "Explore Repositories",
             "options": [
@@ -55,6 +59,15 @@
                 {
                     "text": "Canaria",
                     "action": "Canaria"
+                },
+                {
+                    "text": "CloudFront Error Generator",
+                    "action": "CloudFrontErrorGenerator"
+                },
+                {
+                    "text": "My GitHub",
+                    "url": "https://github.com/MercuriusDream",
+                    "variant": "primary"
                 }
             ]
         }

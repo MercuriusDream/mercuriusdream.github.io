@@ -10,5 +10,9 @@
     {
         "id": "Canaria",
         "src": "./data/chat/canaria.json"
+    },
+    {
+        "id": "CloudFrontErrorGenerator",
+        "src": "./data/chat/cloudfront_error_generator.json"
     }
 ]

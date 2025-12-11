@@ -1,0 +1,32 @@
+{
+    "id": "CloudFront",
+    "name": "CloudFront Error Generator",
+    "preview": "Maybe it's not your problem",
+    "avatar": null,
+    "messages": [
+        {
+            "type": "received",
+            "text": "Your service has a failure? You can now blame your CDN for it!"
+        },
+        {
+            "type": "received",
+            "text": "Yup, saw a Cloudflare one and decided to make it myself"
+        },
+        {
+            "type": "choices",
+            "label": "CloudFront Error Generator",
+            "options": [
+                {
+                    "text": "View on GitHub",
+                    "url": "https://github.com/MercuriusDream/cloudfront-error-generator",
+                    "variant": "primary"
+                },
+                {
+                    "text": "Try it out",
+                    "url": "https://cloudfront-error-generator.mercuriusdream.com/",
+                    "variant": "secondary"
+                }
+            ]
+        }
+    ]
+}
