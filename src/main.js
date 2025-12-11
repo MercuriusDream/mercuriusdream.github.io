@@ -122,10 +122,10 @@ async function init() {
         contacts = data.contacts;
         bioData = data.bioData;
         setSettingsData(data.settingsData);
-        currentLanguage = getLanguage(data.settingsData);
+        currentLanguage = getLanguage(["en", "ko-KR", "ja-JP"]);
         try {
             localStorage.setItem('language', currentLanguage);
-        } catch (e) {}
+        } catch (e) { }
     } catch (error) {
         console.error('Error loading data:', error);
         return;

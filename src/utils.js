@@ -10,10 +10,13 @@ export function formatText(text) {
 }
 
 export function getLanguage(languages) {
+    const langParam = URLSearchParams(window.location.search).get('lang');
+    if (langParam in languages) return langParam;
+
     try {
-        let stored = localStorage.getItem('language');
-        if (stored) return stored;
-    } catch (e) {}
+        const storedLanguage = localStorage.getItem('language')
+        if (storedLanguage in languages) return storedLanguage;
+    } catch (e) { }
 
     let userAgentLanguage = navigator.language;
     if (userAgentLanguage in languages) return userAgentLanguage;
