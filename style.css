@@ -836,6 +836,42 @@ body {
     .user-view-active .mobile-return-button {
         display: none !important;
     }
+
+    .profile-name-large {
+        font-size: 32px;
+    }
+
+    .profile-status {
+        font-size: 20px;
+    }
+
+    .profile-birthdate {
+        font-size: 16px;
+    }
+
+    .header-title {
+        font-size: 20px;
+    }
+
+    .contact-name {
+        font-size: 17px;
+    }
+
+    .contact-preview {
+        font-size: 15px;
+    }
+
+    .message-bubble {
+        font-size: 16px;
+    }
+
+    .choice-button {
+        font-size: 18px;
+    }
+
+    .choice-header-title {
+        font-size: 16px;
+    }
 }
 
 /* << Animations */
