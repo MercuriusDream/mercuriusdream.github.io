@@ -123,7 +123,9 @@ async function init() {
         bioData = data.bioData;
         setSettingsData(data.settingsData);
         currentLanguage = getLanguage(data.settingsData);
-        localStorage.setItem('language', currentLanguage);
+        try {
+            localStorage.setItem('language', currentLanguage);
+        } catch (e) {}
     } catch (error) {
         console.error('Error loading data:', error);
         return;

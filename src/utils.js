@@ -10,8 +10,12 @@ export function formatText(text) {
 }
 
 export function getLanguage(languages) {
+    try {
+        let stored = localStorage.getItem('language');
+        if (stored) return stored;
+    } catch (e) {}
+
     let userAgentLanguage = navigator.language;
-    if (localStorage.getItem('language')) return localStorage.getItem('language');
     if (userAgentLanguage in languages) return userAgentLanguage;
     for (let iterLang of navigator.languages) {
         if (iterLang in languages) return iterLang;

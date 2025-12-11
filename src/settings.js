@@ -59,14 +59,19 @@ export function renderSettings() {
     options.forEach(option => {
         option.addEventListener('click', () => {
             const newLang = option.dataset.value;
-            const currentLang = localStorage.getItem('language') || 'en';
+            let currentLang = 'en';
+            try {
+                currentLang = localStorage.getItem('language') || 'en';
+            } catch (e) {}
 
             if (newLang === currentLang) return;
 
             options.forEach(o => o.classList.remove('active'));
             option.classList.add('active');
 
-            localStorage.setItem('language', newLang);
+            try {
+                localStorage.setItem('language', newLang);
+            } catch (e) {}
             console.log(`Language changed to: ${newLang}`);
 
             document.dispatchEvent(new CustomEvent('languageChanged', { detail: { language: newLang } }));
