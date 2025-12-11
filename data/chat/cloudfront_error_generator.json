@@ -24,7 +24,7 @@
                 {
                     "text": "Try it out",
                     "url": "https://cloudfront-error-generator.mercuriusdream.com/",
-                    "variant": "secondary"
+                    "variant": "primary"
                 }
             ]
         }
