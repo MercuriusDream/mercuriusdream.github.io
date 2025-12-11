@@ -19,7 +19,7 @@
             }
         ]
     },
-    "English": {
+    "en": {
         "name": "MercuriusDream",
         "status": "Wooseok Sung",
         "birthdate": "July 10",
@@ -45,15 +45,15 @@
                 "title": "Languages",
                 "stats": [
                     {
-                        "label": "English",
+                        "label": "en",
                         "value": "Kinda fluent\nI guess?"
                     },
                     {
-                        "label": "Korean",
+                        "label": "ko-KR",
                         "value": "Mother tongue"
                     },
                     {
-                        "label": "Japanese",
+                        "label": "ja-JP",
                         "value": "Got mistaken for\na Japanese once"
                     }
                 ]
@@ -94,7 +94,7 @@
             }
         ]
     },
-    "Korean": {
+    "ko-KR": {
         "name": "MercuriusDream",
         "status": "성우석",
         "birthdate": "7월 10일",
@@ -169,7 +169,7 @@
             }
         ]
     },
-    "Japanese": {
+    "ja-JP": {
         "name": "MercuriusDream",
         "status": "ソン・ウソク",
         "birthdate": "7月 10日",

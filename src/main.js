@@ -1,24 +1,20 @@
 import { renderContacts, updateActiveContact, renderMessages } from './chats.js';
 import { toggleSidebar, switchView } from './ui.js';
 import { loadData } from './data.js';
-import { initSettings } from './settings.js';
+import { initSettings, setSettingsData } from './settings.js';
 import { renderUserProfile } from './bio.js';
+import { getLanguage } from './utils.js';
 
 const MOBILE_BREAKPOINT = 768;
 let activeContactId = 'About';
 let contacts = [];
 let bioData = null;
-let currentLanguage = window.location.search ? new URLSearchParams(window.location.search).get('lang') : localStorage.getItem('language') || 'English';
+let currentLanguage;
 
 function getLocalizedProfile() {
     if (!bioData) return null;
-    return { ...bioData.common, ...(bioData[currentLanguage] || bioData['English']) };
+    return { ...bioData.common, ...(bioData[currentLanguage]) };
 }
-
-document.addEventListener('languageChanged', (e) => {
-    currentLanguage = e.detail.language;
-    if (bioData) renderUserProfile(getLocalizedProfile());
-});
 
 function isMobile() {
     return window.innerWidth <= MOBILE_BREAKPOINT;
@@ -113,6 +109,11 @@ function setupEventListeners() {
     }
 
     window.addEventListener('resize', updateMobileReturnButton);
+
+    document.addEventListener('languageChanged', (e) => {
+        currentLanguage = e.detail.language;
+        if (bioData) renderUserProfile(getLocalizedProfile());
+    });
 }
 
 async function init() {
@@ -120,6 +121,9 @@ async function init() {
         const data = await loadData();
         contacts = data.contacts;
         bioData = data.bioData;
+        setSettingsData(data.settingsData);
+        currentLanguage = getLanguage(data.settingsData);
+        localStorage.setItem('language', currentLanguage);
     } catch (error) {
         console.error('Error loading data:', error);
         return;
@@ -132,6 +136,7 @@ async function init() {
 
     renderContacts(contacts, activeContactId, handleSelectContact);
     renderMessages(contacts.find(c => c.id === activeContactId), handleChoice);
+
     initSettings();
     setupEventListeners();
     updateMobileReturnButton();

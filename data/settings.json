@@ -1,0 +1,17 @@
+{
+    "en": {
+        "title": "Settings",
+        "language": "Language",
+        "disclaimers": "Disclaimers"
+    },
+    "ko-KR": {
+        "title": "설정",
+        "language": "언어",
+        "disclaimers": "Disclaimers"
+    },
+    "ja-JP": {
+        "title": "設定",
+        "language": "言語",
+        "disclaimers": "Disclaimers"
+    }
+}
