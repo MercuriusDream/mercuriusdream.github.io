@@ -10,7 +10,7 @@ export function formatText(text) {
 }
 
 export function getLanguage(languages) {
-    const langParam = URLSearchParams(window.location.search).get('lang');
+    const langParam = (new URLSearchParams(window.location.search)).get('lang');
     if (langParam in languages) return langParam;
 
     try {
