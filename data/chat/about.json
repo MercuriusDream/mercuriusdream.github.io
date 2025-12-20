@@ -14,7 +14,11 @@
         },
         {
             "type": "received",
-            "text": "I mainly delve into low-level systems with C (C99/C11) and modern C++, but I also use Python for scripting and rapid prototyping."
+            "text": "First and the most, I'm a Security Vulnerability Researcher, reported and disclosed vulnerabilities to OpenAI and Naver."
+        },
+        {
+            "type": "received",
+            "text": "Getting to the main thing, I mainly delve into low-level systems with C (C99/C11) and modern C++, but I also use Python for scripting and rapid prototyping."
         },
         {
             "type": "received",
