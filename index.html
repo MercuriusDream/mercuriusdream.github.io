@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <link rel="icon" type="image/svg+xml" href="/favicon.ico" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="MercuriusDream - Security Researcher & Developer Portfolio" />
+  <meta name="theme-color" content="#a8d4f0" />
+
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=Noto+Sans+JP:wght@300;400;500&family=Noto+Sans+KR:wght@300;400;500&family=Quicksand:wght@300;400;500;600&display=swap"
+    rel="stylesheet">
+
+  <title>MercuriusDream ✦ 星の夢</title>
+
+  <style>
+    /* Critical CSS for initial load */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      font-family: 'Quicksand', 'Noto Sans JP', 'Noto Sans KR', sans-serif;
+      background: #121921;
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    /* Loading animation */
+    #root:empty::before {
+      content: '';
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      width: 60px;
+      height: 60px;
+      margin: -30px 0 0 -30px;
+      border: 3px solid rgba(168, 212, 240, 0.3);
+      border-top-color: #4A90E2;
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+    }
+
+    @keyframes spin {
+      to {
+        transform: rotate(360deg);
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div id="root"></div>
+  <script type="module" src="/src/main.jsx"></script>
+</body>
+
+</html>
