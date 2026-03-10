@@ -1,7 +1,7 @@
-# Mercuriusdream.github.io
+# Mercuriusdream
 
-Plain JS + HTML + CSS to MomoTalk.
+*With my fullest respect to Claude Monet.*
 
-# Disclaimers
+## License
 
-- Design inspired by *MomoTalk* from *Blue Archive* by *Nexon Games*.
+AGPL 3.0

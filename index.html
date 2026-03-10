@@ -1,90 +1,67 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-    <title>MercuriusDream</title>
-    <link rel="stylesheet" href="./style.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-    <link rel="icon" href="./favicon.ico">
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.ico" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="MercuriusDream - Security Researcher & Developer Portfolio" />
+    <meta name="theme-color" content="#a8d4f0" />
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=Noto+Sans+JP:wght@300;400;500&family=Noto+Sans+KR:wght@300;400;500&family=Quicksand:wght@300;400;500;600&display=swap"
+        rel="stylesheet">
+
+    <title>MercuriusDream ✦ 星の夢</title>
+
+    <style>
+        /* Critical CSS for initial load */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Quicksand', 'Noto Sans JP', 'Noto Sans KR', sans-serif;
+            background: #121921;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        /* Loading animation */
+        #root:empty::before {
+            content: '';
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            width: 60px;
+            height: 60px;
+            margin: -30px 0 0 -30px;
+            border: 3px solid rgba(168, 212, 240, 0.3);
+            border-top-color: #4A90E2;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+    </style>
 </head>
 
 <body>
-    <div class="app-container">
-        <!-- HEADER -->
-        <div class="header">
-            <span class="header-title">MercuriusDream</span>
-        </div>
-
-        <!-- MAIN CONTENT -->
-        <div class="main-content">
-            <!-- LEFT ICON BAR -->
-            <div class="icon-bar">
-                <div class="icon-bar-item active" id="icon-user">
-                    <svg viewBox="0 0 24 24">
-                        <path
-                            d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z" />
-                    </svg>
-                </div>
-                <div class="icon-bar-item" id="icon-message">
-                    <svg viewBox="0 0 24 24">
-                        <path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2z" />
-                    </svg>
-                </div>
-                <div class="icon-bar-item" id="icon-setting">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                        stroke-linejoin="round">
-                        <circle cx="12" cy="12" r="3"></circle>
-                        <path
-                            d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z">
-                        </path>
-                    </svg>
-                </div>
-            </div>
-
-            <!-- USER INFO PAGE -->
-            <div class="user-info-page" id="user-info-page"></div>
-
-            <!-- SETTINGS PAGE -->
-            <div class="user-info-page" id="settings-page" style="display: none;"></div>
-
-            <!-- LEFT SIDEBAR -->
-            <div class="sidebar" id="sidebar" style="display: none;">
-                <div class="sidebar-header">
-                    <span class="sidebar-header-title">Messages</span>
-                    <div class="sidebar-header-controls">
-                        <div class="sidebar-dropdown" style="padding: 4px 30px;">
-                            All
-                            <svg viewBox="0 0 12 12" class="triangle-icon">
-                                <path d="M0 0h24v24z" />
-                            </svg>
-                        </div>
-                        <div class="sidebar-dropdown" style="padding: 4px 16px;">
-                            <svg viewBox="0 0 24 24" class="sort-icon">
-                                <path
-                                    d="M3,2H21A1,1 0 0 1 22,3V5A1,1 0 0 1 21,6H3A1,1 0 0 1 2,5V3A1,1 0 0 1 3,2ZM3,10H21A1,1 0 0 1 22,11V13A1,1 0 0 1 21,14H3A1,1 0 0 1 2,13V11A1,1 0 0 1 3,10ZM3,18H21A1,1 0 0 1 22,19V21A1,1 0 0 1 21,22H3A1,1 0 0 1 2,21V19A1,1 0 0 1 3,18Z" />
-                            </svg>
-                        </div>
-                    </div>
-                </div>
-                <div class="contact-list" id="contact-list">
-                </div>
-            </div>
-
-            <!-- RIGHT CHAT AREA -->
-            <div class="chat-area" style="display: none;">
-                <div class="chat-messages" id="chat-messages">
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="mobile-return-button" id="mobile-return-btn">
-        <svg viewBox="0 0 24 24">
-            <path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z" />
-        </svg>
-    </div>
-    <script type="module" src="./src/main.js"></script>
+    <div id="root"></div>
+    <script type="module" src="/src/main.jsx"></script>
 </body>
 
 </html>
