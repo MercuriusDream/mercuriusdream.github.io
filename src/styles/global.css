@@ -1290,6 +1290,36 @@ section {
   z-index: 13;
 }
 
+.social-links-hero {
+  display: flex;
+  justify-content: center;
+  gap: 1.5rem;
+  margin-top: 1.5rem;
+  opacity: 0;
+  transform: translateY(10px);
+  transition: opacity 0.6s ease, transform 0.6s ease;
+}
+
+.social-links-hero.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.social-link-hero {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: var(--text-secondary);
+  text-decoration: none;
+  font-size: 0.9rem;
+  transition: color 0.3s ease, transform 0.3s ease;
+}
+
+.social-link-hero:hover {
+  color: var(--text-primary);
+  transform: translateY(-2px);
+}
+
 @keyframes float-hint {
 
   0%,

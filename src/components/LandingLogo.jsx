@@ -1,9 +1,10 @@
-import { useEffect, useRef, memo, useCallback } from 'react';
-import { ChevronDown } from 'lucide-react';
+import { useEffect, useRef, memo, useCallback, useState } from 'react';
+import { ChevronDown, Github, Mail, X } from 'lucide-react';
 
 const LandingLogo = memo(function LandingLogo() {
   const containerRef = useRef(null);
   const logoRef = useRef(null);
+  const [linksVisible, setLinksVisible] = useState(false);
 
   const loadLogo = useCallback(async () => {
     try {
@@ -126,6 +127,11 @@ const LandingLogo = memo(function LandingLogo() {
 
   useEffect(() => { loadLogo(); }, [loadLogo]);
 
+  useEffect(() => {
+    const timer = setTimeout(() => setLinksVisible(true), 800);
+    return () => clearTimeout(timer);
+  }, []);
+
   return (
     <div ref={containerRef} className="landing-container">
       <div
@@ -135,6 +141,20 @@ const LandingLogo = memo(function LandingLogo() {
 
       <div className="hero-name">
         <h1 className="brand-name">MercuriusDream</h1>
+        <div className={`social-links-hero ${linksVisible ? 'visible' : ''}`}>
+          <a href="https://github.com/mercuriusdream" target="_blank" rel="noopener noreferrer" className="social-link-hero">
+            <Github size={18} />
+            <span>GitHub</span>
+          </a>
+          <a href="https://x.com/mercuriusdream" target="_blank" rel="noopener noreferrer" className="social-link-hero">
+            <X size={18} />
+            <span>X</span>
+          </a>
+          <a href="mailto:mercuriusdream@mercuriusdream.com" className="social-link-hero">
+            <Mail size={18} />
+            <span>Mail</span>
+          </a>
+        </div>
       </div>
 
       <div className="scroll-hint" aria-hidden="true">

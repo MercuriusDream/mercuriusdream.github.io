@@ -23,10 +23,10 @@ export const translations = {
       title: 'Featured Works',
       items: {
         c99: {
-          title: 'C99-6502',
-          description: 'Cycle-accurate MOS 6502 emulator in C99. Passes Klaus Dormann functional tests.',
+          title: 'TideSurf',
+          description: 'The connector between Chromium and LLM agents — no screenshots, no vision models, just the DOM compressed for machines.',
           status: 'Active',
-          link: 'https://github.com/MercuriusDream/C99-6502'
+          link: 'https://github.com/tidesurf/core'
         },
         vibrowser: {
           title: 'Vibrowser',
@@ -83,10 +83,10 @@ export const translations = {
       title: '프로젝트',
       items: {
         c99: {
-          title: 'C99-6502',
-          description: 'C99로 작성된 사이클 정확 MOS 6502 에뮬레이터 — NMOS/CMOS 지원, TUI 디버거, Klaus Dormann 기능 테스트 통과.',
+          title: 'TideSurf',
+          description: '크로미엄과 LLM 에이전트 사이의 연결자 — 스크린샷 없이, 비전 모델 없이, 기계를 위해 압축된 DOM만.',
           status: '진행중',
-          link: 'https://github.com/MercuriusDream/C99-6502'
+          link: 'https://github.com/tidesurf/core'
         },
         vibrowser: {
           title: 'Vibrowser',
@@ -143,10 +143,10 @@ export const translations = {
       title: 'プロジェクト',
       items: {
         c99: {
-          title: 'C99-6502',
-          description: 'C99で書かれたサイクル精度MOS 6502エミュレータ — NMOS/CMOSサポート、TUIデバッガ、Klaus Dormann機能テスト合格。',
+          title: 'TideSurf',
+          description: 'ChromiumとLLMエージェント間のコネクタ — スクリーンショットなし、ビジョンモデルなし、機械のために圧縮されたDOMのみ。',
           status: '進行中',
-          link: 'https://github.com/MercuriusDream/C99-6502'
+          link: 'https://github.com/tidesurf/core'
         },
         vibrowser: {
           title: 'Vibrowser',
