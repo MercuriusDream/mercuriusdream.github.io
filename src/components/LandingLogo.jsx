@@ -144,15 +144,12 @@ const LandingLogo = memo(function LandingLogo() {
         <div className={`social-links-hero ${linksVisible ? 'visible' : ''}`}>
           <a href="https://github.com/mercuriusdream" target="_blank" rel="noopener noreferrer" className="social-link-hero">
             <Github size={18} />
-            <span>GitHub</span>
           </a>
           <a href="https://x.com/mercuriusdream" target="_blank" rel="noopener noreferrer" className="social-link-hero">
             <X size={18} />
-            <span>X</span>
           </a>
           <a href="mailto:mercuriusdream@mercuriusdream.com" className="social-link-hero">
             <Mail size={18} />
-            <span>Mail</span>
           </a>
         </div>
       </div>
