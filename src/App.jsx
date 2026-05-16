@@ -1,130 +1,164 @@
-import { LanguageProvider } from './context/LanguageContext';
-import Navigation from './components/Navigation';
-import LandingLogo from './components/LandingLogo';
-import About from './components/About';
-import Projects from './components/Projects';
-import Skills from './components/Skills';
-import WatercolorCanvas from './components/WatercolorCanvas';
-import { useEffect, useRef, useState } from 'react';
+import { Fragment, useState, useEffect } from 'react';
+import { KaomojiIcon } from './components/Icons';
 
-const SECTIONS = ['hero', 'about', 'projects', 'skills'];
+const LOVE_LINKS = [
+  { label: 'Zhilin Yang', href: 'https://kimiyoung.github.io/', accent: '#B8634A' },
+  { label: 'Thebes', href: 'https://vgel.me', accent: '#6F7D63' },
+  { label: 'Ghostfail', href: 'https://ghost.fail', accent: '#76668D' },
+];
 
-function App() {
-  const [activeIndex, setActiveIndex] = useState(0);
-  const [direction, setDirection] = useState(1); // 1 = forward, -1 = backward
-  const isAnimating = useRef(false);
+const MADE_LINKS = [
+  { label: 'TideSurf', href: 'https://github.com/tidesurf/core', accent: '#4F7B86' },
+  { label: 'Agent-Estate', href: 'https://github.com/MercuriusDream/agent-estate', accent: '#8A6D4E' },
+];
 
-  useEffect(() => {
-    const goTo = (index) => {
-      if (index < 0 || index >= SECTIONS.length) return;
-      if (isAnimating.current) return;
+const THEME_MODES = ['light', 'dark'];
+const revealDelay = (ms) => ({ '--reveal-delay': `${ms}ms` });
 
-      isAnimating.current = true;
-      setDirection(index > activeIndex ? 1 : -1);
-      setActiveIndex(index);
+function getStoredThemeMode() {
+  if (typeof window === 'undefined') return 'system';
+  const stored = localStorage.getItem('theme');
+  return stored === 'light' || stored === 'dark' ? stored : 'system';
+}
 
-      setTimeout(() => {
-        isAnimating.current = false;
-      }, 600);
-    };
+function getSystemTheme() {
+  if (typeof window === 'undefined') return 'light';
+  return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+}
 
-    const handleWheel = (e) => {
-      e.preventDefault();
-      if (isAnimating.current) return;
-      goTo(e.deltaY > 0 ? activeIndex + 1 : activeIndex - 1);
-    };
+function linkSeparator(index, total) {
+  if (index === 0) return '';
+  if (index === total - 1) return total === 2 ? ' and ' : ', and ';
+  return ', ';
+}
 
-    let touchStartY = 0;
-    const handleTouchStart = (e) => {
-      touchStartY = e.touches[0].clientY;
-    };
-    const handleTouchEnd = (e) => {
-      const diff = touchStartY - e.changedTouches[0].clientY;
-      if (Math.abs(diff) < 50 || isAnimating.current) return;
-      goTo(diff > 0 ? activeIndex + 1 : activeIndex - 1);
-    };
-
-    const handleKeyDown = (e) => {
-      if (isAnimating.current) return;
-      if (e.key === 'ArrowDown' || e.key === 'PageDown' || e.key === ' ') {
-        e.preventDefault();
-        goTo(activeIndex + 1);
-      } else if (e.key === 'ArrowUp' || e.key === 'PageUp') {
-        e.preventDefault();
-        goTo(activeIndex - 1);
-      }
-    };
-
-    window.addEventListener('wheel', handleWheel, { passive: false });
-    window.addEventListener('touchstart', handleTouchStart, { passive: true });
-    window.addEventListener('touchend', handleTouchEnd, { passive: true });
-    window.addEventListener('keydown', handleKeyDown);
-
-    return () => {
-      window.removeEventListener('wheel', handleWheel);
-      window.removeEventListener('touchstart', handleTouchStart);
-      window.removeEventListener('touchend', handleTouchEnd);
-      window.removeEventListener('keydown', handleKeyDown);
-    };
-  }, [activeIndex]);
-
+function HighlightLink({ link }) {
   return (
-    <LanguageProvider>
-      <div className="app">
-        <WatercolorCanvas activeIndex={activeIndex} />
-        <Navigation activeIndex={activeIndex} onNavigate={(i) => {
-          if (!isAnimating.current) {
-            isAnimating.current = true;
-            setDirection(i > activeIndex ? 1 : -1);
-            setActiveIndex(i);
-            setTimeout(() => { isAnimating.current = false; }, 600);
-          }
-        }} />
-
-        {/* Persistent section header — number and title morph */}
-        <div className={`persistent-header ${activeIndex > 0 ? 'visible' : ''}`}>
-          <div className="persistent-header-inner">
-            <div className="persistent-header-top">
-              <div className="morph-num-wrapper">
-                {['01', '02', '03'].map((num, i) => (
-                  <span
-                    key={num}
-                    className={`morph-num ${activeIndex === i + 1 ? 'active' : ''} ${activeIndex > i + 1 ? 'above' : ''} ${activeIndex < i + 1 ? 'below' : ''}`}
-                  >
-                    {num}
-                  </span>
-                ))}
-              </div>
-            </div>
-            <div className="morph-label-wrapper">
-              {['About', 'Projects', 'Read More'].map((label, i) => (
-                <span
-                  key={label}
-                  className={`morph-label ${activeIndex === i + 1 ? 'active' : ''} ${activeIndex > i + 1 ? 'above' : ''} ${activeIndex < i + 1 ? 'below' : ''}`}
-                >
-                  {label}
-                </span>
-              ))}
-            </div>
-          </div>
-        </div>
-
-        <main className="morph-viewport">
-          {SECTIONS.map((id, i) => (
-            <div
-              key={id}
-              className={`morph-section ${i === activeIndex ? 'active' : ''} ${i < activeIndex ? 'above' : ''} ${i > activeIndex ? 'below' : ''}`}
-            >
-              {id === 'hero' && <LandingLogo />}
-              {id === 'about' && <About />}
-              {id === 'projects' && <Projects />}
-              {id === 'skills' && <Skills />}
-            </div>
-          ))}
-        </main>
-      </div>
-    </LanguageProvider>
+    <a
+      href={link.href}
+      target="_blank"
+      rel="noopener noreferrer"
+      className="inline-link"
+      style={{ '--link-accent': link.accent }}
+    >
+      {link.label}
+    </a>
   );
 }
 
-export default App;
+function InlineLinkList({ links }) {
+  return links.map((link, index) => (
+    <Fragment key={link.label}>
+      {linkSeparator(index, links.length)}
+      <HighlightLink link={link} />
+    </Fragment>
+  ));
+}
+
+function OnePage() {
+  const [themeMode, setThemeMode] = useState(getStoredThemeMode);
+  const [systemTheme, setSystemTheme] = useState(getSystemTheme);
+  const [announcement, setAnnouncement] = useState('');
+  const [mojiPoked, setMojiPoked] = useState(false);
+  const activeTheme = themeMode === 'system' ? systemTheme : themeMode;
+
+  function pokeMoji() {
+    setMojiPoked(true);
+    setTimeout(() => setMojiPoked(false), 350);
+  }
+
+  useEffect(() => {
+    const media = window.matchMedia('(prefers-color-scheme: dark)');
+    const handleChange = () => setSystemTheme(media.matches ? 'dark' : 'light');
+    handleChange();
+    if (media.addEventListener) {
+      media.addEventListener('change', handleChange);
+      return () => media.removeEventListener('change', handleChange);
+    }
+    media.addListener(handleChange);
+    return () => media.removeListener(handleChange);
+  }, []);
+
+  useEffect(() => {
+    const root = document.documentElement;
+    root.setAttribute('data-theme', activeTheme);
+    if (themeMode === 'system') {
+      localStorage.removeItem('theme');
+    } else {
+      localStorage.setItem('theme', themeMode);
+    }
+    const meta = document.querySelector('meta[name="theme-color"]');
+    const paper = getComputedStyle(root).getPropertyValue('--paper').trim();
+    if (meta && paper) meta.setAttribute('content', paper);
+    const message = themeMode === 'system'
+      ? `Following system theme (${activeTheme})`
+      : `Switched to ${themeMode} theme`;
+    setAnnouncement(message);
+  }, [themeMode, activeTheme]);
+
+  return (
+    <div className="app">
+      <a href="#main" className="skip-link">Skip to content</a>
+
+      <main id="main" className="onepage">
+        <header className="hero-title reveal-hero" style={revealDelay(0)}>
+          <h1 className="hero-headline" aria-label="마라향 안개구름, Claude-Induced Insanity">
+            <KaomojiIcon className={`hero-moji ${mojiPoked ? 'poked' : ''}`} aria-hidden="true" blink={mojiPoked} onClick={pokeMoji} />
+            <span lang="ko">마라향 안개구름</span>
+            <span className="hero-cii reveal" aria-hidden="true" style={revealDelay(100)}>CII</span>
+          </h1>
+          <p className="hero-handle reveal" style={revealDelay(60)}>@mercuriusdream</p>
+        </header>
+
+        <div className="hero-row reveal" style={revealDelay(90)}>
+          <p className="made-line">
+            Made <InlineLinkList links={MADE_LINKS} />
+          </p>
+          <p className="hero-bio">
+            People I admire: <InlineLinkList links={LOVE_LINKS} />
+          </p>
+        </div>
+
+        <footer className="site-footer reveal" style={revealDelay(180)}>
+          <div className="footer-links">
+            <a href="https://github.com/mercuriusdream" target="_blank" rel="noopener noreferrer" className="footer-btn reveal" style={{ ...revealDelay(200), '--btn-color': '#4F7B86' }}>
+              github
+            </a>
+            <a href="https://x.com/mercuriusdream" target="_blank" rel="noopener noreferrer" className="footer-btn reveal" style={{ ...revealDelay(260), '--btn-color': '#6F7D63' }}>
+              x
+            </a>
+            <a
+              href="https://bughunters.google.com/profile/3dfc69d5-8b8a-4754-80ab-ba59a56e7295"
+              target="_blank" rel="noopener noreferrer"
+              className="footer-btn reveal"
+              style={{ ...revealDelay(320), '--btn-color': '#76668D' }}
+            >
+              vrp
+            </a>
+            <a href="mailto:mercuriusdream@mercuriusdream.com" className="footer-btn reveal" style={{ ...revealDelay(380), '--btn-color': '#B8634A' }}>
+              email
+            </a>
+          </div>
+
+          <div className="theme-selector" role="group" aria-label="Theme mode">
+            {THEME_MODES.map((mode) => (
+              <button
+                key={mode}
+                onClick={() => setThemeMode(themeMode === mode ? 'system' : mode)}
+                className={`theme-btn ${themeMode === mode ? 'active' : ''}`}
+                aria-pressed={themeMode === mode}
+              >
+                {mode}
+              </button>
+            ))}
+          </div>
+          <div className="sr-only" aria-live="polite" aria-atomic="true">{announcement}</div>
+        </footer>
+      </main>
+    </div>
+  );
+}
+
+export default function App() {
+  return <OnePage />;
+}

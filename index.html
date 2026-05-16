@@ -3,60 +3,65 @@
 
 <head>
   <meta charset="UTF-8" />
-  <link rel="icon" type="image/svg+xml" href="/favicon.ico" />
+  <link rel="icon" type="image/png" href="/avatar.png" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="description" content="MercuriusDream - Security Researcher & Developer Portfolio" />
-  <meta name="theme-color" content="#a8d4f0" />
+  <meta name="description" content="MercuriusDream — security researcher, reverse engineer, systems writer." />
+  <meta name="theme-color" content="#ECEDEA" />
+  <link rel="preload" href="/logo.svg" as="image" type="image/svg+xml" />
 
-  <!-- Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link
-    href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=Noto+Sans+JP:wght@300;400;500&family=Noto+Sans+KR:wght@300;400;500&family=Quicksand:wght@300;400;500;600&display=swap"
+    href="https://fonts.googleapis.com/css2?family=Zalando+Sans:wght@400;500&family=Gothic+A1:wght@400;500&display=swap"
     rel="stylesheet">
 
-  <title>MercuriusDream ✦ 星の夢</title>
+  <title>마라향 안개구름</title>
 
   <style>
-    /* Critical CSS for initial load */
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html[data-theme="light"] {
+      --paper: #ECEDEA;
+      --ink: #161716;
     }
-
-    html {
-      scroll-behavior: smooth;
+    html[data-theme="dark"] {
+      --paper: #1A1A18;
+      --ink: #E8E9E6;
     }
-
+    html[data-theme="light"] body {
+      background: var(--paper);
+      color: var(--ink);
+    }
+    html[data-theme="dark"] body {
+      background: var(--paper);
+      color: var(--ink);
+    }
     body {
-      font-family: 'Quicksand', 'Noto Sans JP', 'Noto Sans KR', sans-serif;
-      background: #121921;
+      font-family: 'Zalando Sans', 'Gothic A1', system-ui, -apple-system, sans-serif;
       min-height: 100vh;
       overflow-x: hidden;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      text-rendering: optimizeLegibility;
     }
-
-    /* Loading animation */
     #root:empty::before {
       content: '';
       position: fixed;
-      top: 50%;
-      left: 50%;
-      width: 60px;
-      height: 60px;
-      margin: -30px 0 0 -30px;
-      border: 3px solid rgba(168, 212, 240, 0.3);
-      border-top-color: #4A90E2;
-      border-radius: 50%;
-      animation: spin 1s linear infinite;
+      inset: 0;
     }
-
-    @keyframes spin {
-      to {
-        transform: rotate(360deg);
-      }
-    }
+    #root:empty::before { background: var(--paper); }
   </style>
+  <script>
+    (function() {
+      const stored = localStorage.getItem('theme');
+      const systemTheme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+      const theme = stored === 'light' || stored === 'dark' ? stored : systemTheme;
+      const root = document.documentElement;
+      root.setAttribute('data-theme', theme);
+      const meta = document.querySelector('meta[name="theme-color"]');
+      const paper = getComputedStyle(root).getPropertyValue('--paper').trim();
+      if (meta && paper) meta.setAttribute('content', paper);
+    })();
+  </script>
 </head>
 
 <body>

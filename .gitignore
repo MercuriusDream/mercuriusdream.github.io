@@ -43,3 +43,12 @@ bun.lockb
 *.tmp
 *.temp
 .cache/
+
+# Local tool artifacts
+.claude/
+.playwright-cli/
+.playwright-mcp/
+.impeccable.md
+
+# Root-level debug/audit screenshots (does NOT affect public/*.png)
+/*.png
