@@ -220,6 +220,7 @@ ul, ol { list-style: none; }
   display: inline-block;
   border-radius: 0;
   object-fit: contain;
+  cursor: pointer;
   transition: transform 0.45s var(--ease-out-expo);
 }
 

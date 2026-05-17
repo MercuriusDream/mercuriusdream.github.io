@@ -103,7 +103,7 @@ function OnePage() {
 
       <main id="main" className="onepage">
         <header className="hero-title reveal-hero" style={revealDelay(0)}>
-          <h1 className="hero-headline" aria-label="마라향 안개구름, Claude-Induced Insanity">
+          <h1 className="hero-headline" aria-label="마라향 안개구름, Schedule II">
             <KaomojiIcon className={`hero-moji ${mojiPoked ? 'poked' : ''}`} aria-hidden="true" blink={mojiPoked} onClick={pokeMoji} />
             <span lang="ko">마라향 안개구름</span>
             <span className="hero-cii reveal" aria-hidden="true" style={revealDelay(100)}>CII</span>
@@ -145,7 +145,7 @@ function OnePage() {
             {THEME_MODES.map((mode) => (
               <button
                 key={mode}
-                onClick={() => setThemeMode(themeMode === mode ? 'system' : mode)}
+                onClick={() => { if (themeMode !== mode) setThemeMode(mode); }}
                 className={`theme-btn ${themeMode === mode ? 'active' : ''}`}
                 aria-pressed={themeMode === mode}
               >
