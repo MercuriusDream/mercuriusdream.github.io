@@ -149,7 +149,7 @@ ul, ol { list-style: none; }
 
 .app {
   position: relative;
-  height: 100dvh;
+  min-height: 100dvh;
   width: 100%;
   isolation: isolate;
 }
@@ -160,12 +160,12 @@ ul, ol { list-style: none; }
 .onepage {
   position: relative;
   width: var(--col);
-  height: 100dvh;
+  min-height: 100dvh;
   margin-inline: auto;
   padding: clamp(2rem, 5vh, 4rem) 0;
   display: flex;
   flex-direction: column;
-  justify-content: center;
+  justify-content: safe center;
   gap: clamp(1.5rem, 3vh, 2.5rem);
 }
 
@@ -414,14 +414,8 @@ ul, ol { list-style: none; }
 /* ---------- Responsive ---------- */
 
 @media (max-width: 720px) {
-  .app {
-    height: auto;
-    min-height: 100dvh;
-  }
-
   .onepage {
     padding: 2rem 0 1rem;
-    justify-content: flex-start;
   }
 }
 
