@@ -5,6 +5,7 @@ const LOVE_LINKS = [
   { label: 'Zhilin Yang', href: 'https://kimiyoung.github.io/', accent: '#B8634A' },
   { label: 'Thebes', href: 'https://vgel.me', accent: '#6F7D63' },
   { label: 'Ghostfail', href: 'https://ghost.fail', accent: '#76668D' },
+  { label: 'SaltyAom', href: 'https://saltyaom.com', accent: '#B86A8E' },
 ];
 
 const MADE_LINKS = [

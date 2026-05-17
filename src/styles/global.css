@@ -1,12 +1,12 @@
 /* ==========================================================================
-   MercuriusDream — Field Notes from an Unobserved Frequency
+   MercuriusDream: Field Notes from an Unobserved Frequency
    One-page, no scroll. Greyscale paper + restrained terracotta accent.
    No header. No background shells. Sans-only.
    No outline · no border-color · radius 0 or ≥16px · no shadow · no glow.
    ========================================================================== */
 
 :root {
-  /* Snowy-mountain neutrals — cool field, a whisper of warmth */
+  /* Snowy-mountain neutrals: cool field, a whisper of warmth */
   --paper:      #ECEDEA;
   --paper-2:    #E0E1DD;
   --paper-3:    #D2D3CF;
@@ -20,7 +20,7 @@
   --hairline:   #C4C5C0;
   --hairline-2: #B0B1AC;
 
-  /* Single warm punctum — ember in snow */
+  /* Single warm punctum: ember in snow */
   --accent:       #B8634A;
   --accent-soft:  #D89478;
 
@@ -106,7 +106,7 @@ button:focus-visible {
   outline-offset: 3px;
 }
 
-/* Inverse focus for icon-only and large-area links — text-decoration
+/* Inverse focus for icon-only and large-area links: text-decoration
    alone is invisible when there's no visible text or the row is wide. */
 .footer-btn:focus-visible,
 .inline-link:focus-visible {
@@ -155,7 +155,7 @@ ul, ol { list-style: none; }
 }
 .app > :not(.skip-link) { position: relative; }
 
-/* ---------- One page — t3.gg-style centered column ---------- */
+/* ---------- One page: t3.gg-style centered column ---------- */
 
 .onepage {
   position: relative;
@@ -169,14 +169,14 @@ ul, ol { list-style: none; }
   gap: clamp(1.5rem, 3vh, 2.5rem);
 }
 
-/* Title block — name + handle stacked */
+/* Title block: name + handle stacked */
 .hero-title {
   display: flex;
   flex-direction: column;
   gap: 0.15rem;
 }
 
-/* Headline — the Korean name as the primary identity */
+/* Headline: the Korean name as the primary identity */
 .hero-headline {
   font-size: var(--fs-mega);
   font-weight: 500;
@@ -284,8 +284,8 @@ ul, ol { list-style: none; }
 /* ---------- Footer ---------- */
 
 .site-footer {
-  position: relative;
   width: 100%;
+  margin-top: clamp(-1.25rem, -1.5vh, -0.5rem);
   padding: clamp(0.5rem, 1.5vh, 1rem) 0 0;
   font-size: var(--fs-xs);
   color: var(--grey-1);
@@ -294,21 +294,6 @@ ul, ol { list-style: none; }
   justify-content: space-between;
   align-items: center;
   gap: clamp(0.75rem, 2vw, 1.5rem);
-}
-
-.site-footer::before {
-  content: "";
-  position: absolute;
-  top: 0; left: 0; right: 0;
-  height: 1px;
-  background: var(--hairline);
-  transform: scaleX(0);
-  transform-origin: left;
-  animation: draw-line 1.2s var(--ease-out-expo) 0.6s forwards;
-}
-
-@keyframes draw-line {
-  to { transform: scaleX(1); }
 }
 
 .footer-links {
@@ -452,10 +437,6 @@ ul, ol { list-style: none; }
   .reveal, .reveal-hero, .reveal-hero .reveal {
     opacity: 1;
     transform: none;
-    animation: none;
-  }
-  .site-footer::before {
-    transform: scaleX(1);
     animation: none;
   }
 }
