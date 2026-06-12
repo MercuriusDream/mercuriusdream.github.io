@@ -154,6 +154,9 @@ function OnePage() {
             ))}
           </div>
           <div className="sr-only" aria-live="polite" aria-atomic="true">{announcement}</div>
+          <div className="footer-icp">
+            <a href="https://icp.gov.moe/?keyword=20260535" target="_blank" rel="noopener noreferrer">萌ICP备20260535号</a>
+          </div>
         </footer>
       </main>
     </div>

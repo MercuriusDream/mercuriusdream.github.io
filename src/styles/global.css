@@ -360,6 +360,24 @@ ul, ol { list-style: none; }
   transition-duration: 0.08s;
 }
 
+.footer-icp {
+  width: 100%;
+  text-align: center;
+  font-size: var(--fs-xs);
+  opacity: 0.6;
+  padding-top: 0.35rem;
+  border-top: 1px solid color-mix(in srgb, var(--ink) 8%, var(--paper));
+  margin-top: 0.25rem;
+}
+.footer-icp a {
+  color: var(--grey-1);
+  text-decoration: none;
+  transition: color 0.3s var(--ease-out-expo);
+}
+.footer-icp a:hover {
+  color: var(--ink);
+}
+
 
 /* ---------- Reveal ---------- */
 
