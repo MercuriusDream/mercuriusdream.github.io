@@ -1,5 +1,7 @@
 import { Fragment, useState, useEffect } from 'react';
+import { HashRouter, Routes, Route, Link } from 'react-router-dom';
 import { KaomojiIcon } from './components/Icons';
+import Logos from './pages/Logos.jsx';
 
 const LOVE_LINKS = [
   { label: 'Zhilin Yang', href: 'https://kimiyoung.github.io/', accent: '#B8634A' },
@@ -56,7 +58,7 @@ function InlineLinkList({ links }) {
   ));
 }
 
-function OnePage() {
+function HomePage() {
   const [themeMode, setThemeMode] = useState(getStoredThemeMode);
   const [systemTheme, setSystemTheme] = useState(getSystemTheme);
   const [announcement, setAnnouncement] = useState('');
@@ -120,6 +122,22 @@ function OnePage() {
           </p>
         </div>
 
+        <div className="hero-row reveal" style={revealDelay(120)}>
+          <p className="made-line">
+            Also runs {' '}
+            <Link
+              to="/logos"
+              className="inline-link"
+              style={{ '--link-accent': '#B8634A' }}
+              viewTransition
+              onClick={() => document.documentElement.classList.add('vt-ready')}
+            >
+              Project Logos
+            </Link>
+            , open defensive cybersecurity for the web.
+          </p>
+        </div>
+
         <footer className="site-footer reveal" style={revealDelay(180)}>
           <div className="footer-links">
             <a href="https://github.com/mercuriusdream" target="_blank" rel="noopener noreferrer" className="footer-btn reveal" style={{ ...revealDelay(200), '--btn-color': '#4F7B86' }}>
@@ -163,6 +181,15 @@ function OnePage() {
   );
 }
 
-export default function App() {
-  return <OnePage />;
+function App() {
+  return (
+    <HashRouter>
+      <Routes>
+        <Route path="/" element={<HomePage />} />
+        <Route path="/logos" element={<Logos />} />
+      </Routes>
+    </HashRouter>
+  );
 }
+
+export default App;

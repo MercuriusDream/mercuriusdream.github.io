@@ -35,6 +35,14 @@
   --col:        min(640px, 100% - var(--gutter) * 2);
   --footer-h:   auto;
 
+  /* Logos spectrum: the site palette becomes the page's color system */
+  --c-teal:    #4F7B86;
+  --c-green:   #6F7D63;
+  --c-gold:    #8A6D4E;
+  --c-rust:    #B8634A;
+  --c-rose:    #B86A8E;
+  --c-violet:  #76668D;
+
   --ease-out-quart: cubic-bezier(0.25, 1, 0.5, 1);
   --ease-out-expo:  cubic-bezier(0.16, 1, 0.3, 1);
 
@@ -364,18 +372,18 @@ ul, ol { list-style: none; }
   width: 100%;
   text-align: center;
   font-size: var(--fs-xs);
-  opacity: 0.6;
-  padding-top: 0.35rem;
-  border-top: 1px solid color-mix(in srgb, var(--ink) 8%, var(--paper));
-  margin-top: 0.25rem;
+  opacity: 0.55;
+  padding-top: 0.15rem;
+  margin-top: 0.15rem;
+  letter-spacing: 0.04em;
 }
 .footer-icp a {
   color: var(--grey-1);
   text-decoration: none;
-  transition: color 0.3s var(--ease-out-expo);
+  transition: color 0.45s var(--ease-out-expo);
 }
 .footer-icp a:hover {
-  color: var(--ink);
+  color: var(--ink-3);
 }
 
 
@@ -415,11 +423,340 @@ ul, ol { list-style: none; }
   }
 }
 
+
+/* ==========================================================================
+   Page transition: a gradual crossfade between routes.
+   The View Transitions API crossfades the whole page on navigation. Once the
+   user has navigated once (.vt-ready on <html>), the per-element reveals stand
+   down so the crossfade blends two fully-rendered pages rather than catching
+   the incoming page mid-reveal. First load still gets the staggered reveals.
+   ========================================================================== */
+
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation-duration: 0.65s;
+  animation-timing-function: cubic-bezier(0.25, 1, 0.5, 1);
+}
+
+.vt-ready .reveal,
+.vt-ready .reveal-hero,
+.vt-ready .reveal-hero .reveal {
+  animation: none;
+}
+
+
+/* ==========================================================================
+   Logos — an extension of the home page, told in colour.
+   Same warm paper, same sans, same soft colour-pill highlights the home page
+   wears on its links. The Greek root λόγος sits behind the name as a pastel
+   watermark; "Project Logos" reads crisp in front. No rules, no labels — the
+   colour lives in the highlighted words and the model chips. Flat fills only:
+   no gradient, no shadow, no glow.
+   ========================================================================== */
+
+.logos-doc {
+  position: relative;
+  width: var(--col);
+  min-height: 100dvh;
+  margin-inline: auto;
+}
+
+/* Foreground column: centered like the home page */
+.logos-content {
+  min-height: 100dvh;
+  display: flex;
+  flex-direction: column;
+  justify-content: safe center;
+  gap: clamp(1.4rem, 3vh, 2.3rem);
+  padding: clamp(2rem, 5vh, 4rem) 0;
+}
+
+/* ---------- Hero: the layered wordmark ---------- */
+
+.logos-hero {
+  display: flex;
+  flex-direction: column;
+  gap: 0.45rem;
+}
+
+/* The witnesses emblem — small flat brand mark above the name */
+.logos-emblem {
+  width: clamp(2.4rem, 5.5vw, 3.1rem);
+  height: auto;
+  display: block;
+  margin-bottom: 0.55rem;
+  transition: transform 0.7s var(--ease-out-expo);
+}
+.logos-emblem:hover {
+  transform: rotate(60deg);
+}
+
+/* The name in front, the Greek root behind it as a pastel watermark */
+.logos-wordmark {
+  position: relative;
+  display: inline-block;
+  align-self: flex-start;
+  padding-bottom: 0.55em;
+  font-weight: 500;
+}
+
+.logos-greek {
+  display: block;
+  font-size: clamp(4rem, 18vw, 13rem);
+  line-height: 0.8;
+  letter-spacing: -0.015em;
+  white-space: nowrap;
+}
+.logos-greek span {
+  display: inline-block;
+  color: color-mix(in srgb, var(--g, var(--accent)), var(--paper) 34%);
+  transition: transform 0.6s var(--ease-out-expo);
+}
+.logos-wordmark:hover .logos-greek span {
+  transform: translateY(-0.035em);
+}
+
+/* "Project Logos" pinned to the foot, overlapping the root — clearly in front */
+.logos-name {
+  position: absolute;
+  left: 0.04em;
+  bottom: 0;
+  font-size: clamp(1rem, 3.2vw, 1.9rem);
+  font-weight: 600;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--ink);
+  white-space: nowrap;
+}
+
+/* The manifesto — the human thesis, bold and plain */
+.logos-mission {
+  margin-top: 0.4rem;
+  font-size: var(--fs-lg);
+  font-weight: 500;
+  color: var(--ink);
+  letter-spacing: -0.01em;
+  line-height: 1.3;
+  text-wrap: balance;
+  max-width: 28ch;
+}
+
+/* The vague positioning line — what a cold reader (or a grant) needs */
+.logos-sub {
+  font-size: var(--fs-md);
+  color: var(--ink-2);
+  line-height: 1.55;
+  text-wrap: pretty;
+  max-width: 50ch;
+}
+
+/* Same soft highlight pill the home page uses on its inline links. Inline-block
+   so that the <span> highlights and the <button> highlights share one box model
+   and render at exactly the same height. */
+.logos-hl {
+  display: inline-block;
+  vertical-align: baseline;
+  font-weight: 500;
+  color: var(--ink);
+  background-color: color-mix(in srgb, var(--hl, var(--accent-soft)), var(--paper) 72%);
+  padding: 0.02em 0.24em 0.08em;
+}
+
+/* ---------- Built with — a quiet label and bare marks, no chrome ---------- */
+
+.logos-built {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.logos-built-label {
+  font-size: var(--fs-sm);
+  color: var(--grey-1);
+  letter-spacing: 0.01em;
+}
+
+.logos-marks {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: clamp(1.1rem, 2.6vw, 1.85rem);
+}
+
+.logos-mark {
+  display: inline-flex;
+}
+
+.logos-mark svg {
+  width: 1.5rem;
+  height: 1.5rem;
+  display: block;
+  color: var(--mk, var(--accent));
+  transition: transform 0.5s var(--ease-out-expo);
+}
+
+.logos-mark:hover svg {
+  transform: translateY(-3px) scale(1.08);
+}
+
+/* ---------- Foot: back, in the home footer-button style ---------- */
+
+.logos-foot {
+  margin-top: 0.2rem;
+  display: flex;
+}
+
+.logos-back {
+  display: inline-flex;
+  align-items: center;
+  min-height: 28px;
+  padding: 0.15rem 0.55rem;
+  font-size: calc(var(--fs-xs) * 1.25);
+  font-weight: 500;
+  color: var(--ink);
+  background-color: color-mix(in srgb, var(--c-teal), var(--paper) 72%);
+  transition: background-color 0.45s var(--ease-out-expo), transform 0.45s var(--ease-out-expo);
+  cursor: pointer;
+}
+.logos-back:hover {
+  background-color: color-mix(in srgb, var(--c-teal), var(--paper) 48%);
+  transform: scale(1.12) rotate(-3deg);
+}
+.logos-back:active {
+  transform: scale(0.96) rotate(0deg);
+  transition-duration: 0.08s;
+}
+
+/* ---------- An interactive highlight: a pill that opens a pop-up ---------- */
+
+.logos-hl-btn {
+  display: inline-block;
+  vertical-align: baseline;
+  cursor: pointer;
+  transition: background-color 0.45s var(--ease-out-expo), transform 0.45s var(--ease-out-expo);
+}
+.logos-hl-btn:hover {
+  background-color: color-mix(in srgb, var(--hl, var(--accent-soft)), var(--paper) 48%);
+  transform: scale(1.07) rotate(-2deg);
+}
+.logos-hl-btn:active {
+  transform: scale(0.96) rotate(0deg);
+  transition-duration: 0.08s;
+}
+.logos-hl-btn:focus-visible {
+  background-color: var(--ink);
+  color: var(--paper);
+  text-decoration: none;
+}
+
+/* ---------- The pop-up: a flat card on an ink scrim (no shadow needed) ----------
+   The scrim is tinted with --ink, so it darkens the page in light mode and
+   lightens it in dark mode; either way the --paper card lifts off it cleanly. */
+
+/* Selector beats `.app > :not(.skip-link) { position: relative }` so the
+   pop-up actually overlays the viewport instead of dropping into the flow.
+   A fixed dark dim on both themes (an ink-tinted scrim would lighten the page
+   in dark mode); the raised --paper-2 card lifts off it without a shadow. */
+.app > .logos-modal {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--gutter);
+  background: rgba(13, 13, 12, 0.62);
+  animation: logos-scrim 0.4s var(--ease-out-quart) backwards;
+}
+
+.logos-modal-card {
+  width: min(630px, 100%);
+  background: var(--paper-2);
+  padding: clamp(1.6rem, 4.5vw, 2.4rem);
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+  animation: logos-card 0.5s var(--ease-out-expo) backwards;
+}
+
+.logos-modal-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.logos-modal-title {
+  font-size: var(--fs-lg);
+  font-weight: 500;
+  letter-spacing: -0.01em;
+  color: var(--ink);
+}
+
+.logos-modal-close {
+  flex: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 30px;
+  height: 30px;
+  font-size: var(--fs-sm);
+  color: var(--grey-1);
+  /* transparent mix so it blends with the raised --paper-2 card surface */
+  background: color-mix(in srgb, var(--grey-1) 14%, transparent);
+  transition: color 0.4s var(--ease-out-expo), background-color 0.4s var(--ease-out-expo), transform 0.4s var(--ease-out-expo);
+  cursor: pointer;
+}
+.logos-modal-close:hover {
+  color: var(--ink);
+  background: color-mix(in srgb, var(--ink) 12%, transparent);
+  transform: rotate(90deg);
+}
+
+.logos-art {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+/* Diagram motion: each dot travels from its origin (agents from the launch
+   apex, methodologies from above) and settles into place. A gentle quart ease
+   over a long, widely-staggered cascade reads as a gradual reveal rather than a
+   pop. Per-dot --dx/--dy and delay are set inline. */
+.logos-dot {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: logos-dot-in 0.95s var(--ease-out-quart) backwards;
+}
+@keyframes logos-dot-in {
+  from { opacity: 0; transform: translate(var(--dx, 0), var(--dy, 0)) scale(0.35); }
+}
+
+.logos-modal-caption {
+  font-size: var(--fs-sm);
+  color: var(--grey-1);
+  line-height: 1.55;
+  text-wrap: pretty;
+}
+
+@keyframes logos-scrim {
+  from { opacity: 0; }
+}
+@keyframes logos-card {
+  from { opacity: 0; transform: translateY(12px) scale(0.985); }
+}
+
 /* ---------- Responsive ---------- */
 
 @media (max-width: 720px) {
   .onepage {
     padding: 2rem 0 1rem;
+  }
+}
+
+@media (max-width: 460px) {
+  .logos-name {
+    letter-spacing: 0.16em;
   }
 }
 
@@ -445,6 +782,7 @@ ul, ol { list-style: none; }
     --fs-mega: clamp(1.6rem, 5vw, 3rem);
   }
   .onepage { gap: 0.8rem; padding-top: clamp(1.5rem, 4vh, 2.5rem); }
+  .logos-content { gap: 1rem; padding: clamp(1.5rem, 4vh, 2.5rem) 0; }
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -453,9 +791,14 @@ ul, ol { list-style: none; }
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
   }
-  .reveal, .reveal-hero, .reveal-hero .reveal {
+  .reveal, .reveal-hero, .reveal-hero .reveal,
+  .logos-dot {
     opacity: 1;
     transform: none;
     animation: none;
+  }
+  ::view-transition-old(root),
+  ::view-transition-new(root) {
+    animation-duration: 0.01ms !important;
   }
 }
