@@ -29,7 +29,7 @@ const GREEK = [
   { ch: 'ς', color: 'var(--c-rust)' },
 ];
 
-// Built with — generally available models, bare marks each in its own colour.
+// Built on — generally available models, bare marks each in its own colour.
 const MODELS = [
   { label: 'Composer', Icon: IconCursor, color: 'var(--c-teal)' },
   { label: 'Fireworks', Icon: IconFireworks, color: 'var(--c-rose)' },
@@ -306,7 +306,7 @@ function Logos() {
           </header>
 
           <section className="logos-built reveal" style={revealDelay(285)}>
-            <p className="logos-built-label">Built with</p>
+            <p className="logos-built-label">Built on</p>
             <div className="logos-marks">
               {MODELS.map(({ label, Icon, color }) => (
                 <span
