@@ -1,5 +1,5 @@
 import { Fragment, useState, useEffect } from 'react';
-import { HashRouter, Routes, Route, Link } from 'react-router-dom';
+import { BrowserRouter, Routes, Route, Link } from 'react-router-dom';
 import { KaomojiIcon } from './components/Icons';
 import Logos from './pages/Logos.jsx';
 
@@ -183,12 +183,12 @@ function HomePage() {
 
 function App() {
   return (
-    <HashRouter>
+    <BrowserRouter>
       <Routes>
         <Route path="/" element={<HomePage />} />
         <Route path="/logos" element={<Logos />} />
       </Routes>
-    </HashRouter>
+    </BrowserRouter>
   );
 }
 
