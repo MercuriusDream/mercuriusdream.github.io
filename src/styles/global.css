@@ -48,7 +48,7 @@
 
 /* ── Reset ── */
 *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; border: 0; }
-html, body { height: 100%; }
+html, body { height: 100%; overflow: hidden; }
 
 body {
   font-family: 'Zalando Sans', 'Gothic A1', system-ui, -apple-system, sans-serif;
