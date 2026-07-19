@@ -1,26 +1,11 @@
 import { useState, useRef, useEffect, useCallback } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavTransition } from '../hooks/useNavTransition';
 import {
-  IconCursor,
-  IconClaude,
-  IconOpenAI,
-  IconZhipu,
-  IconKimi,
-  IconFireworks,
+  IconCursor, IconClaude, IconOpenAI, IconZai, IconKimi, IconFireworks,
 } from '../components/Icons';
 
-const revealDelay = (ms) => ({ '--reveal-delay': `${ms}ms` });
+const delay = ms => ({ '--reveal-delay': `${ms}ms` });
 
-const DOTS = [
-  'var(--c-teal)',
-  'var(--c-green)',
-  'var(--c-violet)',
-  'var(--c-rose)',
-  'var(--c-gold)',
-  'var(--c-rust)',
-];
-
-// λόγος — the root sits behind the name, each letter a soft hue from the palette.
 const GREEK = [
   { ch: 'λ', color: 'var(--c-teal)' },
   { ch: 'ό', color: 'var(--c-green)' },
@@ -29,182 +14,19 @@ const GREEK = [
   { ch: 'ς', color: 'var(--c-rust)' },
 ];
 
-// Built on — generally available models, bare marks each in its own colour.
 const MODELS = [
   { label: 'Composer', Icon: IconCursor, color: 'var(--c-teal)' },
   { label: 'Fireworks', Icon: IconFireworks, color: 'var(--c-rose)' },
-  { label: 'GLM', Icon: IconZhipu, color: 'var(--c-violet)' },
+  { label: 'GLM', Icon: IconZai, color: 'var(--c-violet)', large: true },
   { label: 'GPT', Icon: IconOpenAI, color: 'var(--c-green)' },
   { label: 'KIMI', Icon: IconKimi, color: 'var(--c-gold)' },
   { label: 'Opus', Icon: IconClaude, color: 'var(--c-rust)' },
 ];
 
-// Soft colour highlight — same pill the home page uses on its links.
 function HL({ color, children }) {
-  return (
-    <span className="logos-hl" style={{ '--hl': color }}>
-      {children}
-    </span>
-  );
+  return <span className="logos-hl" style={{ '--hl': color }}>{children}</span>;
 }
 
-// ---------------------------------------------------------------------------
-// Pop-up diagrams. Flat dots only — no stroke, no gradient, no shadow. They
-// say just enough: many go down to uneven depths; many findings winnow to one.
-// ---------------------------------------------------------------------------
-
-// Evenly spaced x positions across [a, b].
-const xs = (n, a, b) =>
-  Array.from({ length: n }, (_, i) => (n === 1 ? (a + b) / 2 : a + (i * (b - a)) / (n - 1)));
-
-// Agents — a descending fan. They launch from one point and dive to uneven
-// depths; the larger dots are the few that surface with a find (the small dot
-// trailing above each). A faint sector marks the cone of descent.
-const DIVE_RAYS = 9;
-const DIVE_DEPTH = [3, 4, 5, 5, 6, 5, 5, 4, 3];
-const DIVE_KEEP = new Set([2, 4, 6]);
-
-function buildDive() {
-  const apex = { x: 160, y: 32 };
-  const half = 40;
-  const base = 30;
-  const step = 22;
-  const out = [];
-  for (let i = 0; i < DIVE_RAYS; i++) {
-    const t = (i / (DIVE_RAYS - 1)) * 2 - 1;
-    const ang = (t * half * Math.PI) / 180;
-    const sin = Math.sin(ang);
-    const cos = Math.cos(ang);
-    const n = DIVE_DEPTH[i];
-    const color = DOTS[i % DOTS.length];
-    for (let j = 0; j < n; j++) {
-      const r = base + j * step;
-      const x = apex.x + sin * r;
-      const y = apex.y + cos * r;
-      const last = j === n - 1;
-      const keep = last && DIVE_KEEP.has(i);
-      // Dots taper smaller with depth (receding); keepers are the heavy finds.
-      const rad = keep ? 6 : Math.max(2.4, 3.6 - j * 0.22);
-      // Gradual cascade: deeper dots later, edges trail the centre.
-      const delay = 150 + j * 95 + Math.abs(t) * 110;
-      // Each dot launches from the apex and travels out to its place.
-      out.push({ x, y, r: rad, c: color, k: `a${i}-${j}`, d: delay, dx: apex.x - x, dy: apex.y - y });
-    }
-  }
-  return out;
-}
-const DIVE_DOTS = buildDive();
-
-function AgentsArt() {
-  return (
-    <svg className="logos-art" viewBox="0 0 320 210" aria-hidden="true">
-      {DIVE_DOTS.map((d) => (
-        <circle
-          key={d.k}
-          className="logos-dot"
-          cx={d.x}
-          cy={d.y}
-          r={d.r}
-          fill={d.c}
-          style={{ '--dx': `${d.dx}px`, '--dy': `${d.dy}px`, animationDelay: `${d.d}ms` }}
-        />
-      ))}
-    </svg>
-  );
-}
-
-// Methodologies — a funnel. Many findings enter; each stage admits fewer; one
-// record holds at the point. A faint funnel body sits behind the winnowing.
-// Stages narrow and the survivors grow heavier as fewer pass each filter.
-const METHOD_STAGES = [
-  { n: 9, y: 46, r: 2.8, x0: 62, x1: 258, shift: 0 },
-  { n: 9, y: 66, r: 2.9, x0: 70, x1: 250, shift: 3 },
-  { n: 6, y: 112, r: 3.6, x0: 98, x1: 222, shift: 1 },
-  { n: 4, y: 150, r: 4.4, x0: 132, x1: 188, shift: 2 },
-];
-
-function MethodsArt() {
-  return (
-    <svg className="logos-art" viewBox="0 0 320 210" aria-hidden="true">
-      {METHOD_STAGES.map((s, si) =>
-        xs(s.n, s.x0, s.x1).map((x, i) => (
-          <circle
-            key={`s${si}-${i}`}
-            className="logos-dot"
-            cx={x}
-            cy={s.y}
-            r={s.r}
-            fill={DOTS[(i + s.shift) % DOTS.length]}
-            style={{ '--dy': `${-(28 + si * 12)}px`, animationDelay: `${si * 150 + i * 28}ms` }}
-          />
-        )),
-      )}
-      <circle
-        className="logos-dot"
-        cx="160"
-        cy="182"
-        r="8"
-        fill="var(--ink)"
-        style={{ '--dy': '-80px', animationDelay: '760ms' }}
-      />
-    </svg>
-  );
-}
-
-const POPS = {
-  agents: {
-    title: 'Agents',
-    Art: AgentsArt,
-    caption: 'Many go down, to uneven depths. Few return with anything worth keeping.',
-  },
-  methodologies: {
-    title: 'Methodologies',
-    Art: MethodsArt,
-    caption: 'Many findings, one that holds. Nothing leaves on a single voice.',
-  },
-};
-
-function MethodDialog({ data, onClose }) {
-  const closeRef = useRef(null);
-
-  useEffect(() => {
-    const prevOverflow = document.body.style.overflow;
-    document.body.style.overflow = 'hidden';
-    closeRef.current?.focus();
-    const onKey = (e) => { if (e.key === 'Escape') onClose(); };
-    document.addEventListener('keydown', onKey);
-    return () => {
-      document.removeEventListener('keydown', onKey);
-      document.body.style.overflow = prevOverflow;
-    };
-  }, [onClose]);
-
-  const { title, caption, Art } = data;
-  return (
-    <div className="logos-modal" onMouseDown={onClose}>
-      <div
-        className="logos-modal-card"
-        role="dialog"
-        aria-modal="true"
-        aria-labelledby="logos-modal-title"
-        aria-describedby="logos-modal-caption"
-        onMouseDown={(e) => e.stopPropagation()}
-      >
-        <div className="logos-modal-head">
-          <h2 id="logos-modal-title" className="logos-modal-title">{title}</h2>
-          <button ref={closeRef} type="button" className="logos-modal-close" onClick={onClose} aria-label="Close">
-            ✕
-          </button>
-        </div>
-        <Art />
-        <p id="logos-modal-caption" className="logos-modal-caption">{caption}</p>
-      </div>
-    </div>
-  );
-}
-
-// The witnesses mark: one record at the centre, ringed by the models that watch
-// it. Flat fills, every palette hue, no gradient or shadow — the house style.
 const WITNESSES = [
   { x: 50, y: 13, c: 'var(--c-teal)' },
   { x: 82, y: 31.5, c: 'var(--c-green)' },
@@ -216,24 +38,20 @@ const WITNESSES = [
 
 function WitnessMark() {
   return (
-    <svg className="logos-emblem" viewBox="0 0 100 100" aria-hidden="true">
-      {WITNESSES.map((d, i) => (
-        <circle key={i} cx={d.x} cy={d.y} r="6.5" fill={d.c} />
-      ))}
+    <svg className="logos-emblem" viewBox="0 0 100 100" aria-hidden="true" data-glow>
+      {WITNESSES.map((d, i) => <circle key={i} cx={d.x} cy={d.y} r="6.5" fill={d.c} />)}
       <circle cx="50" cy="50" r="9" fill="var(--ink)" />
     </svg>
   );
 }
 
 function BackLink() {
-  const navigate = useNavigate();
+  const navTo = useNavTransition();
   return (
     <button
-      onClick={() => {
-        document.documentElement.classList.add('vt-ready');
-        navigate('/', { viewTransition: true });
-      }}
+      onClick={() => navTo('/')}
       className="logos-back"
+      data-glow
       aria-label="Back to home"
     >
       ← back
@@ -241,16 +59,80 @@ function BackLink() {
   );
 }
 
+function ArticleDialog({ onClose }) {
+  const closeRef = useRef(null);
+  useEffect(() => {
+    const prev = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
+    closeRef.current?.focus();
+    const onKey = e => { if (e.key === 'Escape') onClose(); };
+    document.addEventListener('keydown', onKey);
+    return () => {
+      document.removeEventListener('keydown', onKey);
+      document.body.style.overflow = prev;
+    };
+  }, [onClose]);
+
+  return (
+    <div className="logos-modal" onMouseDown={onClose}>
+      <div className="logos-modal-card logos-article-card" role="dialog"
+        aria-modal="true" aria-labelledby="logos-article-title"
+        onMouseDown={e => e.stopPropagation()}>
+        <div className="logos-modal-head">
+          <h2 id="logos-article-title" className="logos-modal-title">Project Logos</h2>
+          <button ref={closeRef} type="button" className="logos-modal-close"
+            onClick={onClose} aria-label="Close">✕</button>
+        </div>
+
+        <div className="logos-article">
+          <p className="logos-article-lead">
+            Project Logos is an agent-driven security research workspace built
+            on generally available models. The premise is that frontier AI has
+            crossed a threshold in vulnerability discovery, and the capability
+            to find and fix critical flaws should belong to everyone, not only
+            to those behind closed doors with limited-access agreements.
+          </p>
+          <p>
+            The thesis is <em>logos</em>, structured reason, over <em>ares</em>,
+            brute force. Agents read code, map trust boundaries, and reason
+            about where systems fail to do what they were designed to do. They
+            spawn parallel audits across large attack surfaces, adversarial
+            reviews before filing, and cross-checks on uncertain structural
+            claims. The markdown files are the orchestration layer. Agents
+            open the workspace and self-organize.
+          </p>
+          <p>
+            A frontier lab recently demonstrated that a closed model could find
+            thousands of zero-days in every major operating system and web
+            browser. They named the initiative after a butterfly and the model
+            after the Greek word <em>mythos</em>, meaning narrative. A
+            narrative held by few is not yet reason. Logos is the open
+            reconstruction: same security capability, same structured
+            approach, running on models anyone can audit and deploy.
+          </p>
+          <p>
+            The workspace has produced over KRW 10,000,000 in bounty across
+            Google Mobile VRP, NAVER, and Bugcrowd. Findings span OAuth token
+            theft, codec out-of-bounds writes, factory reset protection
+            bypasses, and compositor integrity failures. The work continues in
+            the open.
+          </p>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 function Logos() {
-  const [openKey, setOpenKey] = useState(null);
+  const [showArticle, setShowArticle] = useState(false);
   const triggerRef = useRef(null);
 
-  const openPop = (key) => (e) => {
-    triggerRef.current = e.currentTarget;
-    setOpenKey(key);
+  const openArticle = () => {
+    triggerRef.current = document.activeElement;
+    setShowArticle(true);
   };
-  const closePop = useCallback(() => {
-    setOpenKey(null);
+  const closeArticle = useCallback(() => {
+    setShowArticle(false);
     triggerRef.current?.focus();
   }, []);
 
@@ -260,7 +142,7 @@ function Logos() {
 
       <main id="main" className="logos-doc">
         <div className="logos-content">
-          <header className="logos-hero reveal-hero" style={revealDelay(0)}>
+          <header className="logos-hero reveal-hero" style={delay(800)}>
             <WitnessMark />
             <h1 className="logos-wordmark">
               <span className="logos-greek" aria-hidden="true">
@@ -271,64 +153,61 @@ function Logos() {
               <span className="logos-name">Project Logos</span>
             </h1>
 
-            <p className="logos-mission reveal" style={revealDelay(120)}>
+            <p className="logos-mission reveal" style={delay(1200)}>
               No one shall be left out. It is a right to defend before the intruder.
             </p>
-            <p className="logos-sub reveal" style={revealDelay(170)}>
+            <p className="logos-sub reveal" style={delay(1300)}>
               Defensive cybersecurity for the web,{' '}
               <HL color="var(--c-teal)">kept open</HL> and run on{' '}
               <HL color="var(--c-violet)">generally available models</HL>.
             </p>
-            <p className="logos-sub reveal" style={revealDelay(215)}>
-              See{' '}
+            <p className="logos-sub reveal" style={delay(1350)}>
               <button
                 type="button"
-                className="logos-hl logos-hl-btn"
+                className="logos-hl"
+                data-glow
                 style={{ '--hl': 'var(--c-green)' }}
                 aria-haspopup="dialog"
-                aria-expanded={openKey === 'agents'}
-                onClick={openPop('agents')}
+                aria-expanded={showArticle}
+                onClick={openArticle}
               >
-                agents
-              </button>{' '}
-              and{' '}
-              <button
-                type="button"
-                className="logos-hl logos-hl-btn"
-                style={{ '--hl': 'var(--c-gold)' }}
-                aria-haspopup="dialog"
-                aria-expanded={openKey === 'methodologies'}
-                onClick={openPop('methodologies')}
-              >
-                methodologies
-              </button>.
+                Read how it works →
+              </button>
             </p>
           </header>
 
-          <section className="logos-built reveal" style={revealDelay(285)}>
-            <p className="logos-built-label">Built on</p>
-            <div className="logos-marks">
-              {MODELS.map(({ label, Icon, color }) => (
-                <span
-                  key={label}
-                  className="logos-mark"
-                  style={{ '--mk': color }}
-                  role="img"
-                  aria-label={label}
-                >
-                  <Icon />
-                </span>
-              ))}
+          <section className="logos-built reveal" style={delay(1450)}>
+            <div className="logos-built-row">
+              <div>
+                <p className="logos-built-label">Built on</p>
+                <div className="logos-marks">
+                  {MODELS.map(({ label, Icon, color, large }) => (
+                    <span
+                      key={label}
+                      className={`logos-mark${large ? ' logos-mark-lg' : ''}`}
+                      data-glow
+                      style={{ '--mk': color }}
+                      role="img"
+                      aria-label={label}
+                    >
+                      <Icon />
+                    </span>
+                  ))}
+                </div>
+              </div>
+              <p className="logos-built-stat">
+                KRW <span className="logos-stat-amount">10,000,000</span> in bounty
+              </p>
             </div>
           </section>
 
-          <footer className="logos-foot reveal" style={revealDelay(345)}>
+          <footer className="logos-foot reveal" style={delay(1550)}>
             <BackLink />
           </footer>
         </div>
       </main>
 
-      {openKey && <MethodDialog data={POPS[openKey]} onClose={closePop} />}
+      {showArticle && <ArticleDialog onClose={closeArticle} />}
     </div>
   );
 }

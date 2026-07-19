@@ -1,26 +1,24 @@
 /* ==========================================================================
-   MercuriusDream: Field Notes from an Unobserved Frequency
-   One-page, no scroll. Greyscale paper + restrained terracotta accent.
-   No header. No background shells. Sans-only.
-   No outline · no border-color · radius 0 or ≥16px · no shadow · no glow.
+   MercuriusDream — Field Notes from an Unobserved Frequency
+   Deep-space navy. Dreamy starfield canvas behind flat, restrained content.
+   One-page, no scroll. Sans-only. No border-color · radius 0 or ≥16px ·
+   no shadow on content. The sky is the one place glow lives.
    ========================================================================== */
 
 :root {
-  /* Snowy-mountain neutrals: cool field, a whisper of warmth */
-  --paper:      #ECEDEA;
-  --paper-2:    #E0E1DD;
-  --paper-3:    #D2D3CF;
+  --sky:      #060912;
+  --sky-2:    #0A0F1F;
+  --sky-3:    #111728;
 
-  --ink:        #161716;
-  --ink-2:      #2B2C2A;
-  --ink-3:      #45463F;
+  --ink:      #E8EAF0;
+  --ink-2:    #B8BCC8;
+  --ink-3:    #9098A8;
 
-  --grey-1:     #5F5E58;
-  --grey-2:     #8E8D86;
-  --hairline:   #C4C5C0;
-  --hairline-2: #B0B1AC;
+  --grey-1:   #6A7080;
+  --grey-2:   #4A5060;
+  --hairline:   #1E2438;
+  --hairline-2: #283048;
 
-  /* Single warm punctum: ember in snow */
   --accent:       #B8634A;
   --accent-soft:  #D89478;
 
@@ -35,7 +33,6 @@
   --col:        min(640px, 100% - var(--gutter) * 2);
   --footer-h:   auto;
 
-  /* Logos spectrum: the site palette becomes the page's color system */
   --c-teal:    #4F7B86;
   --c-green:   #6F7D63;
   --c-gold:    #8A6D4E;
@@ -46,42 +43,16 @@
   --ease-out-quart: cubic-bezier(0.25, 1, 0.5, 1);
   --ease-out-expo:  cubic-bezier(0.16, 1, 0.3, 1);
 
-  color-scheme: light;
-}
-
-[data-theme="dark"] {
-  --paper:      #1A1A18;
-  --paper-2:    #242422;
-  --paper-3:    #2E2E2C;
-
-  --ink:        #E8E9E6;
-  --ink-2:      #D2D3CF;
-  --ink-3:      #A8A9A4;
-
-  --grey-1:     #9E9D97;
-  --grey-2:     #6E6D67;
-  --hairline:   #3E3E3C;
-  --hairline-2: #484846;
-
   color-scheme: dark;
 }
 
-/* ---------- Reset ---------- */
-
-*, *::before, *::after {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-  border: 0;
-}
-
-html, body {
-  height: 100%;
-}
+/* ── Reset ── */
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; border: 0; }
+html, body { height: 100%; }
 
 body {
   font-family: 'Zalando Sans', 'Gothic A1', system-ui, -apple-system, sans-serif;
-  background: var(--paper);
+  background: var(--sky);
   color: var(--ink);
   font-size: var(--fs-md);
   line-height: 1.45;
@@ -91,7 +62,7 @@ body {
   text-rendering: optimizeLegibility;
 }
 
-::selection { background: var(--ink); color: var(--paper); }
+::selection { background: var(--ink); color: var(--sky); }
 
 a, button {
   color: inherit;
@@ -103,7 +74,7 @@ a, button {
 
 a:focus-visible,
 button:focus-visible {
-  background-color: var(--paper-3);
+  background-color: var(--sky-3);
   text-decoration: underline solid var(--ink);
   text-decoration-thickness: 2px;
   text-underline-offset: 4px;
@@ -114,57 +85,45 @@ button:focus-visible {
   outline-offset: 3px;
 }
 
-/* Inverse focus for icon-only and large-area links: text-decoration
-   alone is invisible when there's no visible text or the row is wide. */
 .footer-btn:focus-visible,
 .inline-link:focus-visible {
   background-color: var(--ink);
-  color: var(--paper);
+  color: var(--sky);
   text-decoration: none;
 }
 
 ul, ol { list-style: none; }
 
 .sr-only {
-  position: absolute;
-  width: 1px;
-  height: 1px;
-  padding: 0;
-  margin: -1px;
-  overflow: hidden;
-  clip: rect(0, 0, 0, 0);
-  white-space: nowrap;
-  border: 0;
+  position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px;
+  overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; border: 0;
 }
 
-.skip-link {
-  position: absolute;
-  left: -9999px;
-}
+.skip-link { position: absolute; left: -9999px; }
 .skip-link:focus-visible {
-  left: var(--gutter);
-  top: var(--gutter);
-  z-index: 999;
-  padding: 0.6rem 1rem;
-  min-height: 44px;
-  display: inline-flex;
-  align-items: center;
-  background: var(--ink);
-  color: var(--paper);
+  left: var(--gutter); top: var(--gutter); z-index: 999;
+  padding: 0.6rem 1rem; min-height: 44px; display: inline-flex; align-items: center;
+  background: var(--ink); color: var(--sky);
 }
 
-/* ---------- App shell ---------- */
+/* ── Starfield canvas ── */
+.starfield {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+}
 
+/* ── App shell ── */
 .app {
   position: relative;
   min-height: 100dvh;
   width: 100%;
   isolation: isolate;
 }
-.app > :not(.skip-link) { position: relative; }
+.app > :not(.skip-link):not(.starfield):not(.logos-modal) { position: relative; z-index: 1; }
 
-/* ---------- One page: t3.gg-style centered column ---------- */
-
+/* ── One page: centered column ── */
 .onepage {
   position: relative;
   width: var(--col);
@@ -177,14 +136,19 @@ ul, ol { list-style: none; }
   gap: clamp(1.5rem, 3vh, 2.5rem);
 }
 
-/* Title block: name + handle stacked */
+/* ── Hero title ── */
 .hero-title {
   display: flex;
   flex-direction: column;
   gap: 0.15rem;
 }
 
-/* Headline: the Korean name as the primary identity */
+.hero-parallax {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+}
+
 .hero-headline {
   font-size: var(--fs-mega);
   font-weight: 500;
@@ -193,20 +157,10 @@ ul, ol { list-style: none; }
   word-wrap: break-word;
 }
 
-.hero-title .hero-handle {
-  margin-top: 0;
+.hero-handle {
   font-size: var(--fs-md);
   color: var(--grey-1);
   letter-spacing: -0.005em;
-}
-
-
-/* Bio */
-.hero-row {
-  display: flex;
-  flex-direction: column;
-  gap: 0.4rem;
-  max-width: 100%;
 }
 
 .hero-cii {
@@ -219,79 +173,55 @@ ul, ol { list-style: none; }
 }
 
 .hero-moji {
-  width: 1em;
-  height: 1em;
   width: 0.95lh;
   height: 0.95lh;
   margin-right: 0.22em;
   vertical-align: -0.14em;
   display: inline-block;
-  border-radius: 0;
-  object-fit: contain;
   cursor: pointer;
   transition: transform 0.45s var(--ease-out-expo);
 }
-
-.hero-moji:hover {
-  transform: rotate(-2deg) scale(1.08) translateY(-2px);
-}
-
+.hero-moji:hover { transform: rotate(-2deg) scale(1.08) translateY(-2px); }
 .hero-moji.poked {
   transform: rotate(-8deg) scale(1.12) translateY(-4px);
   transition-duration: 0.08s;
 }
 
-.hero-bio {
+/* ── Bio rows ── */
+.hero-row {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  max-width: 100%;
+}
+
+.hero-bio, .made-line {
   font-size: var(--fs-md);
   color: var(--ink-2);
   line-height: 1.55;
 }
 
-.hero-bio strong {
-  font-weight: 500;
-  color: var(--ink);
-  background-image: linear-gradient(var(--accent), var(--accent));
-  background-size: 100% 1px;
-  background-position: 0 100%;
-  background-repeat: no-repeat;
-  padding-bottom: 1px;
-}
-
+/* ── Inline links: flat pill highlights ── */
 .inline-link {
   font-weight: 500;
   color: var(--ink);
-  background-color: color-mix(in srgb, var(--link-accent, var(--accent-soft)), var(--paper) 72%);
+  background-color: color-mix(in srgb, var(--link-accent, var(--accent-soft)), var(--sky) 55%);
   padding: 0.02em 0.24em 0.08em;
   box-decoration-break: clone;
   -webkit-box-decoration-break: clone;
   display: inline-block;
-  transition: background-color 0.45s var(--ease-out-expo), color 0.45s var(--ease-out-expo), transform 0.45s var(--ease-out-expo);
+  transition: background-color 0.45s var(--ease-out-expo), transform 0.45s var(--ease-out-expo);
 }
-
 .inline-link:hover {
-  background-color: color-mix(in srgb, var(--link-accent, var(--accent-soft)), var(--paper) 48%);
+  background-color: color-mix(in srgb, var(--link-accent, var(--accent-soft)), var(--sky) 30%);
   transform: scale(1.12) rotate(-3deg);
 }
-
 .inline-link:active {
   transform: scale(0.96) rotate(0deg);
   transition-duration: 0.08s;
 }
 
-.made-line {
-  font-size: var(--fs-md);
-  color: var(--ink-2);
-  line-height: 1.55;
-}
-
-.hero-handle {
-  font-size: var(--fs-sm);
-  color: var(--grey-1);
-  letter-spacing: -0.005em;
-}
-
-/* ---------- Footer ---------- */
-
+/* ── Footer ── */
 .site-footer {
   width: 100%;
   margin-top: clamp(-1.25rem, -1.5vh, -0.5rem);
@@ -305,10 +235,7 @@ ul, ol { list-style: none; }
   gap: clamp(0.75rem, 2vw, 1.5rem);
 }
 
-.footer-links {
-  display: inline-flex;
-  gap: 0.35rem;
-}
+.footer-links { display: inline-flex; gap: 0.35rem; }
 
 .footer-btn {
   display: inline-flex;
@@ -319,11 +246,11 @@ ul, ol { list-style: none; }
   font-size: calc(var(--fs-xs) * 1.25);
   font-weight: 500;
   color: var(--ink);
-  background-color: color-mix(in srgb, var(--btn-color, var(--accent-soft)), var(--paper) 72%);
-  transition: color 0.45s var(--ease-out-expo), background-color 0.45s var(--ease-out-expo), transform 0.45s var(--ease-out-expo);
+  background-color: color-mix(in srgb, var(--btn-color, var(--accent-soft)), var(--sky) 55%);
+  transition: background-color 0.45s var(--ease-out-expo), transform 0.45s var(--ease-out-expo);
 }
 .footer-btn:hover {
-  background-color: color-mix(in srgb, var(--btn-color, var(--accent-soft)), var(--paper) 48%);
+  background-color: color-mix(in srgb, var(--btn-color, var(--accent-soft)), var(--sky) 30%);
   transform: scale(1.12) rotate(-3deg);
 }
 .footer-btn:active {
@@ -331,129 +258,48 @@ ul, ol { list-style: none; }
   transition-duration: 0.08s;
 }
 
-.theme-selector {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.35rem;
-  font-size: var(--fs-xs);
-  letter-spacing: 0.1em;
-  font-weight: 400;
-}
-
-.theme-btn {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  min-height: 28px;
-  padding: 0.05rem 0.5rem;
-  line-height: 1;
-  color: var(--grey-1);
-  background-color: color-mix(in srgb, var(--grey-1) 8%, var(--paper));
-  transition: color 0.45s var(--ease-out-expo), background-color 0.45s var(--ease-out-expo), transform 0.45s var(--ease-out-expo);
-  font-weight: 400;
-  font-size: calc(var(--fs-xs) * 1.25);
-  border-radius: 0;
-}
-.theme-btn:hover {
-  color: var(--ink);
-  background-color: color-mix(in srgb, var(--ink) 10%, var(--paper));
-  transform: scale(1.06) rotate(1.5deg);
-}
-.theme-btn.active {
-  color: var(--ink);
-  background-color: color-mix(in srgb, var(--ink) 14%, var(--paper));
-}
-.theme-btn:active {
-  transform: scale(0.96) rotate(0deg);
-  transition-duration: 0.08s;
-}
-
 .footer-icp {
-  width: 100%;
-  text-align: center;
-  font-size: var(--fs-xs);
-  opacity: 0.55;
-  padding-top: 0.15rem;
-  margin-top: 0.15rem;
-  letter-spacing: 0.04em;
-}
-.footer-icp a {
-  color: var(--grey-1);
-  text-decoration: none;
-  transition: color 0.45s var(--ease-out-expo);
-}
-.footer-icp a:hover {
-  color: var(--ink-3);
+  text-align: right;
 }
 
-
-/* ---------- Reveal ---------- */
-
+/* ── Entrance: pure CSS animations (no useEffect needed) ── */
 .reveal {
-  animation: reveal-in 0.85s var(--ease-out-expo) var(--reveal-delay, 0ms) backwards;
+  animation: reveal-in 0.35s cubic-bezier(0.2, 0.9, 0.3, 1) calc(var(--reveal-delay, 0ms) * 0.1) both;
 }
-
 .reveal-hero {
-  animation: reveal-hero-in 1.1s var(--ease-out-expo) var(--reveal-delay, 0ms) backwards;
+  animation: reveal-hero-in 0.4s cubic-bezier(0.2, 0.9, 0.3, 1) calc(var(--reveal-delay, 0ms) * 0.1) both;
 }
-
-/* Children inside reveal-hero get their own gentler stagger */
-.reveal-hero .reveal {
-  animation: reveal-child-in 0.7s var(--ease-out-expo) var(--reveal-delay, 0ms) backwards;
-}
-
 @keyframes reveal-in {
-  from {
-    opacity: 0;
-    transform: translateY(16px);
-  }
+  from { opacity: 0; transform: translateY(14px); }
+  to { opacity: 1; transform: none; }
 }
-
 @keyframes reveal-hero-in {
-  from {
-    opacity: 0;
-    transform: translateY(28px) scale(0.985);
-  }
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: none; }
 }
 
-@keyframes reveal-child-in {
-  from {
-    opacity: 0;
-    transform: translateY(10px);
-  }
+/* Hero parallax lives on a child element so it never conflicts with the
+   entrance animation on .reveal-hero. */
+
+/* ── Route transitions: manual exit/enter (no View Transitions API) ── */
+.app {
+  animation: app-enter 0.35s cubic-bezier(0.2, 0.9, 0.3, 1) backwards;
+}
+@keyframes app-enter {
+  from { opacity: 0; transform: scale(1.03); }
+}
+.app.nav-exiting {
+  animation: app-exit 0.25s cubic-bezier(0.2, 0.9, 0.3, 1) forwards;
+}
+@keyframes app-exit {
+  to { opacity: 0; transform: scale(0.97); }
 }
 
+/* Starfield smoothing is handled in JS — no CSS transition needed on parallax. */
 
 /* ==========================================================================
-   Page transition: a gradual crossfade between routes.
-   The View Transitions API crossfades the whole page on navigation. Once the
-   user has navigated once (.vt-ready on <html>), the per-element reveals stand
-   down so the crossfade blends two fully-rendered pages rather than catching
-   the incoming page mid-reveal. First load still gets the staggered reveals.
+   Logos — same deep sky, same flat pills, told in colour.
    ========================================================================== */
-
-::view-transition-old(root),
-::view-transition-new(root) {
-  animation-duration: 0.65s;
-  animation-timing-function: cubic-bezier(0.25, 1, 0.5, 1);
-}
-
-.vt-ready .reveal,
-.vt-ready .reveal-hero,
-.vt-ready .reveal-hero .reveal {
-  animation: none;
-}
-
-
-/* ==========================================================================
-   Logos — an extension of the home page, told in colour.
-   Same warm paper, same sans, same soft colour-pill highlights the home page
-   wears on its links. The Greek root λόγος sits behind the name as a pastel
-   watermark; "Project Logos" reads crisp in front. No rules, no labels — the
-   colour lives in the highlighted words and the model chips. Flat fills only:
-   no gradient, no shadow, no glow.
-   ========================================================================== */
-
 .logos-doc {
   position: relative;
   width: var(--col);
@@ -461,7 +307,6 @@ ul, ol { list-style: none; }
   margin-inline: auto;
 }
 
-/* Foreground column: centered like the home page */
 .logos-content {
   min-height: 100dvh;
   display: flex;
@@ -471,15 +316,8 @@ ul, ol { list-style: none; }
   padding: clamp(2rem, 5vh, 4rem) 0;
 }
 
-/* ---------- Hero: the layered wordmark ---------- */
+.logos-hero { display: flex; flex-direction: column; gap: 0.45rem; }
 
-.logos-hero {
-  display: flex;
-  flex-direction: column;
-  gap: 0.45rem;
-}
-
-/* The witnesses emblem — small flat brand mark above the name */
 .logos-emblem {
   width: clamp(2.4rem, 5.5vw, 3.1rem);
   height: auto;
@@ -487,11 +325,8 @@ ul, ol { list-style: none; }
   margin-bottom: 0.55rem;
   transition: transform 0.7s var(--ease-out-expo);
 }
-.logos-emblem:hover {
-  transform: rotate(60deg);
-}
+.logos-emblem:hover { transform: rotate(60deg); }
 
-/* The name in front, the Greek root behind it as a pastel watermark */
 .logos-wordmark {
   position: relative;
   display: inline-block;
@@ -502,6 +337,7 @@ ul, ol { list-style: none; }
 
 .logos-greek {
   display: block;
+  font-family: 'Manrope', system-ui, sans-serif;
   font-size: clamp(4rem, 18vw, 13rem);
   line-height: 0.8;
   letter-spacing: -0.015em;
@@ -509,14 +345,11 @@ ul, ol { list-style: none; }
 }
 .logos-greek span {
   display: inline-block;
-  color: color-mix(in srgb, var(--g, var(--accent)), var(--paper) 34%);
+  color: color-mix(in srgb, var(--g, var(--accent)), var(--sky) 35%);
   transition: transform 0.6s var(--ease-out-expo);
 }
-.logos-wordmark:hover .logos-greek span {
-  transform: translateY(-0.035em);
-}
+.logos-wordmark:hover .logos-greek span { /* no hover lift */ }
 
-/* "Project Logos" pinned to the foot, overlapping the root — clearly in front */
 .logos-name {
   position: absolute;
   left: 0.04em;
@@ -529,7 +362,6 @@ ul, ol { list-style: none; }
   white-space: nowrap;
 }
 
-/* The manifesto — the human thesis, bold and plain */
 .logos-mission {
   margin-top: 0.4rem;
   font-size: var(--fs-lg);
@@ -541,7 +373,6 @@ ul, ol { list-style: none; }
   max-width: 28ch;
 }
 
-/* The vague positioning line — what a cold reader (or a grant) needs */
 .logos-sub {
   font-size: var(--fs-md);
   color: var(--ink-2);
@@ -550,26 +381,31 @@ ul, ol { list-style: none; }
   max-width: 50ch;
 }
 
-/* Same soft highlight pill the home page uses on its inline links. Inline-block
-   so that the <span> highlights and the <button> highlights share one box model
-   and render at exactly the same height. */
+/* ── Bounty stat: subtle, inline alongside Built on ── */
+.logos-built-row {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 1.5rem;
+}
+.logos-built-stat {
+  font-size: var(--fs-sm);
+  color: var(--grey-1);
+  white-space: nowrap;
+  padding-bottom: 0.1rem;
+}
+.logos-stat-amount { color: var(--ink-3); font-weight: 500; }
+
 .logos-hl {
   display: inline-block;
   vertical-align: baseline;
   font-weight: 500;
   color: var(--ink);
-  background-color: color-mix(in srgb, var(--hl, var(--accent-soft)), var(--paper) 72%);
+  background-color: color-mix(in srgb, var(--hl, var(--accent-soft)), var(--sky) 55%);
   padding: 0.02em 0.24em 0.08em;
 }
 
-/* ---------- Built with — a quiet label and bare marks, no chrome ---------- */
-
-.logos-built {
-  display: flex;
-  flex-direction: column;
-  gap: 0.75rem;
-}
-
+.logos-built { display: flex; flex-direction: column; gap: 0.75rem; }
 .logos-built-label {
   font-size: var(--fs-sm);
   color: var(--grey-1);
@@ -582,11 +418,7 @@ ul, ol { list-style: none; }
   align-items: center;
   gap: clamp(1.1rem, 2.6vw, 1.85rem);
 }
-
-.logos-mark {
-  display: inline-flex;
-}
-
+.logos-mark { display: inline-flex; }
 .logos-mark svg {
   width: 1.5rem;
   height: 1.5rem;
@@ -594,18 +426,10 @@ ul, ol { list-style: none; }
   color: var(--mk, var(--accent));
   transition: transform 0.5s var(--ease-out-expo);
 }
+.logos-mark:hover svg { transform: translateY(-3px) scale(1.08); }
+.logos-mark-lg svg { width: 1.875rem; height: 1.875rem; }
 
-.logos-mark:hover svg {
-  transform: translateY(-3px) scale(1.08);
-}
-
-/* ---------- Foot: back, in the home footer-button style ---------- */
-
-.logos-foot {
-  margin-top: 0.2rem;
-  display: flex;
-}
-
+.logos-foot { margin-top: 0.2rem; display: flex; }
 .logos-back {
   display: inline-flex;
   align-items: center;
@@ -614,20 +438,17 @@ ul, ol { list-style: none; }
   font-size: calc(var(--fs-xs) * 1.25);
   font-weight: 500;
   color: var(--ink);
-  background-color: color-mix(in srgb, var(--c-teal), var(--paper) 72%);
+  background-color: color-mix(in srgb, var(--c-teal), var(--sky) 55%);
   transition: background-color 0.45s var(--ease-out-expo), transform 0.45s var(--ease-out-expo);
-  cursor: pointer;
 }
 .logos-back:hover {
-  background-color: color-mix(in srgb, var(--c-teal), var(--paper) 48%);
+  background-color: color-mix(in srgb, var(--c-teal), var(--sky) 30%);
   transform: scale(1.12) rotate(-3deg);
 }
 .logos-back:active {
   transform: scale(0.96) rotate(0deg);
   transition-duration: 0.08s;
 }
-
-/* ---------- An interactive highlight: a pill that opens a pop-up ---------- */
 
 .logos-hl-btn {
   display: inline-block;
@@ -636,7 +457,7 @@ ul, ol { list-style: none; }
   transition: background-color 0.45s var(--ease-out-expo), transform 0.45s var(--ease-out-expo);
 }
 .logos-hl-btn:hover {
-  background-color: color-mix(in srgb, var(--hl, var(--accent-soft)), var(--paper) 48%);
+  background-color: color-mix(in srgb, var(--hl, var(--accent-soft)), var(--sky) 30%);
   transform: scale(1.07) rotate(-2deg);
 }
 .logos-hl-btn:active {
@@ -645,18 +466,11 @@ ul, ol { list-style: none; }
 }
 .logos-hl-btn:focus-visible {
   background-color: var(--ink);
-  color: var(--paper);
+  color: var(--sky);
   text-decoration: none;
 }
 
-/* ---------- The pop-up: a flat card on an ink scrim (no shadow needed) ----------
-   The scrim is tinted with --ink, so it darkens the page in light mode and
-   lightens it in dark mode; either way the --paper card lifts off it cleanly. */
-
-/* Selector beats `.app > :not(.skip-link) { position: relative }` so the
-   pop-up actually overlays the viewport instead of dropping into the flow.
-   A fixed dark dim on both themes (an ink-tinted scrim would lighten the page
-   in dark mode); the raised --paper-2 card lifts off it without a shadow. */
+/* ── Modal: flat card on a deep-navy scrim ── */
 .app > .logos-modal {
   position: fixed;
   inset: 0;
@@ -665,18 +479,23 @@ ul, ol { list-style: none; }
   align-items: center;
   justify-content: center;
   padding: var(--gutter);
-  background: rgba(13, 13, 12, 0.62);
+  background: rgba(6, 9, 18, 0.78);
   animation: logos-scrim 0.4s var(--ease-out-quart) backwards;
 }
 
 .logos-modal-card {
   width: min(630px, 100%);
-  background: var(--paper-2);
+  background: var(--sky-2);
   padding: clamp(1.6rem, 4.5vw, 2.4rem);
   display: flex;
   flex-direction: column;
   gap: 1.25rem;
   animation: logos-card 0.5s var(--ease-out-expo) backwards;
+}
+.logos-article-card {
+  width: min(680px, 100%);
+  max-height: 80vh;
+  overflow-y: auto;
 }
 
 .logos-modal-head {
@@ -685,14 +504,12 @@ ul, ol { list-style: none; }
   justify-content: space-between;
   gap: 1rem;
 }
-
 .logos-modal-title {
   font-size: var(--fs-lg);
   font-weight: 500;
   letter-spacing: -0.01em;
   color: var(--ink);
 }
-
 .logos-modal-close {
   flex: none;
   display: inline-flex;
@@ -702,103 +519,75 @@ ul, ol { list-style: none; }
   height: 30px;
   font-size: var(--fs-sm);
   color: var(--grey-1);
-  /* transparent mix so it blends with the raised --paper-2 card surface */
   background: color-mix(in srgb, var(--grey-1) 14%, transparent);
   transition: color 0.4s var(--ease-out-expo), background-color 0.4s var(--ease-out-expo), transform 0.4s var(--ease-out-expo);
-  cursor: pointer;
 }
 .logos-modal-close:hover {
   color: var(--ink);
   background: color-mix(in srgb, var(--ink) 12%, transparent);
-  transform: rotate(90deg);
 }
 
-.logos-art {
-  width: 100%;
-  height: auto;
-  display: block;
+/* ── Article: flowing prose ── */
+.logos-article {
+  display: flex;
+  flex-direction: column;
+  gap: 0.85rem;
 }
-
-/* Diagram motion: each dot travels from its origin (agents from the launch
-   apex, methodologies from above) and settles into place. A gentle quart ease
-   over a long, widely-staggered cascade reads as a gradual reveal rather than a
-   pop. Per-dot --dx/--dy and delay are set inline. */
-.logos-dot {
-  transform-box: fill-box;
-  transform-origin: center;
-  animation: logos-dot-in 0.95s var(--ease-out-quart) backwards;
+.logos-article-lead {
+  font-size: var(--fs-md);
+  color: var(--ink);
+  line-height: 1.65;
 }
-@keyframes logos-dot-in {
-  from { opacity: 0; transform: translate(var(--dx, 0), var(--dy, 0)) scale(0.35); }
-}
-
-.logos-modal-caption {
+.logos-article p {
   font-size: var(--fs-sm);
-  color: var(--grey-1);
-  line-height: 1.55;
-  text-wrap: pretty;
+  color: var(--ink-2);
+  line-height: 1.7;
+}
+.logos-article em {
+  font-style: italic;
+  color: var(--ink);
 }
 
-@keyframes logos-scrim {
-  from { opacity: 0; }
+/* ── Clickable .logos-hl button (same pill as text highlights) ── */
+button.logos-hl {
+  cursor: pointer;
+  transition: background-color 0.3s var(--ease-out-expo);
 }
-@keyframes logos-card {
-  from { opacity: 0; transform: translateY(12px) scale(0.985); }
+button.logos-hl:hover {
+  background-color: color-mix(in srgb, var(--hl, var(--accent-soft)), var(--sky) 30%);
 }
 
-/* ---------- Responsive ---------- */
+@keyframes logos-scrim { from { opacity: 0; } }
+@keyframes logos-card { from { opacity: 0; transform: translateY(12px); } }
 
+/* ── Responsive ── */
 @media (max-width: 720px) {
-  .onepage {
-    padding: 2rem 0 1rem;
-  }
+  .onepage { padding: 2rem 0 1rem; }
 }
 
 @media (max-width: 460px) {
-  .logos-name {
-    letter-spacing: 0.16em;
-  }
+  .logos-name { letter-spacing: 0.16em; }
 }
 
 @media (max-width: 400px) {
-  .onepage {
-    padding: 1.5rem 0 0.75rem;
-    gap: 1rem;
-  }
-
-  .site-footer {
-    justify-content: flex-start;
-    row-gap: 0.35rem;
-  }
-
-  .theme-selector {
-    width: 100%;
-    justify-content: flex-start;
-  }
+  .onepage { padding: 1.5rem 0 0.75rem; gap: 1rem; }
+  .site-footer { justify-content: flex-start; row-gap: 0.35rem; }
 }
 
 @media (max-height: 720px) and (min-width: 721px) {
-  :root {
-    --fs-mega: clamp(1.6rem, 5vw, 3rem);
-  }
+  :root { --fs-mega: clamp(1.6rem, 5vw, 3rem); }
   .onepage { gap: 0.8rem; padding-top: clamp(1.5rem, 4vh, 2.5rem); }
   .logos-content { gap: 1rem; padding: clamp(1.5rem, 4vh, 2.5rem) 0; }
 }
 
+/* ── Reduced motion ── */
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after {
     animation-duration: 0.01ms !important;
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
   }
-  .reveal, .reveal-hero, .reveal-hero .reveal,
-  .logos-dot {
-    opacity: 1;
-    transform: none;
-    animation: none;
-  }
-  ::view-transition-old(root),
-  ::view-transition-new(root) {
-    animation-duration: 0.01ms !important;
-  }
+  .reveal, .reveal-hero { animation: none; opacity: 1; transform: none; }
+  .hero-parallax { transform: none; transition: none; }
+  .app { animation: none; }
 }
