@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "vite build && cp dist/index.html dist/404.html && mkdir -p dist/logos && cp dist/index.html dist/logos/index.html",
+    "build": "vite build && cp dist/index.html dist/404.html && mkdir -p dist/logos && cp dist/index.html dist/logos/index.html && mkdir -p dist/writings/minus-two && cp dist/index.html dist/writings/index.html && cp dist/index.html dist/writings/minus-two/index.html",
     "preview": "vite preview",
     "deploy": "npm run build && gh-pages -d dist"
   },

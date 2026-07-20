@@ -1,0 +1,311 @@
+/* ==========================================================================
+   Document — a reusable long-form reader. Its OWN design system: it inherits
+   only tokens from global (--sky, --ink, --c-*, fonts) and defines the rest
+   here. Unlike the one-page views it scrolls, so it owns a scroll container.
+   Flat throughout — no borders, no shadow, radius 0. Per-doc accent via
+   --doc-accent, set inline on .doc-scroll.
+   ========================================================================== */
+.doc-scroll {
+  --doc-accent: var(--c-teal);
+  --read: min(680px, 100% - var(--gutter) * 2);
+  position: relative;
+  width: 100%;
+  height: 100dvh;
+  overflow-y: auto;
+  overflow-x: hidden;
+  overscroll-behavior: contain;
+}
+
+.doc {
+  width: var(--read);
+  margin-inline: auto;
+  padding: clamp(2.75rem, 11vh, 6rem) 0 clamp(2.5rem, 8vh, 4.5rem);
+  display: flex;
+  flex-direction: column;
+  gap: 1.05rem;
+}
+
+/* ── Top: dateline · model glyph · language toggle ── */
+.doc-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+.doc-kicker {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4em;
+  font-size: var(--fs-xs);
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--grey-1);
+}
+.doc-mark { display: inline-flex; color: var(--doc-accent); }
+.doc-mark svg { width: 0.95em; height: 0.95em; display: block; }
+
+.doc-lang { display: inline-flex; gap: 0.3rem; }
+.doc-lang-btn {
+  min-height: 26px;
+  padding: 0.1rem 0.5rem;
+  font-size: var(--fs-xs);
+  font-weight: 500;
+  letter-spacing: 0.02em;
+  color: var(--ink-3);
+  background-color: color-mix(in srgb, var(--grey-1) 14%, transparent);
+  transition: color 0.4s var(--ease-out-expo),
+              background-color 0.4s var(--ease-out-expo),
+              transform 0.4s var(--ease-out-expo);
+}
+.doc-lang-btn:hover { color: var(--ink); }
+.doc-lang-btn:active { transform: scale(0.94); transition-duration: 0.08s; }
+.doc-lang-btn.is-on { color: var(--sky); background-color: var(--ink); }
+
+/* ── Title ── */
+.doc-title {
+  font-size: clamp(1.45rem, 3.7vw, 2.5rem);
+  font-weight: 500;
+  line-height: 1.12;
+  letter-spacing: -0.02em;
+  color: var(--ink);
+  text-wrap: balance;
+  margin: 0.15rem 0 0.55rem;
+}
+.doc-title b {
+  font-weight: 500;
+  color: var(--ink);
+  background-color: color-mix(in srgb, var(--doc-accent), var(--sky) 52%);
+  padding: 0.02em 0.26em 0.1em;
+  box-decoration-break: clone;
+  -webkit-box-decoration-break: clone;
+}
+
+/* ── Body prose ── */
+.doc-body { display: flex; flex-direction: column; gap: 1.05rem; }
+
+.doc-p {
+  font-size: var(--fs-md);
+  color: var(--ink-2);
+  line-height: 1.72;
+  text-wrap: pretty;
+}
+.doc-p--lead { color: var(--ink); }
+.doc-p--close {
+  color: var(--ink);
+  font-size: var(--fs-lg);
+  font-weight: 500;
+  line-height: 1.4;
+  letter-spacing: -0.01em;
+  margin-top: 0.35rem;
+}
+
+.doc-h {
+  font-size: var(--fs-lg);
+  font-weight: 500;
+  letter-spacing: -0.01em;
+  color: var(--ink);
+  margin-top: 0.6rem;
+}
+
+/* ── Quoted source: the model's own words, verbatim ── */
+.doc-say {
+  position: relative;
+  padding-left: 1rem;
+  font-size: var(--fs-md);
+  color: var(--ink);
+  line-height: 1.7;
+  text-wrap: pretty;
+}
+.doc-say::before {
+  content: '';
+  position: absolute;
+  left: 0; top: 0.3em; bottom: 0.3em;
+  width: 2px;
+  background: color-mix(in srgb, var(--doc-accent), var(--sky) 15%);
+}
+.doc-say em {
+  font-style: normal;
+  font-weight: 500;
+  color: var(--ink);
+  background-color: color-mix(in srgb, var(--doc-accent), var(--sky) 55%);
+  padding: 0.02em 0.2em;
+}
+
+.doc-redact {
+  font-size: 0.86em;
+  letter-spacing: 0.08em;
+  color: var(--grey-1);
+  background-color: color-mix(in srgb, var(--grey-1) 16%, transparent);
+  padding: 0.02em 0.34em;
+}
+
+/* ── Panels: a labelled block (e.g. a map) and a receipt (e.g. tool output) ── */
+.doc-panel, .doc-receipt {
+  background: var(--sky-2);
+  padding: clamp(0.95rem, 3vw, 1.4rem) clamp(1.1rem, 3.2vw, 1.6rem);
+  overflow-x: auto;
+}
+.doc-panel { display: flex; flex-direction: column; gap: 0.5rem; }
+.doc-panel-head {
+  font-size: var(--fs-sm);
+  color: var(--ink-3);
+  letter-spacing: 0.01em;
+  white-space: nowrap;
+  margin-bottom: 0.25rem;
+}
+.doc-panel-row {
+  display: flex;
+  align-items: baseline;
+  gap: 0.55rem;
+  white-space: nowrap;
+  font-size: var(--fs-md);
+  line-height: 1.5;
+  font-variant-numeric: tabular-nums lining-nums;
+}
+.doc-panel-lbl {
+  flex: none;
+  min-width: 1.7em;
+  font-weight: 600;
+  color: color-mix(in srgb, var(--mk, var(--doc-accent)), var(--ink) 25%);
+}
+.doc-panel-eq { color: var(--ink); }
+
+.doc-receipt { display: flex; flex-direction: column; gap: 0.3rem; }
+.doc-receipt-tag {
+  align-self: flex-start;
+  font-size: var(--fs-xxs);
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--grey-2);
+  margin-bottom: 0.2rem;
+}
+.doc-out {
+  font-size: var(--fs-sm);
+  color: var(--ink-2);
+  line-height: 1.6;
+  letter-spacing: 0.005em;
+  font-variant-numeric: tabular-nums lining-nums;
+}
+.doc-out::before { content: '›'; color: var(--grey-2); margin-right: 0.5em; }
+
+/* ── Checklist ── */
+.doc-list { display: flex; flex-direction: column; gap: 0.6rem; }
+.doc-li {
+  display: flex;
+  gap: 0.65rem;
+  align-items: baseline;
+  font-size: var(--fs-md);
+  color: var(--ink-2);
+  line-height: 1.6;
+}
+.doc-tick {
+  flex: none;
+  width: 0.5rem;
+  height: 0.5rem;
+  margin-top: 0.15rem;
+  background: var(--k, var(--doc-accent));
+  transform: translateY(0.12em);
+}
+
+/* ── Sources + back ── */
+.doc-sources {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.45rem 0.55rem;
+  margin-top: 0.9rem;
+}
+.doc-src-label {
+  font-size: var(--fs-xs);
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--grey-1);
+  margin-right: 0.2rem;
+}
+.doc-sources .inline-link { font-size: var(--fs-sm); font-weight: 500; }
+
+.doc-foot { margin-top: 1.4rem; display: flex; }
+.doc-back {
+  display: inline-flex;
+  align-items: center;
+  min-height: 28px;
+  padding: 0.15rem 0.55rem;
+  font-size: calc(var(--fs-xs) * 1.25);
+  font-weight: 500;
+  color: var(--ink);
+  background-color: color-mix(in srgb, var(--doc-accent), var(--sky) 55%);
+  transition: background-color 0.45s var(--ease-out-expo),
+              transform 0.45s var(--ease-out-expo);
+}
+.doc-back:hover {
+  background-color: color-mix(in srgb, var(--doc-accent), var(--sky) 30%);
+  transform: scale(1.12) rotate(-3deg);
+}
+.doc-back:active { transform: scale(0.96) rotate(0deg); transition-duration: 0.08s; }
+
+/* ── Not found ── */
+.doc-404 { display: flex; flex-direction: column; gap: 1rem; align-items: flex-start; }
+.doc-404 p { font-size: var(--fs-md); color: var(--ink-2); }
+
+@media (max-width: 460px) {
+  .doc-top { gap: 0.6rem; }
+}
+
+/* ── Writings index — the list at /writings ── */
+.doc-index { gap: 1.5rem; }
+.doc-index-head { display: flex; flex-direction: column; gap: 0.4rem; }
+.doc-index-title {
+  font-size: clamp(1.6rem, 4vw, 2.6rem);
+  font-weight: 500;
+  letter-spacing: -0.02em;
+  color: var(--ink);
+}
+.doc-index-sub {
+  font-size: var(--fs-md);
+  color: var(--ink-3);
+  line-height: 1.55;
+  text-wrap: pretty;
+  max-width: 46ch;
+}
+
+.doc-index-list { display: flex; flex-direction: column; gap: 0.7rem; }
+.doc-entry {
+  --doc-accent: var(--c-teal);
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  width: 100%;
+  text-align: left;
+  padding: clamp(1rem, 3vw, 1.35rem) clamp(1.1rem, 3.2vw, 1.5rem);
+  background: var(--sky-2);
+  transition: background-color 0.45s var(--ease-out-expo), transform 0.45s var(--ease-out-expo);
+}
+.doc-entry:hover { background: var(--sky-3); transform: translateY(-2px); }
+.doc-entry:active { transform: translateY(0); transition-duration: 0.08s; }
+.doc-entry:focus-visible { background: var(--sky-3); outline: 2px solid var(--ink); outline-offset: 2px; }
+.doc-entry-meta {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4em;
+  font-size: var(--fs-xs);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--grey-1);
+}
+.doc-entry-mark { display: inline-flex; color: var(--doc-accent); }
+.doc-entry-mark svg { width: 0.95em; height: 0.95em; display: block; }
+.doc-entry-title {
+  font-size: var(--fs-lg);
+  font-weight: 500;
+  color: var(--ink);
+  letter-spacing: -0.01em;
+  line-height: 1.25;
+  text-wrap: balance;
+}
+.doc-entry-blurb {
+  font-size: var(--fs-sm);
+  color: var(--ink-3);
+  line-height: 1.55;
+  text-wrap: pretty;
+}

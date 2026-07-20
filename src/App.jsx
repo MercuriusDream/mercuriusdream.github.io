@@ -4,6 +4,8 @@ import { KaomojiIcon } from './components/Icons';
 import Starfield from './components/Starfield';
 import { useNavTransition } from './hooks/useNavTransition';
 import Logos from './pages/Logos';
+import Document from './pages/Document';
+import Writings from './pages/Writings';
 
 const LOVE_LINKS = [
   { label: 'Zhilin Yang', href: 'https://kimiyoung.github.io/', accent: '#B8634A' },
@@ -119,6 +121,15 @@ function HomePage() {
             <a href="mailto:mercuriusdream@mercuriusdream.com" className="footer-btn" data-glow style={{ ...delay(2100), '--btn-color': '#B8634A' }}>
               email
             </a>
+            <Link
+              to="/writings"
+              className="footer-btn"
+              data-glow
+              style={{ ...delay(2200), '--btn-color': '#8A6D4E' }}
+              onClick={e => { e.preventDefault(); navTo('/writings'); }}
+            >
+              writings
+            </Link>
           </div>
           <div className="footer-icp">
             <a href="https://icp.gov.moe/?keyword=20260535" target="_blank" rel="noopener noreferrer" className="footer-btn" data-glow style={{ '--btn-color': '#6D5A66' }}>萌ICP备20260535号</a>
@@ -136,6 +147,8 @@ function App() {
       <Routes>
         <Route path="/" element={<HomePage />} />
         <Route path="/logos" element={<Logos />} />
+        <Route path="/writings" element={<Writings />} />
+        <Route path="/writings/:slug" element={<Document />} />
       </Routes>
     </BrowserRouter>
   );
