@@ -1,4 +1,4 @@
-import { useMemo } from 'react';
+import { useMemo, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { useNavTransition } from '../hooks/useNavTransition';
 import docs from '../docs';
@@ -28,7 +28,7 @@ function parse(raw) {
   return segs;
 }
 
-// ── Tiny markdown-ish renderer: ## heading, - bullet, **bold**, paragraphs ─
+// ── Tiny markdown-ish renderer ────────────────────────────────────────────
 function inline(s, k) {
   return s.split(/(\*\*[^*]+\*\*)/g).map((p, i) =>
     p.startsWith('**') && p.endsWith('**')
@@ -52,9 +52,9 @@ function Prose({ text }) {
 }
 
 // ── Segment views ─────────────────────────────────────────────────────────
-function Fold({ label, peek, open = false, children }) {
+function Fold({ label, tone, peek, open = false, children }) {
   return (
-    <details className="tx-fold" open={open}>
+    <details className={`tx-fold tx-fold--${tone}`} open={open}>
       <summary>
         <span className="tx-chev" aria-hidden="true" />
         <span className="tx-label">{label}</span>
@@ -67,7 +67,7 @@ function Fold({ label, peek, open = false, children }) {
 
 function Search({ query, results }) {
   return (
-    <details className="tx-fold tx-search">
+    <details className="tx-fold tx-fold--search">
       <summary>
         <span className="tx-chev" aria-hidden="true" />
         <span className="tx-label">Web search</span>
@@ -90,16 +90,33 @@ function Search({ query, results }) {
   );
 }
 
-function Segment({ seg, doc, searchIndex }) {
+function LangSwitch({ lang, setLang, place }) {
+  return (
+    <div className={`doc-lang doc-lang--${place}`} role="group" aria-label="Language">
+      <button type="button" data-glow className={`doc-lang-btn${lang === 'en' ? ' is-on' : ''}`}
+        aria-pressed={lang === 'en'} onClick={() => setLang('en')}>EN</button>
+      <button type="button" data-glow className={`doc-lang-btn${lang === 'ko' ? ' is-on' : ''}`}
+        aria-pressed={lang === 'ko'} onClick={() => setLang('ko')}>한국어</button>
+    </div>
+  );
+}
+
+function renderIntro(intro, tweet) {
+  if (!tweet || !intro.includes('{tweet}')) return intro;
+  const [a, b] = intro.split('{tweet}');
+  return <>{a}<a className="doc-tweet" href={tweet.url} target="_blank" rel="noopener noreferrer" data-glow>{tweet.label} ↗</a>{b}</>;
+}
+
+function Segment({ seg, doc, lang, searchIndex }) {
   if (seg.t === 'think') {
     const peek = seg.text.replace(/\s+/g, ' ').trim().slice(0, 88);
-    return <Fold label="Thinking" peek={`${peek}…`}><pre className="tx-think-body">{seg.text}</pre></Fold>;
+    return <Fold label="Thinking" tone="think" peek={`${peek}…`}><pre className="tx-think-body">{seg.text}</pre></Fold>;
   }
   if (seg.t === 'py') {
     return (
       <div className="tx-py">
-        <Fold label="Code"><pre className="tx-code">{seg.code}</pre></Fold>
-        {seg.out && <Fold label="Output" open><pre className="tx-out">{seg.out}</pre></Fold>}
+        <Fold label="Code" tone="code"><pre className="tx-code">{seg.code}</pre></Fold>
+        {seg.out && <Fold label="Output" tone="out" open><pre className="tx-out">{seg.out}</pre></Fold>}
       </div>
     );
   }
@@ -107,12 +124,8 @@ function Segment({ seg, doc, searchIndex }) {
     return <Search query={seg.query} results={doc.searchResults?.[searchIndex] || []} />;
   }
   const tr = doc.translations?.find(t => seg.text.trimStart().startsWith(t.key));
-  return (
-    <div className="tx-say">
-      <div className="tx-ko"><Prose text={seg.text} /></div>
-      {tr && <div className="tx-en"><span className="tx-label">English</span><Prose text={tr.en} /></div>}
-    </div>
-  );
+  const showEn = lang === 'en' && tr;
+  return <div className="tx-prose" lang={showEn ? 'en' : 'ko'}><Prose text={showEn ? tr.en : seg.text} /></div>;
 }
 
 function BackLink() {
@@ -129,6 +142,7 @@ function Document() {
   const doc = docs[slug];
   const navTo = useNavTransition();
   const segs = useMemo(() => (doc?.transcript ? parse(doc.transcript) : []), [doc]);
+  const [lang, setLang] = useState('en');
 
   if (!doc) {
     return (
@@ -144,6 +158,7 @@ function Document() {
   }
 
   const Mark = doc.mark;
+  const bilingual = doc.translations?.length > 0;
   let searchIndex = 0;
 
   return (
@@ -152,6 +167,8 @@ function Document() {
 
       <main id="main" className="doc-scroll" style={{ '--doc-accent': doc.accent || 'var(--c-teal)' }}>
         <article className="doc doc-article">
+          {bilingual && <LangSwitch lang={lang} setLang={setLang} place="top" />}
+
           <header className="doc-head">
             <p className="doc-kicker reveal-hero" style={delay(680)}>
               {doc.kicker}
@@ -159,18 +176,13 @@ function Document() {
             </p>
             <h1 className="doc-title reveal-hero" style={delay(760)}>{doc.title}</h1>
             {doc.subtitle && <p className="doc-subtitle reveal" style={delay(840)}>{doc.subtitle}</p>}
-            {doc.intro && (
-              <p className="doc-intro reveal" style={delay(920)}>
-                {doc.intro}
-                {doc.tweet && <> <a className="doc-tweet" href={doc.tweet.url} target="_blank" rel="noopener noreferrer" data-glow>{doc.tweet.label} ↗</a></>}
-              </p>
-            )}
+            {doc.intro && <p className="doc-intro reveal" style={delay(920)}>{renderIntro(doc.intro, doc.tweet)}</p>}
           </header>
 
           <div className="tx reveal" style={delay(1020)}>
             {segs.map((seg, i) => {
               const si = seg.t === 'search' ? searchIndex++ : 0;
-              return <Segment key={i} seg={seg} doc={doc} searchIndex={si} />;
+              return <Segment key={i} seg={seg} doc={doc} lang={lang} searchIndex={si} />;
             })}
           </div>
 
@@ -187,6 +199,8 @@ function Document() {
           )}
 
           <footer className="doc-foot reveal"><BackLink /></footer>
+
+          {bilingual && <LangSwitch lang={lang} setLang={setLang} place="bot" />}
         </article>
       </main>
     </div>

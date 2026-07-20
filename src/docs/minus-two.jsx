@@ -22,9 +22,9 @@ const doc = {
   title: 'i handed the jacobian thing to kimi k3',
   subtitle: `it works somehow, and no, Chinese models aren't six months behind, fyi.`,
 
-  intro: `The map below is Levent Alpöge's counterexample to the Jacobian conjecture, posted mid-World-Cup final. I pasted it into Kimi K3, an open-weights model I can run myself, told it nothing, and asked it to find the mistake. It didn't find one; it verified the thing. What follows is K3's log, one to one: my private notes to it are redacted, and the Korean parts are translated underneath.`,
+  intro: `saw the {tweet} and decided to give it to Kimi K3.`,
 
-  tweet: { url: 'https://x.com/__alpoge__/status/2079028340955197566', label: '@__alpoge__ · the original tweet' },
+  tweet: { url: 'https://x.com/__alpoge__/status/2079028340955197566', label: 'original tweet' },
 
   transcript,
   searchResults,
