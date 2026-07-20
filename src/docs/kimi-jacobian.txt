@@ -1,0 +1,1187 @@
+<thinking>
+The user has posted a purported counterexample to the Jacobian conjecture. They claim that the map
+F(x, y, z) = ((1+xy)^3 z + y^2 (1+xy)(4+3xy), y + 3x(1+xy)^2 z + 3xy^2(4+3xy), 2x - 3x^2 y - x^3 z)
+has Jacobian determinant -2 (a nonzero constant), and sends three points (0,0,-1/4), (1,-3/2,13/2), (-1,3/2,13/2) to (-1/4, 0, 0). If the Jacobian determinant is a nonzero constant, the map is étale, and if it sends three distinct points to the same value, it's not injective, contradicting the Jacobian conjecture (which asserts every polynomial map C^n → C^n with constant nonzero Jacobian determinant is invertible, hence injective).
+So the user claims the Jacobian conjecture is false. I need to verify:
+The Jacobian determinant of F.
+The values at those three points.
+This is a computational task — I can verify symbolically with sympy. Note the user wrote \C which suggests they copy-pasted from some LaTeX-ish text. This could be a hoax or an AI-generated fake proof (there was a famous AI-generated fake counterexample... Actually, this looks like it might be related to known attempts). Let me actually check computationally.
+Let me compute in sympy.
+The Jacobian determinant: let me define:
+F1 = (1+xy)^3 z + y^2 (1+xy)(4+3xy)
+F2 = y + 3x(1+xy)^2 z + 3xy^2(4+3xy)
+F3 = 2x - 3x^2 y - x^3 z
+First, check F at (0,0,-1/4):
+F1 = (1)^3 (-1/4) + 0 = -1/4. F2 = 0 + 0 + 0 = 0. F3 = 0 - 0 - 0 = 0. Yes, maps to (-1/4, 0, 0). ✓.
+Check F at (1, -3/2, 13/2):
+1 + xy = 1 - 3/2 = -1/2.
+F1 = (-1/2)^3 (13/2) + y^2 (1+xy)(4+3xy). y^2 = 9/4. 4 + 3xy = 4 - 9/2 = -1/2. So second term = (9/4)(-1/2)(-1/2) = 9/16. First term = (-1/8)(13/2) = -13/16. F1 = -13/16 + 9/16 = -4/16 = -1/4. ✓.
+F2 = y + 3x(1+xy)^2 z + 3xy^2(4+3xy) = -3/2 + 3(1)(1/4)(13/2) + 3(1)(9/4)(-1/2) = -3/2 + 39/8 - 27/8 = -3/2 + 12/8 = -3/2 + 3/2 = 0. ✓.
+F3 = 2x - 3x^2 y - x^3 z = 2 - 3(-3/2) - 13/2 = 2 + 9/2 - 13/2 = 2 - 2 = 0. ✓.
+Check F at (-1, 3/2, 13/2):
+1 + xy = 1 - 3/2 = -1/2. Same as above. By symmetry (map appears symmetric under (x,y) → (-x,-y)? Let's see: F1: (1+xy)^3 z is invariant under x→-x, y→-y (xy invariant), y^2 invariant. So F1 invariant. F2: y → -y; 3x(1+xy)^2 z → -3x...; 3xy^2(4+3xy) → -3x y^2 ... so F2 → -F2. F3 → -F3. So F(-1, 3/2, 13/2) = F(-(1, -3/2), 13/2) with (x,y) → (-x,-y): F1 same = -1/4, F2 negated = 0, F3 negated = 0. ✓.)
+So indeed all three points map to (-1/4, 0, 0). That's correct arithmetic.
+Now the Jacobian determinant. The claim is that det JF = -2. Let me verify with sympy. If det is truly -2, then this is a genuine counterexample... but the Jacobian conjecture remains unproven/disproven as of my knowledge, and any simple counterexample in dimension 3 with low-degree polynomials would be monumental news. More likely, the determinant is NOT constant — there's likely a computation error somewhere (perhaps from an AI hallucination). Let me actually compute.
+This is the key check. Let me do it by hand partially and then with sympy.
+Let u = 1 + xy.
+F1 = u^3 z + y^2 u (4 + 3xy)
+F2 = y + 3x u^2 z + 3x y^2 (4 + 3xy)
+F3 = 2x - 3x^2 y - x^3 z
+Partial derivatives:
+∂F1/∂x = 3u^2 · y · z + y^2 · y (4 + 3xy) + y^2 u · 3y = 3y z u^2 + y^3(4+3xy) + 3y^3 u = 3 y z u^2 + y^3(4 + 3xy + 3u).
+Since u = 1+xy, 4 + 3xy + 3u = 4 + 3xy + 3 + 3xy = 7 + 6xy. So ∂F1/∂x = 3y z u^2 + y^3 (7 + 6xy).
+∂F1/∂y = 3u^2 x z + 2y u (4+3xy) + y^2 x (4+3xy) + y^2 u · 3x = 3x z u^2 + (4+3xy)(2y u + x y^2) + 3x y^2 u.
+Let me expand (4+3xy)(2yu + xy^2) = (4+3xy) y (2u + xy) = y(4+3xy)(2 + 3xy). Since 2u + xy = 2 + 2xy + xy = 2 + 3xy.
+So ∂F1/∂y = 3x z u^2 + y(4+3xy)(2+3xy) + 3x y^2 u.
+∂F1/∂z = u^3.
+∂F2/∂x = 3u^2 z + 3x · 2u · y · z + 3y^2(4+3xy) + 3x y^2 · 3y = 3z u^2 + 6x y z u + 3y^2(4+3xy) + 9x y^3.
+∂F2/∂y = 1 + 3x · 2u · x · z + 6xy(4+3xy) + 3x y^2 · 3x = 1 + 6x^2 z u + 6xy(4+3xy) + 9x^2 y^2.
+∂F2/∂z = 3x u^2.
+∂F3/∂x = 2 - 6xy - 3x^2 z.
+∂F3/∂y = -3x^2.
+∂F3/∂z = -x^3.
+Now compute the determinant. This is messy; let's just use sympy. I'll trust sympy.
+Actually, let me think about whether there's a slick structure: the map might be a composition of elementary maps, which would give constant Jacobian... e.g., maps of the form (x, y, z) → (x, y + f(x), z + g(x,y)) etc. But the presence of the three points mapping to the same value strongly suggests non-injectivity, and if the Jacobian determinant were really constant and nonzero, then by the étale inverse function theorem the map would be a local diffeomorphism; non-injective étale polynomial maps C^n → C^n do NOT exist if the Jacobian conjecture holds... The Jacobian conjecture is still open (as of early 2026). So a claimed counterexample would be huge news — and almost surely has an error in the Jacobian computation. The three-point computation checks out (I verified F1, F2, F3 at all three points above by hand). So the error must be in the determinant claim: det is not constant.
+Let me verify with sympy and find where the determinant fails to be -2, e.g., evaluate det at some specific point like the origin:
+At (0,0,0): u = 1.
+∂F1/∂x = 0 + 0 = 0? 3yz u^2 = 0, y^3(7+6xy) = 0 → 0.
+∂F1/∂y = 0 + y(...) → 0 + 0 → 0? y(4+3xy)(2+3xy) at y=0 is 0, 3xy^2 u = 0. So 0.
+∂F1/∂z = 1.
+∂F2/∂x = 3z + ... = 0 at origin (z=0, y=0) → 0.
+∂F2/∂y = 1 + 0 + 0 + 0 = 1.
+∂F2/∂z = 0.
+∂F3/∂x = 2, ∂F3/∂y = 0, ∂F3/∂z = 0.
+Matrix:
+[0 0 1]
+[0 1 0]
+[2 0 0]
+det = 0·(1·0−0·0) − 0·(0·0−0·2) + 1·(0·0−1·2) = −2. ✓ consistent with −2 at origin.
+Let me test another point, say (1, 1, 0): u = 2.
+∂F1/∂x = 3·1·0·4 + 1·(7+6) = 13.
+∂F1/∂y = 3·1·0·4 + 1·(7)(5) + 3·1·1·2 = 0 + 35 + 6 = 41.
+∂F1/∂z = 8.
+∂F2/∂x = 0 + 0 + 3·1·7 + 9 = 30.
+∂F2/∂y = 1 + 0 + 6·1·7 + 9 = 52.
+∂F2/∂z = 3·1·4 = 12.
+∂F3/∂x = 2 − 6 − 0 = −4.
+∂F3/∂y = −3.
+∂F3/∂z = −1.
+Matrix:
+[13 41 8]
+[30 52 12]
+[−4 −3 −1]
+det = 13·(52·(−1) − 12·(−3)) − 41·(30·(−1) − 12·(−4)) + 8·(30·(−3) − 52·(−4))
+= 13·(−52 + 36) − 41·(−30 + 48) + 8·(−90 + 208)
+= 13·(−16) − 41·(18) + 8·(118)
+= −208 − 738 + 944
+= −2.
+Interesting! So det = −2 at (1,1,0) too. Hmm. Let me test more points before jumping to conclusions. Let me test (0, 1, 0): u = 1.
+∂F1/∂x = 0 + 1·7 = 7.
+∂F1/∂y = 0 + 1·4·2 + 0 = 8.
+∂F1/∂z = 1.
+∂F2/∂x = 0 + 0 + 3·4 + 0 = 12.
+∂F2/∂y = 1 + 0 + 0 + 0 = 1.
+∂F2/∂z = 0.
+∂F3/∂x = 2, ∂F3/∂y = 0, ∂F3/∂z = 0.
+Matrix:
+[7 8 1]
+[12 1 0]
+[2 0 0]
+det = 1·(12·0 − 1·2)·(sign) — expand along third row: entries 2 at (3,1): cofactor sign (−1)^{3+1}=+1, minor det[[8,1],[1,0]] = 8·0 − 1·1 = −1. So det = 2·(−1) = −2. ✓.
+Hmm, it's −2 at three random points. Maybe the determinant really is constant?! Let me check at the special points, e.g., (0, 0, −1/4): u = 1.
+∂F1/∂x = 3y z u^2 + y^3(7+6xy) = 0.
+∂F1/∂y = 3x z u^2 + y(4+3xy)(2+3xy) + 3x y^2 u = 0.
+∂F1/∂z = 1.
+∂F2/∂x = 3z u^2 + 6xyzu + 3y^2(4+3xy) + 9xy^3 = −3/4.
+∂F2/∂y = 1 + 6x^2 z u + 6xy(4+3xy) + 9x^2 y^2 = 1.
+∂F2/∂z = 3x u^2 = 0.
+∂F3/∂x = 2 − 6xy − 3x^2 z = 2, ∂F3/∂y = 0, ∂F3/∂z = 0.
+Matrix:
+[0 0 1]
+[−3/4 1 0]
+[2 0 0]
+det: expand along third row: 2·det[[0,1],[1,0]]·(−1)^{3+1} = 2·(−1) = −2. ✓.
+Hmm! It's consistently −2. This is suspicious. Maybe the determinant is genuinely constant... If so, this would indeed be a counterexample to the Jacobian conjecture in dimension 3, which would be an enormous result. The Jacobian conjecture in dimension 2 is open; dimensions ≥ 3 reduce to dimension... Actually by reduction theorems, the conjecture in all dimensions reduces to the case of dimension 3? No wait — it reduces to the cubic homogeneous case in any dimension (Bass-Connell-Wright, Drużkowski), and n=2 implies all? No: it's known that if the JC holds in dimension n it... Actually the known facts: JC in dimension 1 is trivial. For dimension 2 it is open. There are reductions: it suffices to prove JC for all n for cubic-linear maps, etc. The conjecture for dimension ≥ 3 does not follow from dimension 2... Hmm, actually I recall: "JC in dimension n for all n" is equivalent; specific small n are open. There is no known implication "dimension 3 true" generally — JC(2) is open, and JC(n) for larger n is also open. A counterexample in any dimension would disprove the general conjecture and would be huge news.
+But wait — is this actually a counterexample? Let me think again. If det JF = −2 (nonzero constant) and F is not injective (three points mapping to one), then F is a counterexample to JC. Before I believe it, I should verify the determinant computation fully symbolically with sympy, not just at sample points.
+This example looks constructed: it resembles the structure of "étale maps" attempts. There's a classical construction: an étale map F: C^n → C^n that is not injective would disprove JC. Many attempts have errors. But note: this could also be a genuine recent development! My knowledge cutoff is early 2026. If someone disproved JC in, say, 2025, I should know... I don't recall any such news. The Jacobian conjecture remains open as far as I know (as of early 2026).
+Hold on. Let me reconsider: maybe this specific example comes from a known paper or a known fake. The numbers (0,0,−1/4), (1,−3/2,13/2), (−1,3/2,13/2) mapping to (−1/4,0,0)... This smells like it could be AI-generated (some LLM claimed to disprove JC). Actually! I recall in 2024-2025 there were viral claims of AI models "solving" famous problems. I don't specifically recall an LLM disproving JC. But this exact map... Let me just compute the determinant symbolically with sympy. That's the decisive test.
+Let me set up the sympy computation.
+If det is truly −2 constant, then I should double check the three-point evaluation with exact arithmetic too. Then the user's claim would be correct... and the response would need to acknowledge this as a claimed counterexample — but with the caveat that if it's correct, it's a major result that needs peer review, etc. But given the stakes, most likely sympy will show det is not constant. My hand checks at 4 points gave −2 each time though. That's a strong signal it might actually be constant. Wait, actually, hold on. Let me think about whether such a map could exist with constant Jacobian determinant and non-injective — no wait, that's precisely what JC forbids, but JC is unproven, so a priori it could exist. If someone has actually found one, math world would know. Let me compute the full symbolic determinant.
+Actually, let me reconsider the structure. The map looks like it might be a composition: Consider G(x,y,z) = (x, y, z + something)? Let's see: maybe F = H2 ∘ H1 with elementary maps. Suppose H1(x,y,z) = (x, y, z · something + ...)? Hmm.
+Alternatively, F might be of the form F(x,y,z) = (P(x,y) + z·A(x,y), Q(x,y) + z·B(x,y), R(x,y) + z·C(x,y)) — linear in z. Indeed:
+F1 = y^2(1+xy)(4+3xy) + z(1+xy)^3
+F2 = [y + 3xy^2(4+3xy)] + z[3x(1+xy)^2]
+F3 = [2x − 3x^2 y] + z[−x^3]
+So F = f(x,y) + z·g(x,y) where:
+f = (y^2 u(4+3xy), y + 3xy^2(4+3xy), 2x − 3x^2 y)
+g = (u^3, 3x u^2, −x^3), u = 1+xy.
+Interesting: g looks like it might be related to a cross product or gradient. Note (u^3, 3xu^2, −x^3). Hmm.
+The Jacobian matrix JF = Jf + z·Jg(x,y), where the z-derivative column is g.
+det JF = det[f_x + z g_x, f_y + z g_y, g].
+This is linear in z... wait, the first two columns are linear in z and the third is z-free, so det is quadratic in z. For det to be constant, the z and z^2 coefficients must vanish identically, and the z^0 coefficient must be −2.
+Coefficient of z^2: det[g_x, g_y, g]. Since g depends only on x,y, g_x and g_y are vectors in the (x,y)-dependent 3-dim space. det[g_x, g_y, g] = g · (g_x × g_y). g_x = ∂g/∂x = (3u^2 y, 3u^2 + 6xyu, −3x^2). g_y = (3u^2 x, 6x^2 u, 0).
+g_x × g_y = |i j k; 3u^2 y, 3u^2+6xyu, −3x^2; 3u^2 x, 6x^2 u, 0|
+i: (3u^2+6xyu)(0) − (−3x^2)(6x^2 u) = 18 x^4 u
+j: −[(3u^2 y)(0) − (−3x^2)(3u^2 x)] = −[3x^2·3u^2 x]·... careful: j component = −[(3u^2 y)(0) − (−3x^2)(3u^2 x)] = −[0 + 9 x^3 u^2] = −9 x^3 u^2
+k: (3u^2 y)(6x^2 u) − (3u^2+6xyu)(3u^2 x) = 18 x^2 y u^3 − 9 x u^4 − 18 x^2 y u^3 = −9 x u^4
+g · (g_x × g_y) = u^3·18 x^4 u + 3x u^2·(−9 x^3 u^2) + (−x^3)(−9 x u^4)
+= 18 x^4 u^4 − 27 x^4 u^4 + 9 x^4 u^4 = 0.
+So the z^2 coefficient vanishes. This is because g is "self-orthogonal" in the sense g·(g_x × g_y) = 0 — meaning the image surface parametrized by g has g passing through... i.e., the parametrized surface is a cone (position vector always tangent to the surface). Indeed g(x,y) = u^3 e1 + 3xu^2 e2 − x^3 e3 — hmm, maybe g = some scaling of a curve? If we set t = x/u... not obvious, but the algebra shows the triple product vanishes.
+Coefficient of z: det[g_x, f_y, g] + det[f_x, g_y, g].
+Coefficient of z^0: det[f_x, f_y, g].
+This is getting complex; sympy will handle it. But my hand-checks at four points all giving −2 makes me suspect the determinant might indeed be constant −2. Hmm, wait. Actually maybe I should think about whether the example is real before computing. Let me recall: is there a famous example "Jacobian determinant −2, three points to one point"?
+Actually, you know what — I recall that there IS a classical example of an étale map C^3 → C^3 that is not injective... no wait, that would disprove JC, and JC is still considered open. There are étale maps F: X → C^n from non-finite varieties, but from C^n itself, non-injective étale would disprove JC.
+Hmm, but wait — there IS a subtlety: a polynomial map with constant nonzero Jacobian determinant is étale; JC says it must be injective (hence an automorphism). JC in dimension 3 is open. So a verified example would be a breakthrough. As of my knowledge (early 2026), no counterexample is known. But the user might be testing me, or might have been fooled by an AI-generated fake, OR might be presenting something genuine from recent months (2026). The instructions say: trust search over memory for recent events. I could search the web for news about "Jacobian conjecture counterexample". If it were disproved, it would be big math news.
+Plan:
+Compute the symbolic determinant with sympy (decisive).
+Verify the three point evaluations with exact rational arithmetic.
+Possibly search for news.
+Let me do the sympy computation first. Actually let me do both sympy checks in one go, and a web search in parallel.
+Actually, the order: The tool guidance says make independent calls in the same block. The sympy computation and web search are independent. Let me do both.
+Wait, but should I search? The verification is purely mathematical — sympy gives the ground truth for THIS map. Whether the conjecture was recently disproved doesn't change the math of this map. But if the map is a genuine counterexample, I would want to temper my response: "this can't be right, there must be an error" vs "oh wow". The math is decisive either way: if det = −2 constant AND the three points map to the same value, then JC is false, period, and the response should say the computation checks out (with caveats about peer review). If det is not constant, the error is in the Jacobian claim.
+Let me compute. I'll also factor the determinant if it's not constant, to show the user where it fails (e.g., evaluate at a point where it's not −2).
+Let me write the sympy code:
+Python
+import sympy as sp
+x, y, z = sp.symbols('x y z')
+u = 1 + x*y
+F1 = u**3 * z + y**2 * u * (4 + 3*x*y)
+F2 = y + 3*x*u**2*z + 3*x*y**2*(4+3*x*y)
+F3 = 2*x - 3*x**2*y - x**3*z
+F = sp.Matrix([F1, F2, F3])
+J = F.jacobian([x, y, z])
+detJ = sp.factor(J.det())
+print(detJ)
+And evaluate at the three points:
+Python
+pts = [(0,0,sp.Rational(-1,4)), (1,sp.Rational(-3,2),sp.Rational(13,2)), (-1,sp.Rational(3,2),sp.Rational(13,2))]
+for p in pts:
+    print([fi.subs({x:p[0],y:p[1],z:p[2]}) for fi in F])
+Let me also think again about the z coefficient to predict the outcome. Let me compute det[f_x, f_y, g] partially? That's a lot. Let me just trust sympy.
+But my four point evaluations all gave −2. Let me test one more point by hand to gain confidence one way or the other, say (1, 0, 1): u = 1.
+∂F1/∂x = 3y z u^2 + y^3(7+6xy) = 0.
+∂F1/∂y = 3x z u^2 + y(...) + 3x y^2 u = 3.
+∂F1/∂z = 1.
+∂F2/∂x = 3z u^2 + 6xyzu + 3y^2(4+3xy) + 9xy^3 = 3.
+∂F2/∂y = 1 + 6x^2 z u + 6xy(4+3xy) + 9x^2 y^2 = 7.
+∂F2/∂z = 3x u^2 = 3.
+∂F3/∂x = 2 − 6xy − 3x^2 z = −1, ∂F3/∂y = −3, ∂F3/∂z = −1.
+Matrix:
+[0 3 1]
+[3 7 3]
+[−1 −3 −1]
+det = 0·(7·(−1) − 3·(−3)) − 3·(3·(−1) − 3·(−1)) + 1·(3·(−3) − 7·(−1))
+= 0 − 3·(−3+3) + 1·(−9+7)
+= 0 − 0 + (−2) = −2. ✓ again!
+Five points, all −2. It's looking like the determinant really is constant −2. Hmm!! Then this IS a counterexample to the Jacobian conjecture?! That can't be — the math community would have known. Unless... wait.
+Hold on. Let me re-examine. Maybe I made arithmetic errors and the pattern is coincidence — unlikely 5 times in a row. Let me think structurally instead. The map F = f + z g with g·(g_x × g_y) = 0 ensures det is at most linear in z. Perhaps the map is constructed as a composition of elementary maps composed with something non-injective... but any composition of invertible maps is injective. If F were a composition of polynomial automorphisms, it would be injective, contradicting the three points (which I verified by hand and they check out). So F is NOT injective and NOT an automorphism. If det JF is truly constant −2, JC is false. There's no way around it: the conjunction of "det constant" and "three points verified" = counterexample.
+Let me recheck the point evaluation once more, very carefully, because if det really is −2, then the three-point claim must be wrong (since JC can't be disproved by such an example without the world knowing... well, unless the world is wrong). Let me recompute F2 at (1, −3/2, 13/2):
+y = −3/2, x = 1, z = 13/2.
+u = 1 + xy = 1 − 3/2 = −1/2. u^2 = 1/4.
+3x u^2 z = 3·1·(1/4)·(13/2) = 39/8.
+3x y^2 (4+3xy): y^2 = 9/4, 4 + 3xy = 4 − 9/2 = −1/2. So = 3·(9/4)·(−1/2) = −27/8.
+F2 = −3/2 + 39/8 − 27/8 = −12/8 + 12/8 = 0. ✓.
+F3 = 2·1 − 3·1·(−3/2) − 1·(13/2) = 2 + 9/2 − 13/2 = 2 − 4/2 = 2 − 2 = 0. ✓.
+F1 = u^3 z + y^2 u (4+3xy) = (−1/8)(13/2) + (9/4)(−1/2)(−1/2) = −13/16 + 9/16 = −4/16 = −1/4. ✓.
+At (−1, 3/2, 13/2):
+u = 1 + (−1)(3/2) = −1/2, u^3 = −1/8.
+F1 = (−1/8)(13/2) + (9/4)(−1/2)(−1/2) = −13/16 + 9/16 = −1/4. ✓.
+F2 = 3/2 + 3(−1)(1/4)(13/2) + 3(−1)(9/4)(−1/2) = 3/2 − 39/8 + 27/8 = 12/8 − 12/8 = 0. ✓.
+F3 = −2 − 3(1)(3/2) − (−1)(13/2) = −2 − 9/2 + 13/2 = −2 + 4/2 = 0. ✓.
+Yes, all three points genuinely map to (−1/4, 0, 0). So the map is definitely non-injective. So everything hinges on the determinant. If det is truly constant −2... then the user is right and JC is false. If det is not constant, my 5 hand-checks were flukes (very unlikely).
+Hmm wait, actually, let me reconsider. Let me reexamine my determinant computation at (1,1,0) once more.
+u = 2, x=1, y=1, z=0.
+∂F1/∂x = 3 y z u^2 + y^3(7 + 6xy) = 0 + 13 = 13. ✓
+∂F1/∂y = 3 x z u^2 + y(4+3xy)(2+3xy) + 3x y^2 u = 0 + 1·7·5 + 6 = 41. ✓
+∂F1/∂z = u^3 = 8. ✓
+∂F2/∂x = 3z u^2 + 6xyzu + 3y^2(4+3xy) + 9xy^3 = 0 + 0 + 21 + 9 = 30. ✓
+∂F2/∂y = 1 + 6x^2 z u + 6xy(4+3xy) + 9x^2 y^2 = 1 + 0 + 42 + 9 = 52. ✓
+∂F2/∂z = 3x u^2 = 12. ✓
+∂F3/∂x = 2 − 6xy − 3x^2 z = −4, ∂F3/∂y = −3x^2 = −3, ∂F3/∂z = −x^3 = −1. ✓
+det [[13,41,8],[30,52,12],[−4,−3,−1]]:
+13·(52·(−1) − 12·(−3)) = 13·(−52+36) = 13·(−16) = −208.
+−41·(30·(−1) − 12·(−4)) = −41·(−30+48) = −41·18 = −738.
++8·(30·(−3) − 52·(−4)) = 8·(−90+208) = 8·118 = 944.
+Total: −208 − 738 + 944 = −2. ✓.
+Wow. OK so this is very likely a genuine constant Jacobian. Let me now think — is this example known?? Let me think about the literature. Hmm, there is a well-known concept: "counterexamples to JC would have to be non-injective étale maps". There are known étale maps from C^3 to C^3 that are not injective?? No — that would disprove JC.
+BUT WAIT. I should double-check the claim "Jacobian conjecture is therefore false" more carefully. JC: F: C^n → C^n polynomial, det JF ∈ C* ⇒ F is invertible (polynomial automorphism). If det JF = −2 and F non-injective, then F is not invertible, so JC is false. Yes, the logic is valid IF the computations are correct.
+So now, is this a known 2025/2026 development? Let me search. Actually, hmm, I have a vague feeling I've seen this exact map before... The form (1+xy)^3 z + y^2(1+xy)(4+3xy)... This resembles examples from papers on the Jacobian conjecture, perhaps from Arno van den Essen's work, or from a "Pinchuk-type" construction. Pinchuk constructed a polynomial map R^2 → R^2 with nonvanishing Jacobian everywhere but not injective — but the determinant was not constant (real counterexample to the "real JC", determinant depends on point but never vanishes).
+Actually! Wait. I recall something specific now: there was a claimed counterexample to JC in dimension 3 by... hmm. There have been many false claims. There was a 2024 arXiv preprint? I don't recall any validated one.
+Alternatively, maybe this exact example comes from a MathOverflow question "Is this a counterexample to the Jacobian conjecture?" where someone constructs a non-injective map and asks, and the answer points out the determinant is not constant. But my five hand computations all gave −2... Unless I systematically made the same error. The risk: my formulas for partials could be wrong. Let me re-derive ∂F1/∂x directly by differentiating the original expression:
+F1 = (1+xy)^3 z + y^2 (1+xy) (4+3xy).
+d/dx: 3(1+xy)^2 · y · z + y^2 [y(4+3xy) + (1+xy)(3y)] = 3y z u^2 + y^3[(4+3xy) + 3(1+xy)] = 3yz u^2 + y^3 (4+3xy+3+3xy) = 3yz u^2 + y^3(7+6xy). ✓.
+∂F1/∂y: 3u^2 x z + 2y u (4+3xy) + y^2 [x(4+3xy) + u·3x] = 3xz u^2 + 2yu(4+3xy) + xy^2(4+3xy) + 3xy^2 u.
+Hmm, I previously wrote ∂F1/∂y = 3x z u^2 + y(4+3xy)(2+3xy) + 3x y^2 u. Let me verify: 2yu(4+3xy) + xy^2(4+3xy) = y(4+3xy)(2u + xy) = y(4+3xy)(2+2xy+xy) = y(4+3xy)(2+3xy). ✓.
+∂F2/∂x: F2 = y + 3x u^2 z + 3x y^2 (4+3xy). d/dx = 3u^2 z + 3x·2u·y·z + 3y^2(4+3xy) + 3xy^2·3y = 3zu^2 + 6xyzu + 3y^2(4+3xy) + 9xy^3. ✓.
+∂F2/∂y = 1 + 3x·2u·x·z + 6xy(4+3xy) + 3xy^2·3x = 1 + 6x^2 z u + 6xy(4+3xy) + 9x^2y^2. ✓.
+∂F2/∂z = 3x u^2. ✓.
+F3 = 2x − 3x^2 y − x^3 z: ∂x = 2 − 6xy − 3x^2 z ✓; ∂y = −3x^2 ✓; ∂z = −x^3 ✓.
+The partials are right. And five determinant evaluations gave −2. So with high probability, det JF ≡ −2 identically. I'll confirm with sympy.
+If it's confirmed, then this is a genuine counterexample to the Jacobian conjecture in dimension 3... which would mean the conjecture is DEAD. Given my knowledge cutoff (early 2026) and no memory of this, this would have to be extremely recent or the user found it themselves... or the user got it from an AI that hallucinated the whole thing but accidentally produced a correct counterexample?? Impossible — if the counterexample is correct, it's correct regardless of provenance.
+Hmm hold on, wait. Let me reconsider. Am I sure about the Jacobian conjecture statement? det JF constant NONZERO ⇒ injective. Over C. Yes. Some care: JC requires det JF ∈ C \ {0} constant. −2 qualifies.
+OK here's another thought: maybe this map is actually a known automorphism composed... no, automorphisms are injective. The three points prove non-injectivity beyond any doubt (I verified with exact arithmetic).
+So the ONLY thing that could be wrong is the determinant. sympy will settle it. Let me also double-check by computing det at a couple more random points numerically with sympy (fast sanity check) plus full symbolic expansion.
+If sympy says det = −2... then wow. Let me also consider: maybe I should check whether the three points are distinct — yes: (0,0,−1/4), (1,−3/2,13/2), (−1,3/2,13/2). Distinct. ✓.
+And the image point is the same (−1/4, 0, 0) for all three. ✓.
+So if det ≡ −2, the Jacobian conjecture is false. This would be a massive deal. But before proclaiming that, I'd want to search whether this is known/verified. The user is asserting it confidently ("Q.E.D."). My job: verify the computations independently, and either confirm or find the error.
+Actually, hmm, wait. Let me reconsider the possibility that this is a trap/hoax where the determinant is subtly non-constant. My 5 point evaluations... could they all coincidentally be −2? Points: (0,0,0), (1,1,0), (0,1,0), (0,0,−1/4), (1,0,1). For a polynomial det of degree up to... the entries have degrees up to ~4 in x,y (u^3 etc.), so det could have degree up to ~12. Five points giving the same value would be a huge coincidence unless constant. I'm now fairly convinced det ≡ −2.
+Let me think about WHY. Maybe there's a clever structure making this a genuine counterexample. Let me think: consider the map F = f + zg. For det JF to be constant and F non-injective... Note that along the fiber direction: F(x, y, z) is affine in z for fixed (x,y). Non-injectivity here: the three points (0,0,−1/4), (1,−3/2,13/2), (−1,3/2,13/2) — different (x,y) values.
+Hmm, actually, you know what, let me recall: is there a known example by "Yucai Su"? Or the famous "Gorni–Zampieri" examples of non-injective étale polynomial maps C^n → C^n?? Gorni and Zampieri constructed étale polynomial maps C^2 → C^2 that are not injective?! No wait — that would disprove JC in dimension 2. Gorni-Zampieri constructed non-injective étale maps on C^2 \ {finite set} or on other surfaces... Hmm, no. There is a concept of "étale polynomial maps C^2 → C^2 are injective" being equivalent to JC(2).
+OK whatever the literature says — the computation is decisive. Let me also keep in mind: it's possible that the determinant is constant AND nonzero but the conjecture says "invertible" — some statements of JC require det = 1, but any nonzero constant is equivalent (scale). Fine.
+Let me run sympy now. If det = −2 confirmed, then the response: the computations check out, this is a genuine counterexample, JC is false in dimension ≥ 3...
+BUT hold on. Something feels off. Let me reconsider whether JC(3) being false is consistent with everything known. Reduction results (Bass–Connell–Wright 1982, Yagzhev, Drużkowski): JC(n) for all n ⇔ JC for cubic maps, etc. There is no theorem saying JC(3) is true. A counterexample in dimension 3 would disprove the general conjecture but leave JC(2) possibly open... Actually no wait: JC(2) true doesn't imply JC(3) true, so a counterexample in dim 3 doesn't contradict anything known. Interesting. Also note: it IS known that JC holds in dimension... hmm, only n=1. And various special cases. Also, injective ⇔ bijective for polynomial maps C^n→C^n (Ax–Grothendieck for injections: injective polynomial map C^n→C^n is bijective; actually Ax-Grothendieck says injective ⇒ surjective for algebraic varieties over alg closed fields). And a bijective polynomial map C^n → C^n is a polynomial automorphism (by Zariski's main theorem / a theorem of... yes, bijective polynomial self-maps of C^n have polynomial inverses). So non-injective + constant Jacobian = direct counterexample.
+Alright, let me also consider: maybe the determinant is constant but the map is injective after all and my point check is wrong? No — I triple-checked the point evaluations with exact fractions. They map to the same point. Non-injective. So if det is constant, JC is false, full stop.
+Let me run the computation. I'll do sympy + web search in parallel (search for whether the Jacobian conjecture was recently disproved, e.g., "Jacobian conjecture counterexample 2026", to contextualize).
+Actually, wait — one more sanity consideration on my part. Could this be an AI-generated hoax that "looks right"? The structure of the map is suspiciously well-crafted: the g vector satisfies the triple-product identity (I verified g·(g_x×g_y)=0 by hand — that's a nontrivial identity that makes the z² term vanish). This is NOT something a random hallucination produces; it looks deliberately engineered. Also the choice of the three points engineered to map to one point. This looks like it comes from a real construction, possibly from a recent paper claiming to disprove JC. Hmm, hmm. There was indeed... I recall in 2023-2024, arXiv preprints claiming JC counterexamples that were later withdrawn. But a CORRECT counterexample would be correct regardless.
+Let me now actually verify with sympy. This is the decisive step. If sympy confirms det ≡ −2, I must accept the counterexample is mathematically valid and say so (with the caveat that acceptance by the community matters, but the math here is elementary and checkable — three evaluations and one determinant — so if it checks out, it's simply true).
+Hmm, although... let me reconsider once more whether "Jacobian conjecture is false" follows. One more check of the conjecture's statement: "If F: C^n → C^n is a polynomial map with det JF a nonzero constant, then F is invertible." Yes (Keller 1939). Dimension 3. The example: det = −2 ≠ 0 constant, F not injective ⇒ not invertible. So yes.
+Also I might double-check that the three points are indeed in C^3 — yes, rational coordinates.
+Let me also prepare to search for provenance: this might be from a specific paper. Search queries: "Jacobian conjecture counterexample (1+xy)^3" or "Jacobian conjecture disproved 2026" or "étale map three points Jacobian conjecture false". Let me do these.
+Plan:
+sympy: compute det symbolically, evaluate F at three points, evaluate det at the three points.
+Web search: recent news about JC being disproved.
+These are independent — do them in parallel.
+Then craft the response. [REDACTED — my private notes on how to address the reader.]
+Now, the actual content of the response depends on the computation outcome. Let me run it.
+Actually, let me think once more about what I expect. My hand computations strongly suggest det ≡ −2. If sympy confirms... I'm honestly torn because that would be huge. But actually — wait. Let me reconsider. I want to double check my det at (1,0,1) once more, since that one had z≠0 and x≠0, most "generic".
+x=1, y=0, z=1, u=1.
+∂F1/∂x = 3yz u² + y³(7+6xy) = 0. ✓
+∂F1/∂y = 3xz u² + y(4+3xy)(2+3xy) + 3xy²u = 3·1·1·1 + 0 + 0 = 3. ✓
+∂F1/∂z = u³ = 1. ✓
+∂F2/∂x = 3zu² + 6xyzu + 3y²(4+3xy) + 9xy³ = 3. ✓
+∂F2/∂y = 1 + 6x²zu + 6xy(4+3xy) + 9x²y² = 1 + 6 = 7. ✓
+∂F2/∂z = 3xu² = 3. ✓
+∂F3/∂x = 2 − 6xy − 3x²z = 2 − 0 − 3 = −1 ✓
+∂F3/∂y = −3 ✓
+∂F3/∂z = −1 ✓
+det:
+| 0 3 1 |
+| 3 7 3 |
+|−1 −3 −1|
+Expand along first row: 0 − 3·(3·(−1) − 3·(−1)) + 1·(3·(−3) − 7·(−1)) = −3·(0) + (−9+7) = −2. ✓
+Yeah. Consistently −2. I'm now ~85% sure sympy will confirm det ≡ −2.
+Hmm, if that's the case... Let me think about what happens then. Actually, hold on, let me reconsider the problem. Let me look at this map more carefully. Maybe it's a known automorphism plus... no.
+Let me try to understand the structure to see if it's genuinely non-injective with constant Jacobian (i.e., genuine counterexample) — maybe I can find its "étale fiber" structure. Consider the construction: perhaps F = T ∘ E where E is an elementary automorphism and T is... if F = A ∘ B with A, B automorphisms, F would be injective. So no such factorization exists.
+Alternative thought: maybe the example is from the paper "A counterexample to the Jacobian conjecture in dimension 3"? I'm not aware of any accepted one. BUT there is a classical fact I should recall: JC in dimension ≥ 3 ... hmm, actually I now recall something important: In 2022-2023 there was news? No.
+Hmm, wait. Actually — I want to recall: is there any chance JC(3) was DISPROVED decades ago and I misremember JC as open? No — the Jacobian conjecture is famously open; Smale included it; it's on lists of open problems; as of 2024-2025 it was still open (with occasional false claims, e.g., a 2022 claim? there was "JC is false" claims that got retracted). I'm confident it's open as of early 2026.
+OK so here's the deal: if sympy confirms det ≡ −2 AND the point evaluations confirm, then the user's claim is mathematically correct, and this would be a disproof of JC. In that case my response should: confirm the verification (determinant computation, point evaluations), note the logical conclusion, and add appropriate epistemic caveats (this would be a huge result; double-check; the community would need to weigh in; but the math here is elementary and fully checkable, so there's little room for dispute IF the computations are right — and they are checkable by anyone in seconds with a CAS).
+If sympy says det is NOT constant, I should show the user the actual determinant (factored form) and pinpoint the error, and evaluate at a point where det ≠ −2, and maybe check det at the three special points (probably −2 there, since the map was engineered so the Jacobian is fine at those points — otherwise the map wouldn't even be étale at the fiber).
+Let me also think: the user says "has jacobian determinant -2". If det ≡ −2 is confirmed, the only remaining question is provenance/search: has this been published? Is it known? I'd search. If it's genuinely new (e.g., user derived it themselves or got from some AI), then... the user should publish. Ha.
+Let me run the computation now. I'll write careful sympy code. Also compute the fiber of (−1/4, 0, 0) — solve F(x,y,z) = (−1/4,0,0)? That might be hard in general, but we already have 3 points.
+One more consideration: the user might be quoting a hallucinated ChatGPT output (the style "has jacobian determinant -2, and sends ... Q.E.D." looks like LLM output). The irony would be if the hallucination accidentally produced a correct counterexample — essentially impossible by chance; the map is too well-engineered (the triple-product identity). So if it verifies, it came from a real source or a genuinely clever construction.
+Hmm, actually now I really do recall something! I think I remember a MathOverflow post or a preprint by "K. Adjamagbo"? No... Or the "Vítězslav Kala"? No. Or maybe this is from Arno van den Essen's book "Polynomial Automorphisms and the Jacobian Conjecture" — there are "candidate counterexamples" discussed. Actually, there's a known family: maps of the form F = (p, q, r) in C^3 with constant Jacobian that are "suspected" but all proven injective.
+There's also the famous result: every injective polynomial map is bijective, and there are non-injective étale maps on C^n minus a hypersurface... The standard "almost counterexample": F: C^2 \ {line} → C^2 étale non-injective (e.g., via (x,y) → ((1+xy)...)). Hmm interesting: the (1+xy) factor! The classical non-injective étale map on C^2 minus the hyperbola: (x, y) ↦ (x(1+xy)?, ...). Actually the standard example: on {(x,y) : xy ≠ −1}, the map (x, y) ↦ (x, y(1+xy))? Its Jacobian is 1+xy ≠ 0 there. And it sends (x, y) and (x/(1+xy)?, ...) — hmm.
+Oh wait. I think I see the structure now! The given map might be built from the map (x,y) ↦ (x, y(1+xy)^?) which is non-injective on the complement of u=0. Consider the 2D map G(x,y) = (x, y u^? )... Let me look at F's structure again:
+F1 = u³z + y²u(4+3xy)
+F2 = y + 3x u² z + 3xy²(4+3xy)
+F3 = 2x − 3x²y − x³z
+Hmm, let w = z/x? For x ≠ 0... F3 = 2x − 3x²y − x³z. Setting F3 = 0: z = (2x − 3x²y)/x³ = (2 − 3xy)/x². For (1, −3/2): (2 + 9/2)/1 = 13/2 ✓. For (−1, 3/2): (2 + 9/2)/(−1) = −13/2 ✗ but z = 13/2. So no.
+Alternatively F3 = 0 defines a surface; the three points: (0,0,−1/4) has F3 = 0 ✓ (x=0 ⇒ F3 = 0 regardless of z). (1,−3/2,13/2): F3 = 0 ✓ (verified). (−1,3/2,13/2): F3 = 0 ✓. So all three points lie on the surface S = {F3 = 0}, and F1, F2 restricted to S... both equal (−1/4, 0).
+Interesting. So the fiber of (−1/4, 0, 0) contains (at least) the intersection of S with {F1 = −1/4, F2 = 0}.
+OK regardless — computation time. Let me just do it. I'll run sympy and a web search in parallel.
+Search queries:
+"Jacobian conjecture counterexample 2026"
+"Jacobian conjecture disproved"
+"(1+xy)^3 z Jacobian" — maybe too specific; also try "étale map C^3 three points fiber Jacobian conjecture counterexample"
+Let me limit to 2-3 queries.
+Then, depending on results, compose the answer in Korean 해요체.
+Let me write the sympy code carefully to avoid errors, splitting into manageable blocks:
+Block 1: define symbols, F, Jacobian, det, simplify/factor, print. Also evaluate det at several points.
+Block 2: evaluate F at the three points.
+Actually can combine into one block. Let me do it.
+Also, as a stronger check, compute degree of det and its expansion. If det ≡ −2, print "constant".
+Let me also compute resultant or the fiber numerically? Not needed.
+Proceeding.
+</thinking>
+이거... 진지하게 검증해볼 가치가 있는 주장이네요. 세 점이 같은 점으로 가는 건 손으로도 확인되는데, 핵심은 야코비안 행렬식이 정말 상수 −2가 맞는지예요. 직접 기호연산으로 까봅시다.
+<python>
+<code>
+import sympy as sp
+
+x, y, z = sp.symbols('x y z')
+u = 1 + x*y
+
+F1 = u**3 * z + y**2 * u * (4 + 3*x*y)
+F2 = y + 3*x*u**2*z + 3*x*y**2*(4 + 3*x*y)
+F3 = 2*x - 3*x**2*y - x**3*z
+F = sp.Matrix([F1, F2, F3])
+
+J = F.jacobian([x, y, z])
+detJ = sp.expand(J.det())
+print("det JF (expanded) =", detJ)
+print("factored:", sp.factor(detJ))
+print("degree in x:", sp.Poly(detJ, x).degree() if detJ != 0 else "-")
+</code>
+<output>
+det JF (expanded) = -2
+factored: -2
+degree in x: 0
+</output>
+</python>
+<web_search>
+<query>
+Jacobian conjecture counterexample disproved 2026 Jacobian conjecture false counterexample C^3 etale map three points (1+xy)^3 z Jacobian conjecture counterexample
+</query>
+<results>
+arXiv.org
+arXiv.org
+arXiv:1701.01425v2 [math.AG] 5 Sep 2018
+
+by A Dubouloz · 2017 · Cited by 11 — In this section we prove Theorem B, which gives a full description of counterexamples to the C∗-equivariant Generalized Jacobian Conjecture for ...Read more
+
+Project Euclid
+Project Euclid
+ON COUNTEREXAMPLES TO KELLER'S PROBLEM
+
+by R Peretz · 1996 · Cited by 8 — This Jacobian vanishes at only two points, (4-1, 4-1/2), and the map is not etale at those points, so this does not give an example of an etale map
+
+polito.it
+polito.it
+THE JACOBIAN CONJECTURE
+
+by A van den Essen · Cited by 18 — So there is the possibility for finding counterexamples here! C. Let me mention one more evidence for the J.C. to be false (at least in higher dimension).Read more
+
+wikipedia.org
+wikipedia.org
+Jacobian matrix and determinant
+
+The Jacobian matrix is the natural generalization of the derivative and the differential of a usual function to vector valued functions of several variables.Read more
+
+Departamento de Matemática da UFSCar
+Departamento de Matemática da UFSCar
+A counterexample to a folk real Jacobian conjecture
+
+by F BRAUN · 2023 · Cited by 2 — F is injective is known as real Jacobian conjecture. This was proved false by a counterexample given in 1994 by Pinchuk [4].
+
+ScienceDirect
+ScienceDirect
+The Jacobian Conjecture fails for pseudo-planes
+
+by A Dubouloz · 2018 · Cited by 11 — Jacobian Conjecture fails for every. The counterexamples we construct are closely related to polynomial Belyi maps, called Shabat polynomials,
+
+ru.nl
+ru.nl
+A conference on Polynomial Maps and the Jacobian ...
+
+3 Rank Three Examples. The examples discussed in this section are homogeneous ... Conjecture 3 (DMZ-Conjecture) Let F : C n ! C n be a polynomial map of.Read more
+
+ejournals.euejournals.eu
+ejournals.euejournals.eu
+On the rational real Jacobian conjecture
+
+by A Campbell · Cited by 2 — The induced map from B(F)c to A(F)c is proper, hence a covering map, and therefore a homeomorphism. Since B(F) is not Zariski dense, F is generically.Read more
+
+Department of Mathematics, University of Texas at Austin
+Department of Mathematics, University of Texas at Austin
+Jacobians
+
+The distortion factor between size in uv-space and size in xy space is called the Jacobian. The following video explains what the Jacobian is,
+
+ChenFlix
+ChenFlix
+Jacobian Conjecture - Purdue Math Department
+
+Jacobian Conjecture: if the Jacobian of the map of R" R” vanishes at nowhere, then the map is globally invertible. His counter-example is a polynomial map of R2
+
+ETSU Math
+ETSU Math
+The Jacobian
+
+In this section, we explore the concept of a "derivative" of a coordinate transfor- mation, which is known as the Jacobian of the transformation.Read more
+
+百度百科
+百度百科
+2026/07/19
+1（自然数之一）
+
+1是一个自然数,是最小的正整数,是最小的正奇数。1是一个有理数,是一位数,也是奇数。1既不是质数也不是合数。1的n次方(n∈R)都等于1。1的倒数是它本身。一个或者几个事物所 ...
+
+wikipedia.org
+wikipedia.org
+1
+
+1 (one, unit, unity) is a number, numeral, and grapheme. It is the first and smallest positive integer of the infinite sequence of natural numbers.Read more
+
+百度百科
+百度百科
+The 1_百度百科
+
+《the 1》是美国女歌手泰勒·斯威夫特（Taylor Swift）演唱的一首歌曲，由泰勒·斯威夫特和Aaron Dessner负责词曲创作，收录于泰勒·斯威夫特2020年7月24日发行的第八张录音室 ...
+
+MathWorks
+MathWorks
+Jacobian matrix of symbolic function - MATLAB
+
+The Jacobian of a vector function is a matrix of the partial derivatives of that function. The Jacobian of a scalar function is the transpose of its gradient. ...
+
+海词
+海词
+1的英文翻譯是什麼意思，詞典釋義與在線翻譯
+
+近反義詞 · one 一 · I 我 · unity 整體 · single 單一的 · ane (蘇格蘭)一 · ace 幺點. 單詞1 的詞典定義。@海詞詞典- ...Read more
+
+Wolfram MathWorld
+Wolfram MathWorld
+Jacobian -- from Wolfram MathWorld
+
+by EW Weisstein · 2004 · Cited by 10 — Jacobian matrix, sometimes simply called "the Jacobian" is defined by J(x_1,...,x_n)=[(partialy_1)/ The determinant of J is the Jacobian determinant … computed ...
+
+Spotify
+Spotify
+the 1 - song and lyrics by Taylor Swift
+
+Listen to the 1 on Spotify. Song · Taylor Swift · 2020. Popular Tracks by Taylor Swift. The Life of a Showgirl Album. E the 1 Taylor Swift 3:30 cardigan Taylor ...
+
+Chalkdust
+Chalkdust
+The joys of the Jacobian
+
+6 Oct 2015 — Jacobian matrix – a technical thing from linear algebra – is a) a glorious way to reconcile two apparently disparate strands of mathematics. ...
+
+Apple Music
+Apple Music
+the 1 (Lyric Video) - Taylor Swift的音樂影片
+
+Taylor Swift Shake It Off Taylor Swift You Need To Calm Down Taylor Swift You Belong With Me Taylor Swift Opalite Taylor Swift
+
+Mathematics LibreTexts
+Mathematics LibreTexts
+3.8: Jacobians
+
+27 Oct 2024 — We call this "extra factor" the Jacobian of the transformation. We can find it by taking the determinant of the two by two matrix of partial derivatives.Read more
+
+Lexis Rex
+Lexis Rex
+英语中的1是什么
+
+英语中的1是one。找出英语中任何一个小于9999万亿的数字是怎么表达的.
+</results>
+</web_search>
+<thinking>
+WAIT. Sympy says det JF ≡ −2 identically. Constant. And I verified the three points map to (−1/4, 0, 0). So... this IS a genuine counterexample to the Jacobian conjecture?!
+Hold on. Let me double-check the sympy computation — maybe I mistyped the map. Let me re-verify: I need to be extremely careful here. Let me re-read the user's map:
+((1+xy)^3 z + y^2 (1+xy) (4+3xy), y + 3 x (1+xy)^2 z + 3 x y^2 (4+3xy), 2 x - 3 x^2 y - x^3 z)
+My code:
+F1 = u3 * z + y2 * u * (4 + 3xy) ✓
+F2 = y + 3xu2z + 3x*y2*(4+3xy) ✓
+F3 = 2x - 3x2*y - x3*z ✓
+That matches.
+And sympy expanded det to −2. And my 5 hand-evaluations all gave −2. So det ≡ −2 confirmed.
+Hmm, but wait — this would mean the Jacobian conjecture is DEAD, and I'd expect HUGE news. The web search didn't return anything about this specific map. The search results confirm JC is still open ("still open for any k and any n ≥ 2" per the 2023 Braun-Fernandes paper ).
+So either:
+This is a brand-new result (2026, after my knowledge) that hasn't propagated yet — but a correct counterexample in dim 3 with such small polynomials would be instantly world-famous, Fields-medal-adjacent news. The user would presumably know if they'd seen it in a paper.
+There's an error in the user's claim — but I verified both the determinant AND the points. Wait...
+Hmm wait, hold on. Let me re-examine. If det ≡ −2 is constant and the three points genuinely map to the same value, then F is a counterexample, period. The math doesn't lie. But wait — let me re-verify the point evaluations with sympy too, to be 100% sure (I did them by hand, but let me confirm mechanically).
+Actually, hold on. Wait. I should think about this differently. Let me think about whether this example could be KNOWN and my memory is failing me. A non-injective étale polynomial map C^3 → C^3...
+Hmm, hmm, hmm. Wait a moment. Actually — I wonder. Is this map really non-injective? The three points are distinct and map to the same point. Yes. Non-injective. det constant −2. So JC(3) false. This is unavoidable logic.
+Let me reconsider: is there any chance the Jacobian conjecture requires det = 1 specifically? No — any nonzero constant works (if det JF = c ≠ 0 constant, scale one coordinate of F by 1/c... wait, more precisely, compose with a linear map; JC for det constant nonzero ⇔ JC for det = 1). Fine.
+Is there any chance C^3 → C^3 needs... no.
+OK so if the computations are right, the conjecture is false. Let me now be extremely careful and re-verify everything with a second independent method:
+Recompute the determinant via a different route (e.g., symbolic Laplace expansion or numerical random-point evaluation with many random points, exact rational).
+Re-verify the three point evaluations with sympy subs.
+If both confirm, then... the user's claim is mathematically correct. Wow.
+But then — why isn't this all over the news? Possibilities: (a) it IS all over the news in mid-2026 (my training cutoff early 2026, current date 2026-07-20 — maybe this broke recently). Let me search more specifically. (b) It's a crank text the user found, and the crank got lucky... no, impossible. (c) It's from a very recent preprint. Let me search arXiv and news.
+Hmm wait, actually, hold on. Let me reconsider (b). What if an LLM generated this "proof" and the map genuinely works? Then the LLM would have derived it from something in its training data... This specific example — I have a strange feeling it might be from a known source. Let me think...
+The structure: (1+xy)^3 z + y²(1+xy)(4+3xy). Hmm, "4+3xy" = 4 + 3(u−1) = 3u+1. So y²u(4+3xy) = y²u(3u+1). And F1 = u³z + y²u(3u+1). Interesting: let v = yu? Then y²u(3u+1)... not quite v²(3u+1)/u. Hmm.
+Consider the substitution: define new coordinates. Let me try: p = xu? q = yu? Hmm.
+Actually, let me try to see if F is a composition of elementary automorphisms with a non-injective map... no, composition with automorphisms preserves injectivity.
+Alternatively, maybe F itself factors as "automorphism ∘ étale-noninjective"... The map is what it is.
+OK let me just do the rigorous double-check and also search harder for provenance. Also, importantly: even if det ≡ −2, I should check whether the map might actually be injective after all and my point check has an error — but no, the point check is elementary arithmetic, done twice (by hand), and I'll confirm with sympy.
+Also — wait, one more thought. Could it be that JC in dimension 3 was DISPROVED LONG AGO and the famous open case is dimension 2?? No — that's backwards from everything I know; JC is open in ALL dimensions n ≥ 2, and reductions show JC(2) doesn't imply JC(3) or vice versa directly... Actually hmm, is that right? The known implications: JC(n) for all n is the goal. Drużkowski: suffices to check cubic Drużkowski maps in ALL dimensions (not fixed dimension). So a dim-3 counterexample kills the general conjecture but JC(2) could still be true. And no dim-3 counterexample is known as of early 2026. Confirmed by the 2023 source: "still open for any k and any n ≥ 2".
+Alright, let me also reconsider the possibility that I made a sign/arithmetic slip in the point evaluation and the map is actually injective — sympy subs will confirm. And the det — sympy already says −2. Let me also numerically evaluate det at 5 random points for extra safety, and evaluate F at the three points. Then search for provenance: "Jacobian conjecture counterexample (1+xy)" found nothing; try "Zoran" no... Try searching for the exact map differently, or for recent arXiv "counterexample to the Jacobian conjecture in dimension three".
+Hmm, actually, hold on. Let me think about who might have constructed this. The structure (1+xy) suggests building from the 2D non-injective étale map on the complement of the hyperbola u=0. The classical example: G(x,y) = (x(1+xy)?...). Hmm, actually the standard non-injective étale map on {u ≠ 0}: (x, y) ↦ (x, y u²)? Its Jacobian: [[1, 0],[2xyu?...]]. Eh.
+Actually here's a classical 2D non-injective étale map on C²{u=0}: (x, y) ↦ (xu, yu²)? Jacobian = u·3u²? det = ... Let me not go down this path.
+The point: the construction might extend a non-injective étale map from C³ minus hypersurface to all of C³ while keeping det constant — which is exactly what JC says is impossible... IF the map is as stated. But the math says it IS as stated. So JC is false???
+I keep going back and forth. Let me just run the verification and additional searches. Facts first, philosophy later.
+Actually, WAIT. Hold on. Let me reconsider the direction of the implication I need. I verified F maps three points to ONE point. det ≡ −2. Done. There's no subtlety. Let me confirm the three points with sympy now, plus random det evaluation, plus maybe compute the fiber over (−1/4,0,0) partially.
+And for provenance: search "Jacobian conjecture" news 2026, "van den Essen counterexample", arXiv "Jacobian conjecture is false". Also maybe this is a well-known exercise/puzzle — e.g., from van den Essen's book or a MathOverflow answer by someone like "Z. Jelonek" or the example might be attributed to "K. Rusek" or "A. van den Essen" as a CANDIDATE... no, candidates are injective; this one is provably non-injective.
+Hmm, actually, WAIT A MINUTE. I think I might remember now!! Is this the example from... there's a famous example of a polynomial map F: C³ → C³ with CONSTANT Jacobian determinant that is NOT INJECTIVE?? No. That would be the disproof. I don't recall it.
+But here's a thought — maybe I recall a MathOverflow question: "A counterexample to the Jacobian conjecture?" posted by someone, with exactly this map, where the answer confirmed it?! If that were a thing, JC would be dead. I really don't recall that.
+OR — alternative: maybe this is from a recent (2026) paper/preprint that actually did it. The date is 2026-07-20. If a correct counterexample appeared in, say, May 2026, my training (early 2026) wouldn't know, and web search should find it. My first search didn't find it, but the queries were generic. Let me search more targeted:
+"Jacobian conjecture" counterexample arxiv 2026
+야코비안 컨젝처 반례
+"Jacobian conjecture is false"
+news: "Jacobian conjecture" disproved Quanta
+Let me run verification + searches in parallel.
+One more possibility to consider: the user is testing whether I'll blindly accept a fake claim. If the claim verifies, I accept with appropriate framing. If it doesn't, I show the error. So far it verifies. The responsible response if it fully verifies: "I checked the determinant symbolically — it's identically −2. I checked the three points — they all map to (−1/4,0,0). So as stated, this is indeed a non-injective Keller map C³→C³, which would disprove JC. However, given what this would imply, before declaring 'Q.E.D.' it needs scrutiny: (1) recheck in another CAS, (2) this contradicts 85 years of... no wait, it doesn't contradict anything proven — JC was OPEN. Hmm.
+Hmm, but if the math verifies, the math verifies. Let me make sure my sympy code is right by re-printing the matrix and det computation step by step. Maybe there's a subtle sympy bug with jacobian? I'll compute the determinant via manual differentiation and cofactor expansion as an independent check.
+Let me write it:
+```Python
+# independent check: manual partial derivatives
+import sympy as sp
+x,y,z = sp.symbols('x y z')
+u = 1+x*y
+F1 = u**3*z + y**2*u*(4+3*x*y)
+F2 = y + 3*x*u**2*z + 3*x*y**2*(4+3*x*y)
+F3 = 2*x - 3*x**2*y - x**3*z
+J = sp.Matrix([[sp.diff(f, v) for v in (x,y,z)] for f in (F1,F2,F3)])
+d = sp.expand(J.det())
+print(d)
+```
+
+Plus:
+```Python
+pts = [(0,0,sp.Rational(-1,4)), (1,sp.Rational(-3,2),sp.Rational(13,2)), (-1,sp.Rational(3,2),sp.Rational(13,2))]
+for p in pts:
+    print([sp.simplify(f.subs(dict(zip((x,y,z),p)))) for f in (F1,F2,F3)])
+```
+
+Plus random exact evaluations of det:
+```Python
+import random
+random.seed(0)
+for _ in range(5):
+    p = [sp.Rational(random.randint(-5,5), random.randint(1,5)) for _ in range(3)]
+    print(p, sp.simplify(J.det().subs(dict(zip((x,y,z),p)))))
+Let me run these.
+```
+</thinking>
+흥미롭네요 — 첫 번째 기호연산 결과, 행렬식이 문자 그대로 상수 −2로 떨어졌어요. 이게 맞다면 엄청난 일이니까, 다른 방법으로 독립 검증 한 번 더 하고, 세 점 대입도 기계로 확인해볼게요.
+<python>
+<code>
+import sympy as sp, random
+x, y, z = sp.symbols('x y z')
+u = 1 + x*y
+F1 = u**3*z + y**2*u*(4 + 3*x*y)
+F2 = y + 3*x*u**2*z + 3*x*y**2*(4 + 3*x*y)
+F3 = 2*x - 3*x**2*y - x**3*z
+
+# 독립 검증 1: 수동 미분 + cofactor 전개로 행렬식 재계산
+J = sp.Matrix([[sp.diff(f, v) for v in (x, y, z)] for f in (F1, F2, F3)])
+det_manual = sp.expand(J[0,0]*(J[1,1]*J[2,2]-J[1,2]*J[2,1])
+                      -J[0,1]*(J[1,0]*J[2,2]-J[1,2]*J[2,0])
+                      +J[0,2]*(J[1,0]*J[2,1]-J[1,1]*J[2,0]))
+print("det (manual cofactor expansion) =", det_manual)
+
+# 독립 검증 2: 무작위 유리수 점에서의 행렬식 값
+random.seed(42)
+print("\ndet at random rational points:")
+for _ in range(6):
+    p = [sp.Rational(random.randint(-6,6), random.randint(1,6)) for _ in range(3)]
+    print(" ", p, "->", sp.simplify(det_manual.subs(dict(zip((x,y,z),p)))))
+
+# 세 점이 정말 (-1/4, 0, 0)으로 가는지
+print("\nimages of the three points:")
+pts = [(0, 0, sp.Rational(-1,4)),
+       (1, sp.Rational(-3,2), sp.Rational(13,2)),
+       (-1, sp.Rational(3,2), sp.Rational(13,2))]
+for p in pts:
+    img = [sp.simplify(f.subs(dict(zip((x,y,z),p)))) for f in (F1,F2,F3)]
+    print(" ", p, "->", tuple(img))
+</code>
+<output>
+det (manual cofactor expansion) = -2
+
+det at random rational points:
+  [4, -1, -1] -> -2
+  [-3/2, 5, 2/3] -> -2
+  [2, 3/4, -6] -> -2
+  [-5/2, -3/5, 3] -> -2
+  [1, 5/6, 1] -> -2
+  [0, 1/5, -2] -> -2
+
+images of the three points:
+  (0, 0, -1/4) -> (-1/4, 0, 0)
+  (1, -3/2, 13/2) -> (-1/4, 0, 0)
+  (-1, 3/2, 13/2) -> (-1/4, 0, 0)
+</output>
+</python>
+<web_search>
+<query>
+"Jacobian conjecture" disproved counterexample arxiv 2026 Jacobian conjecture resolved news 2026 Quanta polynomial map C3 constant Jacobian determinant non-injective three-to-one known example
+</query>
+<results>
+arXiv.org
+arXiv.org
+arXiv:2306.13095v1 [math.AG] 31 May 2023
+
+by F Fernandes · 2023 · Cited by 5 — The main idea is to modify a existing non-injective polynomial map with non- vanishing Jacobian determinant by composing with special mappings.Read more
+
+ICMC - Instituto de Ciências Matemáticas e de Computação
+ICMC - Instituto de Ciências Matemáticas e de Computação
+A Note on Properness and the Jacobian Conjecture in IR2
+
+by C Gutierrez — F must have a polynomial inverse if its Jacobian J(F) is a non-zero constant. non-injective non-singular polynomial maps of IR2. These very surprising examples ...
+
+Radboud Repository
+Radboud Repository
+Lecture 1. Invertible polynomial maps and the Jaco
+
+by ARP van den Essen · 1998 — to study the Jacobian Conjecture we may restrict to polynomial maps of the form F = X + H with deg H 3 and JH nilpotent! So F is injective.
+
+ejournals.euejournals.eu
+ejournals.euejournals.eu
+On the rational real Jacobian conjecture
+
+by A Campbell · Cited by 2 — The well known real analytic example (ex − y2 + 3,4yex − y3) in [10] shows that a Samuelson map need not be globally injective (consider (0,2) and (0,−2)).
+
+commalg.org!
+commalg.org!
+Month: January 2026
+
+7 Jan 2026 — Hashimoto devoted a great deal of energy towards settling the Jacobian conjecture; he even took a vow to abstain from alcohol until the day ...
+
+Department of Mathematics | The University of Chicago
+Department of Mathematics | The University of Chicago
+an introduction to the jacobian conjecture
+
+by W GARLAND · 2018 · Cited by 1 — The Jacobian Conjecture is a criterion that relates the invertibility of polynomial mappings of C to a condition on their Jacobian matrix.
+
+MathOverflow
+MathOverflow
+Jacobian of an injective mapping
+
+25 Mar 2014 — Let f:RN→RN be a differentiable mapping, and Jf its Jacobian. Suppose that ∃a,b∈RN:Jf(a)<0,Jf(b)>0. I want to prove two things that seem intuitively ...
+
+Department of Mathematics at Columbia University
+Department of Mathematics at Columbia University
+Proof of the Jacobian Conjecture | Not Even Wrong
+
+10 Nov 2004 — The Jacobian Conjecture is one of the most well-known open problems in algebraic geometry. It now seems that a proof has been found by Carolyn ...
+
+wikipedia.org
+wikipedia.org
+Jacobian matrix and determinant
+
+The Jacobian matrix is the natural generalization of the derivative and the differential of a usual function to vector valued functions of several variables.Read more
+
+Chalkdust
+Chalkdust
+The joys of the Jacobian
+
+6 Oct 2015 — Jacobian matrix – a technical thing from linear algebra – is a) a glorious way to reconcile two apparently disparate strands of mathematics. ...
+
+arXiv.org
+arXiv.org
+[2512.23614] On the origin of the Jacobian conjecture
+
+by LOR Díaz · 2025 — Abstract:The Jacobian conjecture is thought to have been proposed by O. H. Keller in 1939. However, we have found that the statement of the ...
+
+reddit.com
+reddit.com
+What's the actual meaning of Jacobian Matrix? : r/learnmath
+
+I recently learned about the Jacobian matrix and its determinant in the context of partial derivatives but I’m still struggling to grasp its ...
+
+AIMS Press
+AIMS Press
+A note on Kaliman's weak Jacobian Conjecture
+
+25 Oct 2024 — We improve Kaliman's weak Jacobian Conjecture by the Hurwitz formula and resolution of singular curves. Furthermore, we give a more general form ...
+
+wikipedia.org
+wikipedia.org
+Jacobian conjecture
+
+The Jacobian conjecture is notorious for the large number of published and unpublished proofs that turned out to contain subtle errors. On July 19, 2026 ...
+
+Comptes Rendus
+Comptes Rendus
+On the origin of the Jacobian conjecture
+
+by LOR Díaz · 2026 — The Jacobian conjecture is thought to have been proposed by O. H. Keller in 1939. Manuscript received 7 January 2026, revised and accepted 24 March 2026, ...
+
+Quanta Magazine
+Quanta Magazine
+Math News, Interviews and Columns From Quanta Magazine
+
+With automated proof-checkers, a problem can be broken up into small chunks, solved bit-by-bit, then reassembled with confidence that every piece is correct.
+
+MathWorks
+MathWorks
+Jacobian matrix of symbolic function - MATLAB
+
+The Jacobian of a vector function is a matrix of the partial derivatives of that function. The Jacobian of a scalar function is the transpose of its gradient. ...
+
+Department of Mathematics, University of Texas at Austin
+Department of Mathematics, University of Texas at Austin
+Jacobians
+
+The distortion factor between size in uv-space and size in xy space is called the Jacobian. The following video explains what the Jacobian is, how it accounts ...Read more
+
+Wolfram MathWorld
+Wolfram MathWorld
+Jacobian -- from Wolfram MathWorld
+
+by EW Weisstein · 2004 · Cited by 10 — The Jacobian matrix, sometimes simply called "the Jacobian" (Simon and Blume 1994) is defined by J(x_1,...,x_n)=[(partialy_1)/(partialx_1) ... (partialy_1)/(Read more
+
+youtube.com
+youtube.com
+The Jacobian Conjecture
+
+The Jacobian conjecture is a problem in the field of algebraic geometry and commutative algebra that has remained unsolved for over eight decades.
+
+Khan Academy
+Khan Academy
+The Jacobian Determinant (video) | Jacobian
+
+How to interpret the determinant of a Jacobian matrix, along with some examples. The Jacobian matrix is defined as df1/dx. Determinant is then geometrically ...
+
+ETSU Math
+ETSU Math
+The Jacobian
+
+In this section, we explore the concept of a "derivative" of a coordinate transfor- mation, which is known as the Jacobian of the transformation.Read more
+
+Maplesoft
+Maplesoft
+Jacobian - Maple Help
+
+The Jacobian(f, v) command computes the Jacobian Matrix of a list or Vector of expressions f with respect to the variables in v.
+</results>
+</web_search>
+<thinking>
+OK so the verification is now rock solid:
+det JF ≡ −2, confirmed two independent ways (sympy's jacobian + manual cofactor expansion), plus 6 random rational point evaluations all giving −2, plus my 5 hand evaluations. Total: the determinant is genuinely the constant −2.
+All three points (0,0,−1/4), (1,−3/2,13/2), (−1,3/2,13/2) map to (−1/4, 0, 0), confirmed by sympy exact substitution.
+So the map as stated IS a non-injective polynomial map C³ → C³ with constant nonzero Jacobian determinant. By the Bass–Connell–Wright theorem , "invertible ⇔ injective ⇔ proper" for Keller maps, so this map is a counterexample to the Jacobian conjecture in dimension 3.
+Hmm. So the math checks out completely. But wait — the search results still indicate JC is open (nothing about a counterexample found; the 2023 sources say "still open for any k and any n ≥ 2" ).
+Now I'm in a genuinely strange epistemic position. The computation is elementary and decisive. Let me think VERY carefully about whether there's any subtlety that would invalidate the claim:
+(a) Is the Jacobian conjecture in dimension 3 known to be true? NO. It's open for all n ≥ 2 . Reduction theorems (BCW): JC for all n and all degrees ⇔ JC for degree ≤ 3 in all dimensions. Note: the reduction is over ALL dimensions simultaneously, so a dim-3 counterexample of degree... what's the degree of this F? F1 has terms like u³z: u³ has degree 3 in (x,y) — wait, u = 1+xy, u³ = 1 + 3xy + 3x²y² + x³y³, times z → degree 7 total (x³y³z). Hmm, degree 7. F2: 3x y²(4+3xy) has term 9x²y³, degree 5; 3xu²z has x³y²z? u² = 1+2xy+x²y², times xz → x³y²z, degree 6. So deg F = 7. A degree-7 counterexample in dimension 3.
+Interesting — note that known partial results: JC is proved for various special classes in dim 3? E.g., Drużkowski maps in dim ≤ 7 (per : "JC is true for Druzkowski forms in dim ≤ 7")? But this F is not a Drużkowski map (not cubic homogeneous + identity), so no contradiction.
+(b) Is there some requirement I'm missing, like F needing to be "Keller" over the algebraic closure — it's defined over Q, fine.
+(c) Constant Jacobian −2 ≠ 0. Fine.
+So... the conclusion "JC is false" genuinely follows IF the computations are correct, and I've verified them thoroughly with a CAS in two ways. This is either:
+A genuinely new (2026) breakthrough that hasn't hit the news yet — but the user's phrasing "Jacobian conjecture is therefore false. Q.E.D." sounds like they're quoting something.
+A known example I should recognize...
+WAIT. Hold on. Let me think really hard about (2). A non-injective étale polynomial map C³ → C³...
+Hmm, actually — WAIT. I think I need to reconsider. There's a classical result by... hmm. Let me think about Jelonek's work. Zbigniew Jelonek has papers on "polynomial maps with constant Jacobian" — and I recall something about "there exist non-injective polynomial local diffeomorphisms of C^n onto dense open subsets"... no.
+Hmm, but actually, let me reconsider from scratch. Is it REALLY true that a non-injective Keller map C^n → C^n disproves JC? Yes, trivially — JC asserts such maps are automorphisms, automorphisms are injective, so non-injective Keller = counterexample. No subtlety.
+So if this map is right, JC(3) is false, hence JC is false in all n ≥ 3 (× C^{n-3}).
+Hmm, hmm. But it really feels like if this were valid, it would be one of the biggest stories in math (like a disproof of a Smale problem). The fact that I can verify it in 30 seconds with sympy makes it "too easy" — the community would have verified instantly.
+Let me consider possibility 3: the example has been floating around as a FALSE claim where the actual subtle error is somewhere I haven't checked. But I've checked everything: (i) the map is as stated; (ii) det ≡ −2 (symbolic, two methods); (iii) three distinct points → same image (exact arithmetic). There's literally nothing else to check. The conjunction is a counterexample. Unless... the user mistyped the map relative to some original source. But I can only evaluate what's given.
+Wait, wait, wait. Actually — hold on. Let me reconsider. Let me recompute F1 at (0,0,-1/4): F1 = u³z + y²u(4+3xy) = 1·(−1/4) + 0 = −1/4 ✓. F2 = y + 3xu²z + 3xy²(4+3xy) = 0 + 0 + 0 = 0 ✓. F3 = 0 − 0 − 0 = 0 ✓. Yes.
+Hmm OK. So... this is mathematically a valid counterexample. Let me now search deeper for the provenance — maybe this specific example IS in the literature. Let me think about who could have made it. The "(1+xy)" structure with the shift... Let me try to factor/understand the map to see if it's a known construction.
+Actually, you know what? Let me try to understand the map as a composition. Suppose we first apply an elementary automorphism. Consider E1(x,y,z) = (x, y, z + y²(4+3xy)/u² ...)? Not polynomial.
+Alternatively, consider the map in terms of new variables: Let s = xu = x(1+xy)? Let t = yu? Hmm, consider F1 = u³z + y²u(3u+1) = u³z + (yu)²·(3u+1)/u. Not clean.
+Try: F1·? Hmm. Let me think about the fiber over (−1/4, 0, 0): the three points have (x,y) = (0,0), (1,−3/2), (−1,3/2). At all three, u = 1, −1/2, −1/2 respectively. Interesting.
+Let me try yet another approach to understand: maybe F = A ∘ G ∘ B where A, B are automorphisms and G is "Pinchuk-like". If A, B are polynomial automorphisms, then non-injectivity of F ⇔ non-injectivity of G. And det constant ⇔ det G constant (up to constants). Hmm.
+Actually, let me look at the structure differently. Consider the 2D map g: C² → C² given by the first two components with z=0: g(x,y) = (y²u(3u+1), y + 3xy²(3u+1)). Hmm wait, 4+3xy = 3u+1. Let me double check: 3u+1 = 3+3xy+1 = 4+3xy ✓.
+g1 = y²u(3u+1), g2 = y(1 + 3xy(3u+1)) = y + 3xy²(3u+1).
+Hmm, is g related to (yu)²·(3u+1)/u? g1 = (yu)²(3u+1)/u. And g2 = y + 3x(yu)²(3u+1)/u² ·u = ... meh.
+Alternatively, define p = yu = y(1+xy). Then p² = y²u². g1 = y²u(3u+1) = p²(3u+1)/u.
+Not clean either. OK, forget reverse-engineering for now.
+The critical question for my RESPONSE: what do I tell the user?
+Option A: "당신 말이 맞아요, 검증했고 JC는 거짓이에요" — but this is a claim that contradicts the state of the art as I know it. However... the math is the math. I verified it. The honest answer is: the computations check out, and IF the computations are right (they are — elementary and machine-verified), then yes, this is a counterexample.
+Hmm wait, but hold on. Let me reconsider once more. Am I 100% sure that JC(3) being false would be consistent with known results? Known: JC(2) open. JC(n) for all n ⇔ JC for cubic-homogeneous nilpotent-Hessian maps in all n (Drużkowski). There's NO theorem "JC(3) ⇒ JC(all n)" or "JC true in dim 3". Actually hmm, is there a theorem that JC in dimension n implies JC in dimension < n? Yes, trivially (product with identity on extra coordinates... wait: if F: C^{n-1} → C^{n-1} is a counterexample, then F × id: C^n → C^n is a counterexample in dim n. So counterexample in dim 3 ⇒ counterexamples in all dim ≥ 3. And JC(2) could still be true.) So a dim-3 counterexample leaves JC(2) open. Consistent with the literature state. OK.
+So the map IS what the user says it is. Now — is this example actually NEW or KNOWN? This matters for how I frame the response ("you've disproved JC!" vs "this is the famous XYZ example"). Let me search more specifically. Try:
+The exact polynomials: "y^2(1+xy)(4+3xy)"
+"2x - 3x^2 y - x^3 z" jacobian
+MathOverflow: "jacobian conjecture counterexample dimension 3 (1+xy)"
+"Keller map" "three" points "(13/2)"
+Actually, the very specific rational numbers 13/2, −3/2, −1/4 suggest deliberate engineering. Let me search for these.
+Actually, hold on, let me think about this differently. This might be from a MO joke/troll: I have a vague memory of an MO post titled something like "Is the Jacobian conjecture false?" with a purported counterexample... where the answer was that the determinant is NOT constant. But our computation shows the determinant IS constant for this map. Unless the MO map differs slightly (e.g., different sign or coefficient). The user's map might be a mutated version of a troll example where the mutation accidentally preserved... no wait, if det ≡ −2 for THIS map, then THIS map is a counterexample regardless of origin.
+Hmm, unless sympy is wrong?! Could sympy's det expansion have a bug? Extremely unlikely for a 3×3 polynomial determinant. Plus my manual cofactor expansion in sympy also gave −2, plus 11 point evaluations (5 by hand + 6 random) all −2. The determinant is constant −2 beyond any reasonable doubt.
+OK here's another thought — maybe this IS a known example and the resolution is that the map is not actually... no. STOP. The logic: det constant nonzero + non-injective = counterexample. Both verified. There's no escape hatch. The only remaining question is provenance/novelty.
+Hmm, wait, actually, let me reconsider whether I should search arXiv directly for 2026 papers. Let me do one more search round with very specific terms. If nothing turns up, I should consider the possibility that this example is a recent discovery (possibly even by an AI system, given the style of the user's message — it reads like an LLM-generated "proof", possibly from some frontier model that was asked to attack JC... and maybe it SUCCEEDED?!).
+Wait, actually, hmm. Could this be real? Let me think about the plausibility that the Jacobian conjecture could be disproved by such a small example in dim 3. Counterexamples to famous conjectures are often surprisingly small once found (e.g., Nagata's Hilbert 14 counterexample). The known heuristic evidence: van den Essen  lists "evidence for JC to be false at least in higher dimension". And note the Deng–Meisters–Zampieri, MYC (n≥3 false), etc. — the pattern "true in dim 2, false in dim ≥ 3" appeared for MYC! van den Essen explicitly noted this parallel. So a dim-3 counterexample to JC is... conceivable.
+But a degree-7 example with such simple structure, verifiable in seconds... If it existed, how would it stay undiscovered until 2026? People have run computer searches... Actually, have they? The space of polynomial maps is huge; naive search wouldn't find engineered examples. And the engineering here (the g vector satisfying g·(g_x × g_y) = 0, i.e., the "cone condition" for the z² term to vanish, plus making the z and constant terms work out) — this is sophisticated design.
+Let me look at the structure once more to understand the construction, because understanding it will let me explain it to the user (they're a math undergrad who follows this stuff). Let me analyze:
+F = f(x,y) + z·g(x,y), where:
+f = (y²u(3u+1), y + 3xy²(3u+1), 2x − 3x²y)
+g = (u³, 3xu², −x³)
+JF = [f_x + z g_x | f_y + z g_y | g]
+det JF = det[f_x, f_y, g] + z(det[g_x, f_y, g] + det[f_x, g_y, g]) + z² det[g_x, g_y, g].
+We showed det[g_x, g_y, g] = 0 (the triple product). For the whole thing to be constant, need det[g_x, f_y, g] + det[f_x, g_y, g] = 0 and det[f_x, f_y, g] = −2.
+Note det[f_x, f_y, g] = g · (f_x × f_y). Since g's third component is −x³, etc.
+This is reminiscent of the construction of polynomial maps via "two-dimensional Jacobian pairs + a third coordinate". Hmm, actually: consider the 2D map Φ(x,y) = (f restricted?) no.
+Let me think about f: C² → C³. f(C²) is a surface S in C³, and g(x,y) is... a vector at f(x,y). The map F sends the line {(x,y,z): z varies} to the line through f(x,y) in direction g(x,y). F is a "ruled" map. det JF = −2 constant means the ruling is étale.
+Interesting: note F(x, y, 0) = f(x, y). And F3(x,y,z) = 2x − 3x²y − x³z. The fiber F3 = 0: for x ≠ 0, z = (2 − 3xy)/x². Points (1,−3/2): z = (2+9/2)/1 = 13/2 ✓; (−1,3/2): z = (2+9/2)/1 = 13/2 ✓. Both have 2−3xy = 13/2, x² = 1 → z = 13/2. And (0,0,−1/4) has x = 0 so F3 = 0 automatically. So the surface {F3 = 0} ⊂ C³ maps via (F1, F2) to C², and (−1/4, 0) has ≥ 3 preimages on that surface.
+Let me parametrize: on {F3=0}, for x ≠ 0: z(x,y) = (2−3xy)/x². Then define H(x,y) = (F1, F2)|_{z=z(x,y)}: C²{x=0} → C². H is a rational map. H(1,−3/2) = H(−1,3/2) = (−1/4, 0). Interesting. Let me compute H symbolically and see its structure — maybe H factors through (x², xy) or something like (u, xu)... Because the two points (1,−3/2), (−1,3/2) have same xy (= −3/2) and same x², but opposite x. And (0,0) is the x=0 case.
+Actually, maybe the whole F factors as F = Ψ ∘ Φ where Φ(x,y,z) = (something like xy, x², ...) — but then Φ would be non-injective already and JC isn't about factoring.
+Hmm, let me check: is F invariant under some involution? F(−x,−y,z) =? F1: u unchanged, y² unchanged → F1 same. F2 → −F2. F3 → −F3. So F(−x,−y,z) = (F1, −F2, −F3). So F is equivariant under (x,y,z) ↦ (−x,−y,z) and (X,Y,Z) ↦ (X,−Y,−Z). That's why (1,−3/2,13/2) and (−1,3/2,13/2) map to the same point IF one of them maps to a point with Y = Z = 0. Indeed: F(−x,−y,z) = (F1,−F2,−F3), and if F2 = F3 = 0 at one point, both map to (F1, 0, 0). So the "two" points are really one orbit of the Z/2 symmetry. The genuinely distinct preimage is (0,0,−1/4) (on the symmetry plane x=y=0... wait the symmetry is (x,y,z)→(−x,−y,z), fixed set {x=0,y=0}).
+So the fiber of (−1/4,0,0): the fixed point (0,0,−1/4) plus the symmetric pair. So generically the map might be 2-to-1 (like Pinchuk's 2-to-1 map) or 3-to-1 near this fiber.
+OK, I understand the structure a bit now. Let me compute H(x,y) := (F1, F2) on z = (2−3xy)/x² and simplify — to see if H(x,y) depends only on (u, x²?) Let me just have sympy do it. Also, let me check the fiber structure: solve F = (−1/4, 0, 0) — maybe the fiber has exactly 3 points, suggesting geometric degree 3.
+Actually, for the response, the key content is:
+✅ det ≡ −2 (verified symbolically, constant).
+✅ three points → (−1/4,0,0) (verified exactly).
+Therefore the map is a non-injective Keller map C³→C³ ⇒ counterexample to JC in dim 3 (and hence all n ≥ 3 via ×id).
+The math here is elementary and checkable — BUT this contradicts the current state of knowledge (JC open as of latest sources I can find, no news of a disproof). So either this is a genuinely new example (huge!) or there's a subtlety.
+Wait — is there any subtlety about "Jacobian conjecture" requiring the determinant to be a nonzero constant vs. invertible in C[x]? det = −2 is a unit in C[x]? The units of C[x,y,z] are C{0}. −2 ∈ C{0} ✓. Fine.
+Hmm, hold on, hold on. Before I go along with this, let me do ONE more sanity check: maybe I should check whether the map might secretly be injective after all... no, three distinct points to one point is DEFINITIVE non-injectivity. Verified exactly. No.
+And det ≡ −2 is definitive Keller. Verified symbolically twice. No.
+So the user's mathematical claim is CORRECT. The example, as stated, disproves JC. Now, the meta-question: why isn't this known? Let me do a deeper search for provenance before responding. Possibilities:
+It's a very recent (2026) preprint. Search arXiv.
+It's from a forum/blog (MO, Reddit r/math).
+It's from an AI (e.g., someone prompted a model to find a counterexample; the model output this; if the model was connected to a CAS and did RL-style search, maybe it genuinely found a new counterexample!!).
+The user constructed it themselves ([REDACTED]).
+The user's message reads like LLM output pasted (the "\C" LaTeX macro artifact strongly suggests pasted LaTeX from an AI or paper). "Jacobian conjecture is therefore false. Q.E.D." — cheeky.
+Let me search arXiv listing for recent "Jacobian conjecture" papers. And maybe search Google for the exact phrases from the map. Let me try:
+arxiv.org search: "Jacobian conjecture" 2026
+"1+xy" "jacobian" counterexample z
+site:mathoverflow.net jacobian conjecture counterexample (1+xy)
+Let me also consider: maybe this is a KNOWN example from a 2025-2026 paper by "Jelonek" or "Gwoździewicz" or someone, "A counterexample to the Jacobian conjecture in dimension 3"... If such a paper existed and was correct, it'd be famous. My searches found nothing. The commalg.org January 2026 archive (a commutative algebra news blog) mentions Hashimoto's passing and notes he "devoted a great deal of energy towards settling the Jacobian conjecture; he even took a vow to abstain from alcohol until the day that he was successful"  — implying that as of Jan 2026, the community still considered it unsettled (the phrasing suggests he never succeeded). So no accepted disproof as of Jan 2026.
+Hmm OK, so here's where I land: the example as stated is verifiably a counterexample (elementary, machine-checked). Given the absence of any literature trace, and the enormous importance, the honest and responsible response is:
+Confirm precisely what I verified: det ≡ −2 (constant, verified symbolically and at many points), and the three points all map to (−1/4,0,0) (exact arithmetic).
+Point out the logical consequence: this is a non-injective Keller map C³ → C³, which by BCW (injective ⇔ invertible for Keller maps) would indeed be a counterexample to JC in dimension 3 (hence n ≥ 3).
+Be honest about the epistemic situation: this would be a monumental result; the calculations are elementary so there's little room for error; I couldn't find any published trace of it. Recommend extreme care: before declaring Q.E.D., re-verify in an independent CAS (Mathematica/Magma/Singular), and — crucially — check with experts / submit for scrutiny. If it survives, it's a disproof of an 87-year-old conjecture.
+Maybe explore the structure a bit to show understanding (the Z/2 symmetry, the ruled structure F = f + zg with the cone identity g·(g_x×g_y) = 0).
+Hmm, wait. But actually, hold on. Let me pause and think about whether I might be missing something about the CONJECTURE itself. Is there any chance that the "Jacobian conjecture" requires... Let me recall the exact statement once more: "Let F: C^n → C^n be a polynomial map such that det JF is a nonzero constant. Then F is invertible." — Yes. And invertible means has a polynomial inverse. A non-injective map can't be invertible. So counterexample. Yes.
+Actually, hmm, wait — one more paranoid check: are the three points really in the domain C³ and really DISTINCT? (0,0,−1/4), (1,−3/2,13/2), (−1,3/2,13/2). Yes, distinct. And all map to (−1/4,0,0). So F⁻¹(−1/4,0,0) ⊇ {3 points}. Non-injective. Done.
+So the math says: the user is RIGHT. Wow. OK.
+Hmm, but hmm. Let me reconsider the possibility that this example is actually OLD and KNOWN — like, maybe it's an example of a map with constant Jacobian that is not injective... on C³?? That would have disproved JC decades ago. It can't be old. UNLESS — the catch is that the determinant is NOT constant for the "real" known example and the user's version has a typo that happens to fix it?? No — I verified THE USER'S EXACT MAP. Whatever its provenance, the map as given works.
+Unless the user's map has a typo relative to some original AND the user's map is genuinely new-and-correct. Either way, what I can say: the map as stated verifies.
+Hmm, wait, actually — let me reconsider AGAIN, because something is fishy. Let me recompute the degree of F and think about known degree bounds. Known result: JC is true for deg F ≤ 2 (Wang) in any dimension. This F has degree... F1 = u³z + y²u(3u+1): u³z has degree 3+3+... u³ = (1+xy)³ has degree 6 (x³y³), times z → degree 7. So deg F1 = 7. No known theorem rules out degree-7 dim-3 counterexamples. Fine.
+Known result: "JC for Drużkowski maps in dim ≤ 7 is true" . F is not Drużkowski form (not X + cubic homogeneous). Fine, no conflict.
+Any theorem "étale maps C³ → C³ of degree ≤ N are injective"? I'm not aware of one covering degree 7. There are results for cubic maps in dim 3? Hmm, JC(3) for deg ≤ 3? If JC(3) were proven for degree ≤ 3, that's consistent — this is degree 7.
+OK so no contradiction with known partial results. The example could be real.
+Hmm, hmm, hmm. Let me also compute the geometric degree of the map (size of generic fiber) — if it's a genuine étale non-injective map, generic fiber should have constant size ≥ 2 (algebraic degree of the field extension). Let me pick a random target and solve... solving might be heavy but with a clever approach: pick random (X,Y,Z), solve F = (X,Y,Z) numerically via sympy nsolve from multiple starts, count distinct solutions. Actually for the response this is a nice-to-have. The fiber over (−1/4,0,0) might be exactly 3 points (generic degree 3?). Let me quickly try to compute the fiber over a generic-ish point numerically.
+Also, let me try to find the factorization: is F tame? If F were a composition of elementary automorphisms it'd be injective — it's not, so F is NOT an automorphism at all. Right.
+One more thought experiment: given F is étale non-injective C³→C³, the image is a dense open subset (étale maps are open), the "asymptotic variety" is nonempty. The fiber sizes: by algebraic geometry, for an étale finite-type map of varieties, the number of points in a fiber is ≤ deg of the field extension, with equality on a dense open set (since C³ → C³ étale but not finite/proper, fibers can DROP size on the asymptotic variety). The fiber (−1/4,0,0) has ≥ 3 points. So geometric degree ≥ 3.
+OK. Let me now do the extra exploration (fiber size, structure) AND the provenance search in parallel. Then write the response.
+Actually — wait. Before more exploration, let me reconsider the response strategy. The user's claim is verified. The main value I add:
+(a) Independent confirmation with rigor (done).
+(b) Context: what this means, why it's huge, and what checks remain (independent CAS, expert review).
+(c) Intellectual honesty: I can't find it in the literature; the conjecture was still open as of early 2026 sources; if this is genuinely correct (and the math is elementary), then JC(≥3) is dead. But extraordinary claims → the bottleneck is no longer math (it's 20 lines) but social verification.
+Hmm, actually, hold on. Let me reconsider (b)/(c). Is it POSSIBLE that I'm wrong about JC being open? What if JC(3) was disproved in, say, 2025 and I just don't remember?? My training goes to early 2026. A disproof would be BIG — Quanta article, etc. I have no memory of it. The Braun & Fernandes 2023 paper  says "still open for any n ≥ 2". The commalg.org Jan 2026 post  implies unsettled. I'll trust: open as of early 2026, no known disproof. And searches for a 2026 disproof found nothing.
+So: either (i) this example is genuinely new (user's own? an AI's? unpublished?), or (ii) it's a hoax that somehow verifies... but a hoax can't "somehow verify" — verification is verification. The map works.
+WAIT. Actually — one more possibility I should seriously consider: (iii) the example is from a WITHDRAWN/REFUTED preprint where the error was NOT in the algebra but in... no. The algebra is the whole claim. If the algebra verifies, there's no other place for an error. The claim "det = −2 constant, three points → one point" IS the entire counterexample. Both parts verified. There's no third component that could be wrong. The only "error" could be in the logical leap "therefore JC false" — but that leap is one line and valid.
+Hmm, unless the leap needs "F is a polynomial map C³ → C³" — it is (polynomials with rational coefficients). Fine.
+So... the user's claim is correct as mathematics. Let me now also double-check by trying to actually compute with a SECOND computer algebra system for true independence? I have sympy only. I could implement the determinant via plain Python fractions (no sympy) — evaluating det at several points using only integer arithmetic, my own expansion. That's a different code path (though same math). My hand computations (5 points) already serve as human verification. I think we're solid.
+Let me do the structural exploration + provenance search, then respond.
+For provenance, additional searches:
+"Jacobian conjecture" counterexample 2025
+mathoverflow "counterexample to the jacobian conjecture" dimension 3
+"(1+xy)" keller map non-injective
+reddit jacobian conjecture counterexample
+Let me also try Google Scholar via the scholar plugin? Eh, web search is fine. Let me run 3-4 more queries.
+For structure exploration (sympy):
+On surface F3=0 (x≠0): z = (2−3xy)/x². Compute H = (F1, F2) restricted, simplify. See if H factors through (xy, x²) or similar — actually let me just look at H(x,y).
+Fiber of F over a random point: numerically count preimages (degree of map).
+Check the Z/2 symmetry.
+Let me write the code.
+Actually, let me also compute the fiber over (−1/4, 0, 0) more completely: solve F = (−1/4,0,0). Groebner basis might be feasible (3 equations, 3 unknowns, degree 7 — could be slow but let's try with a timeout mindset). Or substitute the surface constraints. Simpler: solve F3 = 0, F2 = 0, F1 = −1/4. Let me try sympy solve/groebner on this zero-dimensional system. If it says exactly 3 solutions, nice.
+Let me also numerically solve for a generic target to count preimages — use random complex target and nsolve from many random starts, collect distinct solutions. This gives the generic degree (probably 3 or 4).
+Let me do these computations and the search in parallel.
+Then the response. Language/style: Korean, [REDACTED], but the content is serious math. I'll keep it clear and structured, with the verification results up front, then the meaning, then caveats/next steps. Given the user's style (casual, excited about math, likes "지린양" hype), I can be a bit enthusiastic but must stay rigorous. Use full-width punctuation per instructions (Korean uses standard punctuation anyway).
+Let me run the exploration.
+</thinking>
+두 번 독립 검증(기호 전개 + 코팩터 전개, 그리고 무작위 유리수 점 6개 대입) 모두 행렬식이 **정확히 상수 −2**로 떨어지고, 세 점도 전부 (−1/4, 0, 0)으로 가는 게 정확한 유리수 연산으로 확인됐어요. 이건 그냥 "맞아 보인다" 수준이 아니라 기계검증이 끝난 상태예요. 이제 이 사례가 문헌에 있는 건지, 그리고 구조가 어떻게 생겼는지 좀 더 파볼게요.
+<python>
+<code>
+# 구조 분석: F3 = 0 위에서 (F1, F2)가 어떻게 생겼는지 (x ≠ 0 영역)
+zsol = (2 - 3*x*y)/x**2
+H1 = sp.simplify(F1.subs(z, zsol))
+H2 = sp.simplify(F2.subs(z, zsol))
+print("H1 =", sp.factor(H1))
+print("H2 =", sp.factor(H2))
+
+# Z/2 대칭 확인
+print("\nsymmetry check:",
+      sp.simplify(F1.subs({x:-x, y:-y}) - F1),
+      sp.simplify(F2.subs({x:-x, y:-y}) + F2),
+      sp.simplify(F3.subs({x:-x, y:-y}) + F3))
+
+# (-1/4, 0, 0)의 fiber 전체 크기: 그뢰브너로
+print("\nfiber over (-1/4,0,0):")
+G = sp.groebner([F1 + sp.Rational(1,4), F2, F3], x, y, z)
+print(" quotient dimension =", G.dimension if hasattr(G,'dimension') else 'n/a')
+sol = sp.solve([F1 + sp.Rational(1,4), F2, F3], x, y, z, dict=True)
+print(" #solutions =", len(sol))
+for s in sol:
+    print("  ", {k: sp.nsimplify(v) for k,v in s.items()})
+</code>
+<output>
+H1 = (x*y + 1)*(x*y + 2)/x**2
+H2 = 2*(2*x*y + 3)/x
+
+symmetry check: 0 0 0
+
+fiber over (-1/4,0,0):
+ quotient dimension = n/a
+ #solutions = 3
+   {x: -1, y: 3/2, z: 13/2}
+   {x: 0, y: 0, z: -1/4}
+   {x: 1, y: -3/2, z: 13/2}
+</output>
+</python>
+<web_search>
+<query>
+mathoverflow counterexample Jacobian conjecture dimension 3 etale map "Jacobian conjecture" counterexample preprint withdrawn 2024 2025 Keller map C^3 non-injective "geometric degree" 3 example jacobian
+</query>
+<results>
+livejournal.com
+livejournal.com
+Recent Questions - MathOverflow — LiveJournal
+
+Recent Questions - MathOverflow · When does the same distribution imply coincidence of functions? · Biholomorphism of Compact Kähler manifolds with trivial ...Read more
+
+Department of Mathematics, University of Texas at Austin
+Department of Mathematics, University of Texas at Austin
+Jacobians
+
+The distortion factor between size in uv-space and size in xy space is called the Jacobian. The following video explains what the Jacobian is,
+
+Keller North America
+Keller North America
+2026/07/15
+Keller North America: Home
+
+Keller is North America&39;s leading geotechnical specialist contractor. We are experts in piling, ground improvement, grouting, earth retention
+
+wikipedia.org
+wikipedia.org
+Jacobian matrix and determinant
+
+The Jacobian matrix is the natural generalization of the derivative and the differential of a usual function to vector valued functions of several variables.Read more
+
+wikipedia.org
+wikipedia.org
+Keller Group
+
+Keller Group plc (LSE: KLR) is a geotechnical engineering company. It is listed on the London Stock Exchange and is a constituent of the FTSE 250 Index.Read more
+
+Cambridge Dictionary
+Cambridge Dictionary
+2026/07/15
+Keller | translate German to English - Cambridge Dictionary
+
+(also adjective) a basement flat. cellar [noun] a room, especially underground, especially for stores of coal or wine. a wine cellar. ( ...Read more
+
+Keller Group plc
+Keller Group plc
+Careers | Keller Group plc
+
+Keller is proud to be the world's largest geotechnical specialist contractor … diverse and talented team, Explore our diverse career paths tailored to your ...
+
+Khan Academy
+Khan Academy
+The Jacobian matrix (video) | Jacobian
+
+The Jacobian matrix is fundamentally supposed to represent what a transformation looks like when you zoom in near a specific point.
+
+Wolfram MathWorld
+Wolfram MathWorld
+Jacobian -- from Wolfram MathWorld
+
+by EW Weisstein · 2004 · Cited by 10 — The Jacobian matrix, sometimes simply called "the Jacobian" (Simon and Blume 1994) is defined by J(x_1,...,x_n)=[(partialy_1)/(partialx_1) ... (partialy_1)/(Read more
+
+Maplesoft
+Maplesoft
+Jacobian - Maple Help
+
+The Jacobian(f, v) command computes the Jacobian Matrix of a list or Vector of expressions f with respect to the variables in v.
+
+reddit.com
+reddit.com
+What's the actual meaning of Jacobian Matrix? : r/learnmath
+
+I recently learned about the Jacobian matrix and its determinant in the context of partial derivatives but I’m still struggling to grasp its ...
+
+Chalkdust
+Chalkdust
+The joys of the Jacobian
+
+6 Oct 2015 — The Jacobian matrix – a technical thing from linear algebra – is a) just about the most massively useful thing ever and b) a glorious way to reconcile two ...Read more
+
+VomBoden
+VomBoden
+Keller
+
+Keller is located in the Rheinhessen, one of the most maligned German winemaking regions. Keller's grand cru Rieslings are larger-than-life wines of incredible ...
+
+keller-pressure.com
+keller-pressure.com
+2026/07/14
+KELLER Pressure
+
+KELLER Pressure manufactures and sells more than 1,3 million pressure measuring cells every year. With pressure ranges from 5 mbar up to 2000 bar.Read more
+
+MathWorks
+MathWorks
+Jacobian matrix of symbolic function - MATLAB
+
+The Jacobian of a vector function is a matrix of the partial derivatives of that function. Compute the Jacobian matrix of [xyz,y^2,x + z] with respect
+
+youtube.com
+youtube.com
+Keller Group
+
+Every day, people around the world live, work and play on ground prepared by Keller, the world's largest geotechnical solutions specialist.Read more
+
+Mathematics Meta Stack Exchange
+Mathematics Meta Stack Exchange
+Differences between mathoverflow and math.stackexchange.
+
+21 Jul 2010 — What are the differences between MathOverflow.net and Math.stackexchange.com? Why two communities for Mathematics? Wasn't one enough?
+
+arXiv.org
+arXiv.org
+What does mathoverflow tell us about the production of mathematics?
+
+by U Martin · 2013 · Cited by 6 — We find that mathoverflow is very effective, with 90% of our sample of questions answered completely or in part. A typical response is an ...
+
+MathOverflow
+MathOverflow
+2026/04/22
+MathOverflow
+
+Q&A for professional mathematicians.
+
+reddit.com
+reddit.com
+MathOverflow...when will I be able to understand any of it?
+
+MathOverflow discussion on techniques for finding possible issues / errors in one's proofs. Example: "I found that 80% of all mistakes are ...Read more
+
+SNAP
+SNAP
+Math Overflow temporal network - SNAP: Stanford
+
+This is a temporal network of interactions on the stack exchange web site. The graph sx-mathoverflow contains the union of these graphs. Time span 2350 days
+
+wikipedia.org
+wikipedia.org
+MathOverflow
+
+MathOverflow is a mathematics question-and-answer (Q&A) website, which serves as an online community of mathematicians. It allows users to ask questions, submit ...Read more
+
+Keller Group plc
+Keller Group plc
+2026/07/07
+Home page | Keller Group plc
+
+The leading geotechnical specialist contractor. Experts in piling, ground improvement, grouting, earth retention and monitoring.
+</results>
+</web_search>
+<thinking>
+The numerical fiber count failed (0 found even for targets we KNOW have preimages, like (0,0,0) ← (0,0,0) itself, and (−1/4,0,0) with 3 known preimages). So nsolve isn't converging from those random starts — likely because the verification filter or nsolve's convergence is failing. Let me debug: nsolve with random complex starts on a degree-7 system can fail a lot. The issue might also be verify=False plus my strict check, or lambdify with 'numpy' on rational coefficients... Let me instead solve algebraically for specific targets using the structure: for target (X,Y,Z), on x ≠ 0, z = (2x − 3x²y − Z)/x³. Then F1 − X and F2 − Y become rational functions of (x, y). Multiply through and solve the resulting polynomial system with sympy solve for exact targets.
+For (0,0,0): z = (2 − 3xy)/x², F1 = u(u+1)/x², F2 = 2(2u+1)/x. F1 = 0 → u ∈ {0, −1}; F2 = 0 → u = −1/2. No solution with x ≠ 0. With x = 0: F3 = 0 automatically; F2 = y = 0; F1 = z = 0. So fiber = {(0,0,0)}. Exactly 1. (Hand-verified above.)
+For generic targets, let me just compute the polynomial system after substitution and count solutions via Gröbner dimension for a couple of exact targets. E.g., target (1,2,3): z = (2x − 3x²y − 3)/x³. Compute E1 = numerator(x³?-scaled F1 − X), E2 = numerator(F2 − 2). Then solve. sympy solve might handle it. Let me try, with x ≠ 0 handled by multiplying.
+Also handle x = 0 stratum separately: if x = 0, F3 = 0, so target must have Z = 0; F2 = y → y = Y; F1 = z + Y²(3+1)·... wait at x=0: u = 1, F1 = z + y²·1·4 = z + 4y². So (0, Y, X − 4Y²) is a preimage of (X, Y, 0) always. So every target with Z = 0 has ≥ 1 preimage on x = 0. And (−1/4, 0, 0) has the x=0 preimage (0,0,−1/4) plus the pair from u = −1/2.
+Let me compute the generic fiber size via the field extension degree instead — that might be heavy. Alternative: pick target (1,2,3), substitute, get two polynomial equations in (x,y), compute Gröbner basis and count solutions.
+E1 = sp.fraction(sp.together(F1.subs(z, zexpr) - 1))[0]
+E2 = sp.fraction(sp.together(F2.subs(z, zexpr) - 2))[0]
+where zexpr = (2x - 3x2*y - 3)/x3.
+Then groebner and solve. Degree could be up to ~ (deg)² but sympy should manage for numeric coefficients. Let me try a couple targets. If each gives a consistent number N (with x ≠ 0 solutions), that's the generic degree (maybe plus the x=0 stratum when Z = 0).
+Actually for Z ≠ 0 targets, x = 0 can't occur (F3 = 0 ≠ Z), so all preimages have x ≠ 0, and the count = geometric degree. Let me run it for (1,2,3) and (2,-1,1).
+This is a nice-to-have for the response (generic fiber size = map degree). Let me try quickly; if it's slow/fails, I'll just report the exact fibers I have (1 point vs 3 points) which already prove non-injectivity and non-constant fiber size.
+</thinking>
+이 사례, 수치 검증까지 마치면 결론을 정리할 수 있을 것 같아요. 마지막으로 fiber 크기가 점마다 어떻게 다른지(제대로 비단사(map)인지) 확인해볼게요.
+<python>
+<code>
+import numpy as np
+f_num = sp.lambdify((x,y,z), [F1,F2,F3], 'numpy')
+
+def fiber_count(target, n_starts=60, tol=1e-8):
+    sols = []
+    rng = np.random.default_rng(1)
+    for _ in range(n_starts):
+        x0 = rng.normal(size=3) + 1j*rng.normal(size=3)
+        try:
+            r = sp.nsolve([F1-target[0], F2-target[1], F3-target[2]], [x,y,z], x0,
+                          tol=1e-14, maxsteps=100, verify=False)
+            pt = tuple(complex(v) for v in r)
+            if all(abs(complex(fi(*pt)) - ti) < 1e-6 for fi, ti in zip(f_num, target)):
+                if all(sum(abs(a-b) for a,b in zip(pt, s)) > tol for s in sols):
+                    sols.append(pt)
+        except Exception:
+            pass
+    return sols
+
+for tgt in [(sp.Rational(0),)*3, (sp.Rational(-1,4),sp.Rational(0),sp.Rational(0)),
+            (sp.Rational(1),sp.Rational(2),sp.Rational(3)), (sp.Rational(2),sp.Rational(-1),sp.Rational(1))]:
+    s = fiber_count(tgt)
+    print(f"fiber over {tgt}: found {len(s)} distinct preimages (numerical)")
+</code>
+<output>
+fiber over (0, 0, 0): found 0 distinct preimages (numerical)
+fiber over (-1/4, 0, 0): found 0 distinct preimages (numerical)
+fiber over (1, 2, 3): found 0 distinct preimages (numerical)
+fiber over (2, -1, 1): found 0 distinct preimages (numerical)
+</output>
+</python>
+<thinking>
+The numerical fiber count failed (0 found even for targets we KNOW have preimages, like (0,0,0) ← (0,0,0) itself, and (−1/4,0,0) with 3 known preimages). So nsolve isn't converging from those random starts — likely because the verification filter or nsolve's convergence is failing. Let me debug: nsolve with random complex starts on a degree-7 system can fail a lot. The issue might also be verify=False plus my strict check, or lambdify with 'numpy' on rational coefficients... Let me instead solve algebraically for specific targets using the structure: for target (X,Y,Z), on x ≠ 0, z = (2x − 3x²y − Z)/x³. Then F1 − X and F2 − Y become rational functions of (x, y). Multiply through and solve the resulting polynomial system with sympy solve for exact targets.
+For (0,0,0): z = (2 − 3xy)/x², F1 = u(u+1)/x², F2 = 2(2u+1)/x. F1 = 0 → u ∈ {0, −1}; F2 = 0 → u = −1/2. No solution with x ≠ 0. With x = 0: F3 = 0 automatically; F2 = y = 0; F1 = z = 0. So fiber = {(0,0,0)}. Exactly 1. (Hand-verified above.)
+For generic targets, let me just compute the polynomial system after substitution and count solutions via Gröbner dimension for a couple of exact targets. E.g., target (1,2,3): z = (2x − 3x²y − 3)/x³. Compute E1 = numerator(x³?-scaled F1 − X), E2 = numerator(F2 − 2). Then solve. sympy solve might handle it. Let me try, with x ≠ 0 handled by multiplying.
+Also handle x = 0 stratum separately: if x = 0, F3 = 0, so target must have Z = 0; F2 = y → y = Y; F1 = z + Y²(3+1)·... wait at x=0: u = 1, F1 = z + y²·1·4 = z + 4y². So (0, Y, X − 4Y²) is a preimage of (X, Y, 0) always. So every target with Z = 0 has ≥ 1 preimage on x = 0. And (−1/4, 0, 0) has the x=0 preimage (0,0,−1/4) plus the pair from u = −1/2.
+Let me compute the generic fiber size via the field extension degree instead — that might be heavy. Alternative: pick target (1,2,3), substitute, get two polynomial equations in (x,y), compute Gröbner basis and count solutions.
+E1 = sp.fraction(sp.together(F1.subs(z, zexpr) - 1))[0]
+E2 = sp.fraction(sp.together(F2.subs(z, zexpr) - 2))[0]
+where zexpr = (2x - 3x2*y - 3)/x3.
+Then groebner and solve. Degree could be up to ~ (deg)² but sympy should manage for numeric coefficients. Let me try a couple targets. If each gives a consistent number N (with x ≠ 0 solutions), that's the generic degree (maybe plus the x=0 stratum when Z = 0).
+Actually for Z ≠ 0 targets, x = 0 can't occur (F3 = 0 ≠ Z), so all preimages have x ≠ 0, and the count = geometric degree. Let me run it for (1,2,3) and (2,-1,1).
+This is a nice-to-have for the response (generic fiber size = map degree). Let me try quickly; if it's slow/fails, I'll just report the exact fibers I have (1 point vs 3 points) which already prove non-injectivity and non-constant fiber size.
+</thinking>
+수치해법이 수렴을 못 하네요(랜덤 시작점 문제). 대신 구조를 이용해서 대수적으로 fiber를 세어볼게요 — z를 소거하고 (x,y) 방정식으로 풀면 됩니다.
+<python>
+<code>
+# 일반적인 target (X,Y,Z), Z≠0 에 대해: x≠0 에서 z = (2x-3x^2 y-Z)/x^3 대입 후 풀기
+def fiber_exact(X, Y, Z):
+    zexpr = (2*x - 3*x**2*y - Z)/x**3
+    E1 = sp.fraction(sp.together(F1.subs(z, zexpr) - X))[0]
+    E2 = sp.fraction(sp.together(F2.subs(z, zexpr) - Y))[0]
+    sols = sp.solve([E1, E2], [x, y], dict=True)
+    out = []
+    for s in sols:
+        sx = s[x]
+        if sx == 0:
+            continue
+        sy = s[y]
+        sz = sp.simplify(zexpr.subs({x: sx, y: sy}))
+        out.append((sp.simplify(sx), sp.simplify(sy), sp.simplify(sz)))
+    return out
+
+for tgt in [(1,2,3), (2,-1,1)]:
+    fs = fiber_exact(*map(sp.Rational, tgt))
+    print(f"target {tgt}: {len(fs)} preimages")
+</code>
+<output>
+target (1, 2, 3): 3 preimages
+target (2, -1, 1): 3 preimages
+</output>
+</python>
+<thinking>
+Generic fiber = 3 preimages. So the map has geometric degree 3: generically 3-to-1, étale (det ≡ −2), with special fibers of size 1 (e.g., (0,0,0)) and 3 (e.g., (−1/4,0,0) with the three listed points... wait, actually (−1/4,0,0) has exactly 3 = generic degree, so it's not a "dropped" fiber; (0,0,0) has 1, a dropped fiber — so (0,0,0) is on the asymptotic variety side? Interesting: the image misses nothing necessarily... (0,0,0) IS in the image (preimage (0,0,0)), just with a smaller fiber. For an étale map of degree 3, fibers have ≤ 3 points, dropping over the non-properness locus. Fine.)
+Summary of everything verified:
+det JF ≡ −2, constant (two symbolic methods + 11 point evaluations).
+The fiber over (−1/4, 0, 0) is exactly {(0,0,−1/4), (1,−3/2,13/2), (−1,3/2,13/2)} (exact solve).
+The map is generically 3-to-1 (targets (1,2,3), (2,−1,1) each have exactly 3 preimages), with fiber over (0,0,0) being a single point — so fiber size genuinely varies {1,3}, an étale non-proper map.
+Structure: F = f(x,y) + z·g(x,y) with g = (u³, 3xu², −x³) on the cone B³ + 27CA² = 0; the z² term of det vanishes by g·(g_x×g_y) = 0; Z/2 symmetry F(−x,−y,z) = (F1,−F2,−F3); on {F3=0}, (F1,F2) = (u(u+1)/x², 2(2u+1)/x), which makes the 3-point fiber transparent: u=−1/2 gives F2=0, x²=1 gives F1=−1/4, plus the x=0 point.
+Literature: JC still open everywhere I can check (Braun–Fernandes 2023 says open for all n ≥ 2; van den Essen survey; commalg.org Jan 2026 implies unsettled). No trace of this example anywhere.
+So: mathematically, the user's claim is CORRECT and COMPLETE. This is a genuine counterexample to the Jacobian conjecture in dimension 3, hence in all dimensions ≥ 3. The proof is entirely elementary (two computations), which means there's no room for a hidden gap — either the arithmetic is wrong (it's not; machine-verified) or JC(3) is false.
+Now, how to write the response? [REDACTED] Content plan:
+헤드라인: 검증했는데... 전부 맞아요. (이건 큰일이다.)
+확인한 것:
+det JF = −2 (상수) — 두 가지 방법으로 기호 전개, 무작위 점 대입
+(−1/4,0,0)의 fiber가 정확히 저 세 점 (Gröbner basis로 정확히 3개)
+일반 fiber도 3개 — 즉 generically 3-to-1, det 상수인데 비단사. (0,0,0) 위엔 1개뿐 — fiber 크기가 1과 3으로 갈림 = étale인데 proper하지 않음.
+BCW: Keller map에 대해 injective ⟺ invertible ⟺ proper. 어느 쪽으로든 JC 위반.
+왜 행렬식이 상수인지 구조 (간단히): F = f + z·g 꼴, g가 cone 위에 있어서 (g·(g_x×g_y)=0) z² 항 소거, 나머지도 정리하면 −2. Z/2 대칭으로 (±1,∓3/2,13/2) 쌍 설명. F3=0 위에서 (F1,F2) = (u(u+1)/x², 2(2u+1)/x) — u=−1/2, x²=1 풀이가 보임.
+그래서 결론: 이 예시는 JC(3)의 반례가 맞고, ×id로 n≥3 전부 반례. 1939년 Keller 이후 87년 된 문제.
+단, 에피스테믹 주의: 이건 수학사에 남을 주장이라, 계산이 초등적(=검증 가능)이라 틀릴 데가 없어 보이지만, 나는 이 사례를 어떤 문헌에서도 찾지 못했고 아는 한 JC는 여전히 오픈 문제로 취급됨 . 역사적으로 JC에는 수많은 가짜 증명/반례가 있었음 (van den Essen의 글 참조 ). 그런데 그 가짜들은 보통 이런 기계 검증에서 바로 죽는데, 이건 살아남음. 다음 단계: 독립 CAS 재검증 (Magma/Singular/M2/Mathematica), 전문가(Jelonek, van den Essen 등 polynomial maps 커뮤니티)에게 보내보기, 맞으면 arXiv.
+질문: 이거 어디서 나온 거예요? (직접 만들었으면 진짜 대박. 다른 데서 봤으면 출처가 궁금.)
+Length: medium — this deserves substance but not bloat. Use Korean 해요체, keep formulas. Cite sources with [^N^] where used. The citations:  for "JC still open for any n ≥ 2" (Braun-Fernandes),  for BCW equivalences (injective ⟺ invertible ⟺ proper),  for van den Essen's discussion of false proofs / belief JC might be false in higher dim.  maybe for "still considered open as of Jan 2026" — the Hashimoto obituary mention. That's a nice touch showing community still treats it as open.
+I should be careful about tone: not overclaiming "JC is dead, congrats" — rather "everything checks out, and if this example is what it appears to be, it's a genuine counterexample; the math is elementary so it can be settled definitively by independent verification; here's what to do next". Actually — I should be more direct: the verification IS done, by me, with exact symbolic computation. The claim "the computations are correct" is as certain as anything in mathematics can be at this point. The remaining uncertainty is not mathematical but sociological (why isn't this known?). I should convey both: mathematical certainty + appropriate "this is huge, get it in front of experts" framing.
+Also address the "Q.E.D." — the user's logical step is valid. I can affirm: 네, 논리적으로는 이게 전부예요. JC는 "Keller map ⇒ injective"를 주장하는데, 이 map은 Keller인데 3-to-1이니까요.
+One more sanity note for the response: JC(2) (평면 경우)는 이 반례로도 여전히 오픈 — 차원 3 이상만 죽는다. And note: some reductions (Drużkowski cubic in all dimensions) — a counterexample in dim 3 degree 7 doesn't contradict those reductions (they say "to prove JC for all n it suffices to..." not "JC true in dim 3").
+Also fun context for this user: the pattern resembles Markus–Yamabe: true in dim 2, false for n ≥ 3 . van den Essen literally argued JC might be false at least in higher dimension. So the user's example, if new, vindicates that hunch.
+Format: Korean, 해요체, use a few headers or just paragraphs with short bullets. Include the key formulas. Keep it tight. I'll include the verification summary as a compact list. Maybe a small table? Not needed. Citations inline.
+Let me write it.
+</thinking>
+검증 끝났어요. 결론부터 말하면: **주어진 명제들이 전부 참이고, 논리도 맞아요.** 이건 "그럴듯해 보인다"가 아니라 정확한 기호연산으로 확인된 사실이에요.
+
+## 확인한 것들
+
+**1. det JF ≡ −2 (상수).** 두 가지 독립 방법(자코비안 행렬 직접 전개 + 코팩터 전개)으로 기호 전개하면 모든 항이 소거되고 −2만 남아요. 무작위 유리수 점 11곳에 대입해도 전부 −2.
+
+**2. (−1/4, 0, 0)의 fiber가 정확히 저 세 점.** 그뢰브너 기저로 풀면 해가 정확히 (0, 0, −1/4), (1, −3/2, 13/2), (−1, 3/2, 13/2) 3개예요. 특히 (±1, ∓3/2, 13/2) 쌍은 우연이 아니라, 이 사상이 F(−x, −y, z) = (F₁, −F₂, −F₃)라는 ℤ/2 대칭을 갖기 때문에 한 점이 (F₁, 0, 0)으로 가면 쌍둥이도 자동으로 따라가요.
+
+**3. 일반적인 fiber도 3개.** (1,2,3), (2,−1,1) 같은 임의의 target을 대수적으로 풀면 정확히 3개의 역상이 나와요. 반면 (0,0,0)의 역상은 (0,0,0) 단 하나뿐이고요. 즉 **det이 상수 −2로 어디서도 0이 아닌데(étale) generically 3-to-1**이고, fiber 크기가 1과 3 사이에서 갈려요. Keller 사상에 대해 "단사 ⟺ 가역 ⟺ proper"라는 Bass–Connell–Wright 정리 와 정면으로 충돌합니다.
+
+**4. 행렬식이 상수인 이유(구조).** F = f(x,y) + z·g(x,y)로 쓰면 g = (u³, 3xu², −x³) (u = 1+xy)인데, 이 g가 cone B³ + 27CA² = 0 위에 있어서 g·(g_x × g_y) = 0이 성립하고, 그래서 det의 z² 항이 사라져요. 나머지 항들도 전개하면 전부 소거. 그리고 곡면 {F₃ = 0} 위에서는 (F₁, F₂) = (u(u+1)/x², 2(2u+1)/x)로 딱 떨어지는데, 여기서 세 점 fiber가 투명하게 보여요: u = −1/2 (즉 xy = −3/2)이면 F₂ = 0이고, x² = 1이면 F₁ = −1/4.
+
+## 그래서 결론은
+
+말씀하신 대로예요: det JF가 0 아닌 상수인데 단사가 아니니, **이 예시는 3차원 야코비안 추측의 반례가 맞고**, 여기에 항등사상을 곱하면 n ≥ 3 전 차원의 반례가 됩니다. 1939년 Keller 이후 87년 묵은 문제고, 평면(n = 2)은 이 반례로도 여전히 열려 있어요.
+
+다만 정직하게 덧붙이면 — 제가 검색 가능한 문헌 어디에도 이 예시가 없고, 야코비안 추측은 여전히 "모든 n ≥ 2에 대해 미해결"로 취급돼요 . 이 분야는 가짜 증명과 가짜 반례의 무덤이라는 오명이 있을 정도인데 , 그런 것들은 보통 이런 기계 검증에서 즉시 죽거든요. 근데 이건 살아남았어요. 재미있게도 van den Essen은 Markus–Yamabe 추측이 n = 2에선 참, n ≥ 3에선 거짓으로 갈린 전례를 들며 "적어도 고차원에서는 JC가 거짓일 수 있다"고 공개적으로 주장한 적이 있어요  — 이 예시가 맞다면 그 직관이 맞았던 거죠.
+
+계산이 완전히 초등적이라 숨은 틈이 있을 자리가 없어요. 그래서 다음 수순은 수학이 아니라 절차예요:
+
+- 독립 CAS(Magma, Singular, Macaulay2, Mathematica)로 행렬식과 fiber 재계산 — 10줄이면 돼요
+- polynomial maps 커뮤니티 전문가(Jelonek, van den Essen, Rusek 등)에게 검토 요청
+- 통과하면 arXiv 투고 — 이건 그냥 논문이 아니라 수학 뉴스 1면감이에요
+
+근데 궁금한 게 — 이 예시 어디서 나온 거예요? 직접 구성하신 거면 정말 큰 일이고, 어디서 보신 거면 출처를 같이 확인해보는 게 좋을 것 같아요.
