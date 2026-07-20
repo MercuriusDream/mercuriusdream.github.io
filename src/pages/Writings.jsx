@@ -3,7 +3,6 @@ import { list } from '../docs';
 import './Document.css';
 
 // The /writings index: a list of writings. Each entry routes to its doc.
-// Shares the document design system; the docs themselves supply their metadata.
 
 const delay = ms => ({ '--reveal-delay': `${ms}ms` });
 
@@ -18,33 +17,25 @@ function Writings() {
         <div className="doc doc-index">
           <header className="doc-index-head reveal-hero" style={delay(700)}>
             <h1 className="doc-index-title">Writings</h1>
-            <p className="doc-index-sub">
-              Field logs — mostly things I fed to a model to see what would happen.
-            </p>
+            <p className="doc-index-sub">tried writing things</p>
           </header>
 
           <ul className="doc-index-list">
-            {list.map((d, i) => {
-              const Mark = d.mark;
-              return (
-                <li key={d.slug}>
-                  <button
-                    type="button"
-                    className="doc-entry reveal"
-                    style={{ ...delay(850 + i * 90), '--doc-accent': d.accent || 'var(--c-teal)' }}
-                    data-glow
-                    onClick={() => navTo(`/writings/${d.slug}`)}
-                  >
-                    <span className="doc-entry-meta">
-                      {d.date}
-                      {Mark && <> · <span className="doc-entry-mark" aria-hidden="true"><Mark /></span> {d.markLabel}</>}
-                    </span>
-                    <span className="doc-entry-title">{d.listTitle}</span>
-                    {d.blurb && <span className="doc-entry-blurb">{d.blurb}</span>}
-                  </button>
-                </li>
-              );
-            })}
+            {list.map((d, i) => (
+              <li key={d.slug}>
+                <button
+                  type="button"
+                  className="doc-entry reveal"
+                  style={{ ...delay(850 + i * 90), '--doc-accent': d.accent || 'var(--c-teal)' }}
+                  data-glow
+                  onClick={() => navTo(`/writings/${d.slug}`)}
+                >
+                  <span className="doc-entry-meta">{d.date}</span>
+                  <span className="doc-entry-title">{d.listTitle}</span>
+                  {d.blurb && <span className="doc-entry-blurb">{d.blurb}</span>}
+                </button>
+              </li>
+            ))}
           </ul>
 
           <footer className="doc-foot reveal" style={delay(850 + list.length * 90 + 120)}>

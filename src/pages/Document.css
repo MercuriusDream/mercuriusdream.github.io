@@ -1,13 +1,11 @@
 /* ==========================================================================
-   Document — a reusable long-form reader that renders a raw model transcript
-   one-to-one. Its own design system; inherits only tokens from global. Easy
-   read: comfortable measure and line-height, quiet lowercase labels (no
-   letter-spaced caps), monospace reserved for code / output / search only.
-   Flat throughout. Per-doc accent via --doc-accent on .doc-scroll.
+   Document : a reusable reader that renders a raw model transcript one-to-one.
+   Article pages float a reading surface in the middle of the starfield. Its
+   own design; inherits tokens from global. Monospace only for code / output /
+   search; folds are collapsible; labels are quiet Title Case.
    ========================================================================== */
 .doc-scroll {
   --doc-accent: var(--c-teal);
-  --read: min(720px, 100% - var(--gutter) * 2);
   --mono: ui-monospace, "SF Mono", SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace;
   position: relative;
   width: 100%;
@@ -15,14 +13,20 @@
   overflow-y: auto;
   overflow-x: hidden;
   overscroll-behavior: contain;
+  padding: clamp(1.5rem, 5vh, 3rem) var(--gutter) clamp(2.5rem, 7vh, 4rem);
 }
-.doc {
-  width: var(--read);
-  margin-inline: auto;
-  padding: clamp(2.75rem, 10vh, 5.5rem) 0 clamp(3rem, 9vh, 5rem);
-  display: flex;
-  flex-direction: column;
-  gap: 1.5rem;
+
+.doc { margin-inline: auto; display: flex; flex-direction: column; }
+
+/* ── The article reading surface (the middle thing over the sky) ── */
+.doc-article {
+  width: min(840px, 100%);
+  gap: 1.55rem;
+  padding: clamp(1.9rem, 5vw, 3.5rem) clamp(1.35rem, 4.5vw, 3rem);
+  background:
+    radial-gradient(130% 55% at 50% -8%,
+      color-mix(in srgb, var(--doc-accent), transparent 89%), transparent 62%),
+    color-mix(in srgb, var(--sky-2) 92%, transparent);
 }
 
 /* ── Header ── */
@@ -37,11 +41,10 @@
 }
 .doc-mark { display: inline-flex; color: var(--doc-accent); }
 .doc-mark svg { width: 0.95em; height: 0.95em; display: block; }
-
 .doc-title {
-  font-size: clamp(1.5rem, 3.8vw, 2.5rem);
+  font-size: clamp(1.55rem, 3.9vw, 2.55rem);
   font-weight: 500;
-  line-height: 1.14;
+  line-height: 1.13;
   letter-spacing: -0.02em;
   color: var(--ink);
   text-wrap: balance;
@@ -58,7 +61,7 @@
   color: var(--ink-2);
   line-height: 1.72;
   text-wrap: pretty;
-  margin-top: 0.5rem;
+  margin-top: 0.6rem;
 }
 .doc-tweet {
   color: color-mix(in srgb, var(--doc-accent), var(--ink) 30%);
@@ -70,35 +73,141 @@
 .doc-tweet:hover { text-decoration-color: var(--doc-accent); }
 
 /* ── Transcript ── */
-.tx { display: flex; flex-direction: column; gap: 1.4rem; }
+.tx { display: flex; flex-direction: column; gap: 1.5rem; }
+.tx-py { display: flex; flex-direction: column; gap: 0.6rem; }
 
-.tx-tag {
-  display: block;
+/* Folds (collapsible thinking / code / output / search) */
+.tx-fold > summary {
+  cursor: pointer;
+  list-style: none;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.2rem 0;
+  color: var(--ink-3);
+  transition: color 0.3s var(--ease-out-expo);
+}
+.tx-fold > summary::-webkit-details-marker { display: none; }
+.tx-fold > summary:hover { color: var(--ink); }
+.tx-fold > summary:focus-visible { outline: 2px solid var(--ink); outline-offset: 3px; }
+.tx-chev {
+  flex: none;
+  width: 0.42rem;
+  height: 0.42rem;
+  border-right: 1.5px solid currentColor;
+  border-bottom: 1.5px solid currentColor;
+  transform: rotate(-45deg);
+  transition: transform 0.25s var(--ease-out-expo);
+}
+.tx-fold[open] > summary .tx-chev { transform: rotate(45deg); }
+.tx-label {
+  flex: none;
   font-size: var(--fs-xs);
-  color: var(--grey-1);
-  margin-bottom: 0.4rem;
+  font-weight: 500;
+  letter-spacing: 0.01em;
+}
+.tx-peek {
+  flex: 1 1 auto;
+  min-width: 0;
+  font-size: var(--fs-xs);
+  color: var(--grey-2);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.tx-fold-body { margin-top: 0.55rem; }
+
+/* thinking : quieter, as the model wrote it */
+.tx-think-body {
+  font-family: inherit;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  font-size: var(--fs-sm);
+  color: var(--ink-3);
+  line-height: 1.7;
+  margin: 0;
 }
 
-/* the model's spoken text + its translation */
+/* code / output : monospace insets, layered against the surface */
+.tx-code, .tx-out {
+  font-family: var(--mono);
+  white-space: pre;
+  overflow-x: auto;
+  overscroll-behavior-x: contain;
+  padding: 0.85rem 1rem;
+  line-height: 1.55;
+  font-size: 0.8rem;
+  tab-size: 2;
+  margin: 0;
+}
+.tx-code { background: var(--sky); color: var(--ink-2); }
+.tx-out  { background: var(--sky-3); color: var(--ink); }
+
+/* web search : detailed, numbered, linked where resolved */
+.tx-search .tx-query {
+  font-size: var(--fs-sm);
+  color: var(--ink-2);
+  line-height: 1.6;
+  margin-bottom: 0.7rem;
+  padding-left: 0.9rem;
+  position: relative;
+  text-wrap: pretty;
+}
+.tx-search .tx-query::before { content: '“'; position: absolute; left: 0.1rem; color: var(--grey-1); }
+.tx-search .tx-query::after { content: '”'; color: var(--grey-1); }
+.tx-results {
+  list-style: none;
+  counter-reset: r;
+  background: var(--sky);
+  padding: 0.35rem 0;
+}
+.tx-res {
+  counter-increment: r;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 0.12rem;
+  padding: 0.5rem 1rem 0.5rem 2.4rem;
+}
+.tx-res::before {
+  content: counter(r);
+  position: absolute;
+  left: 1rem;
+  top: 0.55rem;
+  font-size: var(--fs-xs);
+  color: var(--grey-2);
+  font-variant-numeric: tabular-nums;
+}
+.tx-res-title { font-size: var(--fs-sm); line-height: 1.4; }
+.tx-res-plain { color: var(--ink-3); }
+a.tx-res-title {
+  color: color-mix(in srgb, var(--doc-accent), var(--ink) 32%);
+  text-decoration: none;
+  transition: color 0.3s var(--ease-out-expo);
+}
+a.tx-res-title:hover { text-decoration: underline; text-underline-offset: 3px; }
+.tx-res-ext { font-size: 0.85em; color: var(--doc-accent); opacity: 0.75; }
+.tx-res-src { font-size: var(--fs-xs); color: var(--grey-1); }
+
+/* spoken text + its translation */
 .tx-say { display: flex; flex-direction: column; gap: 0.7rem; }
-.tx-ko { font-size: var(--fs-md); color: var(--ink); line-height: 1.72; }
+.tx-ko { font-size: var(--fs-md); color: var(--ink); line-height: 1.75; }
 .tx-en {
   font-size: var(--fs-md);
   color: var(--ink-2);
-  line-height: 1.72;
-  padding-left: 0.9rem;
+  line-height: 1.75;
+  padding-left: 1rem;
   position: relative;
 }
 .tx-en::before {
   content: '';
   position: absolute;
-  left: 0; top: 0.35em; bottom: 0.35em;
+  left: 0; top: 0.4em; bottom: 0.4em;
   width: 2px;
-  background: color-mix(in srgb, var(--doc-accent), var(--sky) 25%);
+  background: color-mix(in srgb, var(--doc-accent), var(--sky) 20%);
 }
-.tx-en .tx-tag { color: var(--grey-2); }
+.tx-en .tx-label { display: block; margin-bottom: 0.4rem; color: var(--grey-2); }
 
-/* prose blocks inside spoken text */
 .tx-ko p, .tx-en p { text-wrap: pretty; }
 .tx-ko p + p, .tx-en p + p { margin-top: 0.7rem; }
 .tx-ko h3, .tx-en h3 {
@@ -106,10 +215,10 @@
   font-weight: 500;
   letter-spacing: -0.01em;
   color: var(--ink);
-  margin: 1rem 0 0.2rem;
+  margin: 1.1rem 0 0.25rem;
 }
 .tx-en h3 { color: var(--ink-2); }
-.tx-ko ul, .tx-en ul { display: flex; flex-direction: column; gap: 0.45rem; margin: 0.5rem 0; }
+.tx-ko ul, .tx-en ul { display: flex; flex-direction: column; gap: 0.45rem; margin: 0.55rem 0; }
 .tx-ko li, .tx-en li { padding-left: 1rem; position: relative; }
 .tx-ko li::before, .tx-en li::before {
   content: '';
@@ -120,71 +229,13 @@
 }
 .tx-ko strong, .tx-en strong { font-weight: 600; color: var(--ink); }
 
-/* thinking — quieter, kept as the model wrote it */
-.tx-think {
-  position: relative;
-  padding-left: 0.9rem;
-}
-.tx-think::before {
-  content: '';
-  position: absolute;
-  left: 0; top: 1.7rem; bottom: 0.1rem;
-  width: 2px;
-  background: var(--hairline-2);
-}
-.tx-think-body {
-  font-family: inherit;
-  white-space: pre-wrap;
-  overflow-wrap: anywhere;
-  font-size: var(--fs-sm);
-  color: var(--ink-3);
-  line-height: 1.68;
-  margin: 0;
-}
-
-/* code / output / search results — monospace, scroll on overflow */
-.tx-code, .tx-out, .tx-results {
-  font-family: var(--mono);
-  white-space: pre;
-  overflow-x: auto;
-  overscroll-behavior-x: contain;
-  padding: 0.85rem 1rem;
-  line-height: 1.55;
-  font-size: 0.82rem;
-  tab-size: 2;
-}
-.tx-code { background: var(--sky-2); color: var(--ink); }
-.tx-out  { background: var(--sky-3); color: var(--ink-2); margin-top: 0.5rem; }
-.tx-py .tx-tag:nth-of-type(2) { margin-top: 0.7rem; }
-
-.tx-search { }
-.tx-query {
-  font-size: var(--fs-md);
-  color: var(--ink);
-  line-height: 1.6;
-  text-wrap: pretty;
-}
-.tx-query::before { content: '“'; color: var(--grey-1); }
-.tx-query::after { content: '”'; color: var(--grey-1); }
-.tx-results {
-  margin-top: 0.55rem;
-  background: var(--sky-2);
-  color: var(--ink-3);
-  font-size: 0.76rem;
-  line-height: 1.6;
-  white-space: pre-wrap;
-  overflow-wrap: anywhere;
-  max-height: 15rem;
-  overflow-y: auto;
-}
-
 /* ── Sources + back ── */
 .doc-sources {
   display: flex;
   flex-wrap: wrap;
   align-items: baseline;
   gap: 0.45rem 0.55rem;
-  margin-top: 1rem;
+  margin-top: 1.1rem;
 }
 .doc-src-label { font-size: var(--fs-xs); color: var(--grey-1); margin-right: 0.2rem; }
 .doc-sources .inline-link { font-size: var(--fs-sm); font-weight: 500; }
@@ -209,29 +260,22 @@
 
 /* ── Not found ── */
 .doc-404 {
-  width: var(--read);
-  margin-inline: auto;
+  width: min(680px, 100%);
   padding: clamp(2.75rem, 11vh, 6rem) 0;
   display: flex; flex-direction: column; gap: 1rem; align-items: flex-start;
 }
 .doc-404 p { font-size: var(--fs-md); color: var(--ink-2); }
 
-/* ── Writings index — the list at /writings ── */
-.doc-index { gap: 1.5rem; }
-.doc-index-head { display: flex; flex-direction: column; gap: 0.4rem; }
+/* ── Writings index ── */
+.doc-index { width: min(680px, 100%); gap: 1.5rem; }
+.doc-index-head { display: flex; flex-direction: column; gap: 0.35rem; }
 .doc-index-title {
   font-size: clamp(1.6rem, 4vw, 2.6rem);
   font-weight: 500;
   letter-spacing: -0.02em;
   color: var(--ink);
 }
-.doc-index-sub {
-  font-size: var(--fs-md);
-  color: var(--ink-3);
-  line-height: 1.55;
-  text-wrap: pretty;
-  max-width: 46ch;
-}
+.doc-index-sub { font-size: var(--fs-md); color: var(--ink-3); line-height: 1.55; }
 .doc-index-list { display: flex; flex-direction: column; gap: 0.7rem; }
 .doc-entry {
   --doc-accent: var(--c-teal);
@@ -247,16 +291,7 @@
 .doc-entry:hover { background: var(--sky-3); transform: translateY(-2px); }
 .doc-entry:active { transform: translateY(0); transition-duration: 0.08s; }
 .doc-entry:focus-visible { background: var(--sky-3); outline: 2px solid var(--ink); outline-offset: 2px; }
-.doc-entry-meta {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.4em;
-  font-size: var(--fs-xs);
-  letter-spacing: 0.02em;
-  color: var(--grey-1);
-}
-.doc-entry-mark { display: inline-flex; color: var(--doc-accent); }
-.doc-entry-mark svg { width: 0.95em; height: 0.95em; display: block; }
+.doc-entry-meta { font-size: var(--fs-sm); color: var(--grey-1); }
 .doc-entry-title {
   font-size: var(--fs-lg);
   font-weight: 500;
@@ -265,14 +300,10 @@
   line-height: 1.25;
   text-wrap: balance;
 }
-.doc-entry-blurb {
-  font-size: var(--fs-sm);
-  color: var(--ink-3);
-  line-height: 1.55;
-  text-wrap: pretty;
-}
+.doc-entry-blurb { font-size: var(--fs-sm); color: var(--ink-3); line-height: 1.55; text-wrap: pretty; }
 
 @media (max-width: 460px) {
   .doc-head { gap: 0.45rem; }
-  .tx-code, .tx-out, .tx-results { font-size: 0.76rem; }
+  .tx-code, .tx-out { font-size: 0.74rem; }
+  .doc-article { padding-left: 1.1rem; padding-right: 1.1rem; }
 }

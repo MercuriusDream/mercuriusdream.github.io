@@ -21,14 +21,14 @@ function parse(raw) {
     pushProse(raw.slice(last, m.index));
     if (m[1] !== undefined) segs.push({ t: 'think', text: m[1].trim() });
     else if (m[2] !== undefined) segs.push({ t: 'py', code: grab(m[2], 'code'), out: grab(m[2], 'output') });
-    else segs.push({ t: 'search', query: grab(m[3], 'query').trim(), results: grab(m[3], 'results') });
+    else segs.push({ t: 'search', query: grab(m[3], 'query').trim() });
     last = BLOCK.lastIndex;
   }
   pushProse(raw.slice(last));
   return segs;
 }
 
-// ── A tiny markdown-ish renderer: ## heading, - bullet, **bold**, paragraphs ─
+// ── Tiny markdown-ish renderer: ## heading, - bullet, **bold**, paragraphs ─
 function inline(s, k) {
   return s.split(/(\*\*[^*]+\*\*)/g).map((p, i) =>
     p.startsWith('**') && p.endsWith('**')
@@ -52,36 +52,65 @@ function Prose({ text }) {
 }
 
 // ── Segment views ─────────────────────────────────────────────────────────
-const Tag = ({ children }) => <span className="tx-tag">{children}</span>;
+function Fold({ label, peek, open = false, children }) {
+  return (
+    <details className="tx-fold" open={open}>
+      <summary>
+        <span className="tx-chev" aria-hidden="true" />
+        <span className="tx-label">{label}</span>
+        {peek && <span className="tx-peek">{peek}</span>}
+      </summary>
+      <div className="tx-fold-body">{children}</div>
+    </details>
+  );
+}
 
-function Segment({ seg, translations }) {
-  if (seg.t === 'think')
-    return <div className="tx-think"><Tag>thinking</Tag><div className="tx-mono-wrap"><pre className="tx-think-body">{seg.text}</pre></div></div>;
+function Search({ query, results }) {
+  return (
+    <details className="tx-fold tx-search">
+      <summary>
+        <span className="tx-chev" aria-hidden="true" />
+        <span className="tx-label">Web search</span>
+        <span className="tx-peek">{query}</span>
+      </summary>
+      <div className="tx-fold-body">
+        <p className="tx-query">{query}</p>
+        <ol className="tx-results">
+          {results.map((r, i) => (
+            <li key={i} className="tx-res">
+              {r.u
+                ? <a className="tx-res-title" href={r.u} target="_blank" rel="noopener noreferrer" data-glow>{r.t} <span className="tx-res-ext" aria-hidden="true">↗</span></a>
+                : <span className="tx-res-title tx-res-plain">{r.t}</span>}
+              <span className="tx-res-src">{r.s}</span>
+            </li>
+          ))}
+        </ol>
+      </div>
+    </details>
+  );
+}
 
-  if (seg.t === 'py')
+function Segment({ seg, doc, searchIndex }) {
+  if (seg.t === 'think') {
+    const peek = seg.text.replace(/\s+/g, ' ').trim().slice(0, 88);
+    return <Fold label="Thinking" peek={`${peek}…`}><pre className="tx-think-body">{seg.text}</pre></Fold>;
+  }
+  if (seg.t === 'py') {
     return (
       <div className="tx-py">
-        <Tag>code</Tag>
-        <pre className="tx-code">{seg.code}</pre>
-        {seg.out && <><Tag>output</Tag><pre className="tx-out">{seg.out}</pre></>}
+        <Fold label="Code"><pre className="tx-code">{seg.code}</pre></Fold>
+        {seg.out && <Fold label="Output" open><pre className="tx-out">{seg.out}</pre></Fold>}
       </div>
     );
-
-  if (seg.t === 'search')
-    return (
-      <div className="tx-search">
-        <Tag>web search</Tag>
-        <p className="tx-query">{seg.query}</p>
-        {seg.results && <pre className="tx-results">{seg.results}</pre>}
-      </div>
-    );
-
-  // prose — the model's spoken Korean (or the final answer); translate underneath
-  const tr = translations?.find(t => seg.text.trimStart().startsWith(t.key));
+  }
+  if (seg.t === 'search') {
+    return <Search query={seg.query} results={doc.searchResults?.[searchIndex] || []} />;
+  }
+  const tr = doc.translations?.find(t => seg.text.trimStart().startsWith(t.key));
   return (
     <div className="tx-say">
       <div className="tx-ko"><Prose text={seg.text} /></div>
-      {tr && <div className="tx-en"><span className="tx-tag">english</span><Prose text={tr.en} /></div>}
+      {tr && <div className="tx-en"><span className="tx-label">English</span><Prose text={tr.en} /></div>}
     </div>
   );
 }
@@ -115,13 +144,14 @@ function Document() {
   }
 
   const Mark = doc.mark;
+  let searchIndex = 0;
 
   return (
     <div className="app">
       <a href="#main" className="skip-link">Skip to content</a>
 
       <main id="main" className="doc-scroll" style={{ '--doc-accent': doc.accent || 'var(--c-teal)' }}>
-        <article className="doc">
+        <article className="doc doc-article">
           <header className="doc-head">
             <p className="doc-kicker reveal-hero" style={delay(680)}>
               {doc.kicker}
@@ -138,7 +168,10 @@ function Document() {
           </header>
 
           <div className="tx reveal" style={delay(1020)}>
-            {segs.map((seg, i) => <Segment key={i} seg={seg} translations={doc.translations} />)}
+            {segs.map((seg, i) => {
+              const si = seg.t === 'search' ? searchIndex++ : 0;
+              return <Segment key={i} seg={seg} doc={doc} searchIndex={si} />;
+            })}
           </div>
 
           {doc.sources?.length > 0 && (
