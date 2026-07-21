@@ -17,7 +17,7 @@ const LOVE_LINKS = [
 
 const MADE_LINKS = [
   { label: 'TideSurf', href: 'https://github.com/tidesurf/core', accent: '#4F7B86' },
-  { label: 'Agent-Estate', href: 'https://github.com/MercuriusDream/agent-estate', accent: '#8A6D4E' },
+  { label: 'Agent-Estate', href: 'https://github.com/MercuriusDream/agent-estate', accent: '#B8BCC8' },
 ];
 
 const delay = ms => ({ '--reveal-delay': `${ms}ms` });
@@ -126,7 +126,7 @@ function HomePage() {
               to="/writings"
               className="footer-btn"
               data-glow
-              style={{ ...delay(2200), '--btn-color': '#8A6D4E' }}
+              style={{ ...delay(2200), '--btn-color': '#B8BCC8' }}
               onClick={e => { e.preventDefault(); navTo('/writings'); }}
             >
               writings

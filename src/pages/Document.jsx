@@ -124,7 +124,7 @@ function Segment({ seg, doc, lang, searchIndex }) {
 function BackLink() {
   const navTo = useNavTransition();
   return (
-    <button onClick={() => navTo('/')} className="doc-back" data-glow aria-label="Back to home">
+    <button onClick={() => navTo('/writings')} className="doc-back" data-glow aria-label="Back to writings">
       ← back
     </button>
   );
@@ -178,6 +178,17 @@ function Document() {
               return <Segment key={i} seg={seg} doc={doc} lang={lang} searchIndex={si} />;
             })}
           </div>
+
+          {doc.exchange?.length > 0 && (
+            <div className="doc-exchange reveal">
+              {doc.exchange.map((m, i) => (
+                <div className="doc-exchange-line" key={i}>
+                  <span className="doc-exchange-role">{m.role}</span>
+                  <span className="doc-exchange-msg">{m.text}</span>
+                </div>
+              ))}
+            </div>
+          )}
 
           {doc.sources?.length > 0 && (
             <div className="doc-sources reveal">

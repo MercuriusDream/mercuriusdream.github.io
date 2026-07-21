@@ -98,7 +98,6 @@
 }
 .tx-fold--think  { --blk: color-mix(in srgb, var(--c-violet), var(--sky-2) 82%); --tone: var(--c-violet); }
 .tx-fold--code   { --blk: color-mix(in srgb, var(--c-green),  var(--sky-2) 83%); --tone: var(--c-green); }
-.tx-fold--out    { --blk: color-mix(in srgb, var(--c-gold),   var(--sky-2) 80%); --tone: var(--c-gold); }
 .tx-fold--search { --blk: color-mix(in srgb, var(--c-teal),   var(--sky-2) 82%); --tone: var(--c-teal); }
 
 .tx-summary {
@@ -202,6 +201,21 @@ a.tx-res-title:hover { text-decoration: underline; text-underline-offset: 3px; }
 .tx-prose strong { font-weight: 600; color: var(--ink); }
 
 /* ── Sources + back ── */
+.doc-exchange {
+  display: flex; flex-direction: column; gap: 0.5rem;
+  margin-top: var(--tx-gap, 1.35rem);
+}
+.doc-exchange-line { display: flex; gap: 0.6rem; align-items: baseline; }
+.doc-exchange-role {
+  flex: none; font-size: var(--fs-xs); color: var(--grey-1);
+  letter-spacing: 0.02em;
+}
+.doc-exchange-role::after { content: ':'; }
+.doc-exchange-msg {
+  font-size: var(--fs-md); color: var(--ink-2); font-style: italic;
+  line-height: 1.6; text-wrap: pretty;
+}
+
 .doc-sources {
   display: flex; flex-direction: column; gap: 0.55rem;
   margin-top: var(--tx-gap, 1.35rem);

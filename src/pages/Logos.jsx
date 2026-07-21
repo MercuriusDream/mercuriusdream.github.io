@@ -19,7 +19,7 @@ const MODELS = [
   { label: 'Fireworks', Icon: IconFireworks, color: 'var(--c-rose)' },
   { label: 'GLM', Icon: IconZai, color: 'var(--c-violet)', large: true },
   { label: 'GPT', Icon: IconOpenAI, color: 'var(--c-green)' },
-  { label: 'KIMI', Icon: IconKimi, color: 'var(--c-gold)' },
+  { label: 'KIMI', Icon: IconKimi, color: 'var(--c-grey)' },
   { label: 'Opus', Icon: IconClaude, color: 'var(--c-rust)' },
 ];
 
@@ -32,7 +32,7 @@ const WITNESSES = [
   { x: 82, y: 31.5, c: 'var(--c-green)' },
   { x: 82, y: 68.5, c: 'var(--c-violet)' },
   { x: 50, y: 87, c: 'var(--c-rose)' },
-  { x: 18, y: 68.5, c: 'var(--c-gold)' },
+  { x: 18, y: 68.5, c: 'var(--c-grey)' },
   { x: 18, y: 31.5, c: 'var(--c-rust)' },
 ];
 
