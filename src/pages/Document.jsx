@@ -52,7 +52,7 @@ function Prose({ text }) {
 }
 
 // ── Segment views ─────────────────────────────────────────────────────────
-function Fold({ label, tone, peek, defaultOpen = false, children }) {
+function Fold({ label, tone, defaultOpen = false, children }) {
   const [open, setOpen] = useState(defaultOpen);
   return (
     <div className={`tx-fold tx-fold--${tone}${open ? ' is-open' : ''}`}>
@@ -60,7 +60,6 @@ function Fold({ label, tone, peek, defaultOpen = false, children }) {
         onClick={() => setOpen(o => !o)}>
         <span className="tx-chev" aria-hidden="true" />
         <span className="tx-label">{label}</span>
-        {peek && <span className="tx-peek">{peek}</span>}
       </button>
       <div className="tx-fold-body"><div className="tx-fold-body-inner">{children}</div></div>
     </div>
@@ -69,7 +68,7 @@ function Fold({ label, tone, peek, defaultOpen = false, children }) {
 
 function Search({ query, results }) {
   return (
-    <Fold label="Web search" tone="search" peek={query}>
+    <Fold label="Web search" tone="search">
       <p className="tx-query">{query}</p>
       <ol className="tx-results">
         {results.map((r, i) => (
@@ -104,8 +103,7 @@ function renderIntro(intro, tweet) {
 
 function Segment({ seg, doc, lang, searchIndex }) {
   if (seg.t === 'think') {
-    const peek = seg.text.replace(/\s+/g, ' ').trim().slice(0, 88);
-    return <Fold label="Thinking" tone="think" peek={`${peek}…`}><pre className="tx-think-body">{seg.text}</pre></Fold>;
+    return <Fold label="Thinking" tone="think"><pre className="tx-think-body">{seg.text}</pre></Fold>;
   }
   if (seg.t === 'py') {
     return (
