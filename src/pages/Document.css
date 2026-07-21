@@ -64,8 +64,10 @@
   color: var(--ink); text-wrap: balance;
 }
 .doc-subtitle {
-  font-size: var(--fs-lg); color: var(--ink-2); line-height: 1.4;
-  text-wrap: pretty; margin-top: 0.1rem;
+  font-size: clamp(1.05rem, 1.5vw, 1.3rem);
+  color: var(--ink-2); line-height: 1.4;
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  margin-top: 0.1rem;
 }
 .doc-intro {
   font-size: var(--fs-md); color: var(--ink-2); line-height: 1.72;
@@ -102,22 +104,23 @@
 .tx-summary {
   cursor: pointer;
   display: flex; align-items: center; gap: 0.5rem; width: 100%; text-align: left;
+  line-height: 1.35;
   color: color-mix(in srgb, var(--tone), var(--ink) 42%);
   transition: color 0.3s var(--ease-out-expo);
 }
 .tx-summary:hover { color: var(--ink); }
 .tx-summary:focus-visible { outline: 2px solid var(--ink); outline-offset: 3px; }
 .tx-chev {
-  flex: none; width: 0.42rem; height: 0.42rem;
+  flex: none; width: 0.5rem; height: 0.5rem;
   border-right: 1.5px solid currentColor; border-bottom: 1.5px solid currentColor;
   transform: rotate(-45deg);
   transition: transform 0.3s var(--ease-out-expo);
 }
 .tx-fold.is-open .tx-chev { transform: rotate(45deg); }
-.tx-label { flex: none; font-size: var(--fs-sm); font-weight: 500; }
+.tx-label { flex: none; font-size: var(--fs-md); font-weight: 500; line-height: 1.35; }
 .tx-peek {
   flex: 1 1 auto; min-width: 0;
-  font-size: var(--fs-xs); color: var(--grey-2);
+  font-size: var(--fs-sm); line-height: 1.35; color: var(--grey-2);
   white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
 }
 
@@ -274,4 +277,5 @@ a.tx-res-title:hover { text-decoration: underline; text-underline-offset: 3px; }
   .doc-head { gap: 0.45rem; }
   .tx-code, .tx-out { font-size: 0.76rem; }
   .doc-article { padding-left: 1.1rem; padding-right: 1.1rem; }
+  .doc-subtitle { white-space: normal; text-overflow: clip; text-wrap: pretty; }
 }
