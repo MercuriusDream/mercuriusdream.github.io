@@ -56,7 +56,7 @@ One thing I'm curious about: where did this come from? If you built it yourself,
   ],
 
   sources: [
-    { label: 'the original tweet (@__alpoge__)', href: 'https://x.com/__alpoge__/status/2079028340955197566', c: '#B8BCC8' },
+    { label: 'the original tweet (@__alpoge__)', href: 'https://x.com/__alpoge__/status/2079028340955197566', c: 'var(--c-grey)' },
     { label: 'the counterexample, explained', href: 'https://jacobianfun.org/jacobian-explained', c: 'var(--c-teal)' },
     { label: 'ForkLog, Fable 5 finds it', href: 'https://forklog.com/en/anthropics-claude-fable-5-finds-counterexample-to-1939-jacobian-conjecture/', c: 'var(--c-violet)' },
   ],

@@ -200,19 +200,21 @@ a.tx-res-title:hover { text-decoration: underline; text-underline-offset: 3px; }
 }
 .tx-prose strong { font-weight: 600; color: var(--ink); }
 
-/* ── Sources + back ── */
+/* ── User/model exchange + sources + back ── */
 .doc-exchange {
+  background: color-mix(in srgb, var(--c-kimi), var(--sky-2) 85%);
+  padding: 0.8rem 1.1rem;
   display: flex; flex-direction: column; gap: 0.5rem;
   margin-top: var(--tx-gap, 1.35rem);
 }
-.doc-exchange-line { display: flex; gap: 0.6rem; align-items: baseline; }
+.doc-exchange-line { display: flex; gap: 0.7rem; align-items: baseline; }
 .doc-exchange-role {
-  flex: none; font-size: var(--fs-xs); color: var(--grey-1);
-  letter-spacing: 0.02em;
+  flex: none; font-size: var(--fs-md); font-weight: 500;
+  color: var(--c-kimi);
 }
 .doc-exchange-role::after { content: ':'; }
 .doc-exchange-msg {
-  font-size: var(--fs-md); color: var(--ink-2); font-style: italic;
+  font-size: var(--fs-md); color: var(--ink-2);
   line-height: 1.6; text-wrap: pretty;
 }
 
