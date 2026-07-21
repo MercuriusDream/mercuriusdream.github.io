@@ -81,8 +81,11 @@
 .doc-tweet:hover { text-decoration-color: var(--doc-accent); }
 
 /* ── Transcript ── */
-.tx { display: flex; flex-direction: column; gap: 1.4rem; }
-.tx-py { display: flex; flex-direction: column; gap: 0.6rem; }
+.tx {
+  --tx-gap: 1.35rem;
+  --tx-gap-inner: 0.7rem;
+  display: flex; flex-direction: column; gap: var(--tx-gap);
+}
 
 /* Tool blocks: flat colour blocks, no outline; collapsible. Colour per tool. */
 .tx-fold {
@@ -96,30 +99,36 @@
 .tx-fold--out    { --blk: color-mix(in srgb, var(--c-gold),   var(--sky-2) 80%); --tone: var(--c-gold); }
 .tx-fold--search { --blk: color-mix(in srgb, var(--c-teal),   var(--sky-2) 82%); --tone: var(--c-teal); }
 
-.tx-fold > summary {
+.tx-summary {
   cursor: pointer;
-  list-style: none;
-  display: flex; align-items: center; gap: 0.5rem;
+  display: flex; align-items: center; gap: 0.5rem; width: 100%; text-align: left;
   color: color-mix(in srgb, var(--tone), var(--ink) 42%);
   transition: color 0.3s var(--ease-out-expo);
 }
-.tx-fold > summary::-webkit-details-marker { display: none; }
-.tx-fold > summary:hover { color: var(--ink); }
-.tx-fold > summary:focus-visible { outline: 2px solid var(--ink); outline-offset: 3px; }
+.tx-summary:hover { color: var(--ink); }
+.tx-summary:focus-visible { outline: 2px solid var(--ink); outline-offset: 3px; }
 .tx-chev {
   flex: none; width: 0.42rem; height: 0.42rem;
   border-right: 1.5px solid currentColor; border-bottom: 1.5px solid currentColor;
   transform: rotate(-45deg);
-  transition: transform 0.25s var(--ease-out-expo);
+  transition: transform 0.3s var(--ease-out-expo);
 }
-.tx-fold[open] > summary .tx-chev { transform: rotate(45deg); }
+.tx-fold.is-open .tx-chev { transform: rotate(45deg); }
 .tx-label { flex: none; font-size: var(--fs-sm); font-weight: 500; }
 .tx-peek {
   flex: 1 1 auto; min-width: 0;
   font-size: var(--fs-xs); color: var(--grey-2);
   white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
 }
-.tx-fold-body { margin-top: 0.6rem; }
+
+/* Animated open/close: grid 0fr→1fr. Default closed. */
+.tx-fold-body {
+  display: grid;
+  grid-template-rows: 0fr;
+  transition: grid-template-rows 0.32s var(--ease-out-expo);
+}
+.tx-fold.is-open .tx-fold-body { grid-template-rows: 1fr; }
+.tx-fold-body-inner { overflow: hidden; min-height: 0; padding-top: var(--tx-gap-inner); }
 
 /* thinking: bigger, readable */
 .tx-think-body {
@@ -129,7 +138,7 @@
   margin: 0;
 }
 
-/* code / output: monospace, transparent on their colour block */
+/* code / output: monospace; output lives inside the Code fold, brighter than code */
 .tx-code, .tx-out {
   font-family: var(--mono);
   white-space: pre; overflow-x: auto; overscroll-behavior-x: contain;
@@ -137,15 +146,20 @@
   line-height: 1.55; font-size: 0.82rem; tab-size: 2;
 }
 .tx-code { color: var(--ink-2); }
-.tx-out  { color: var(--ink); }
+.tx-out  {
+  color: var(--ink);
+  margin-top: var(--tx-gap-inner);
+  padding-top: var(--tx-gap-inner);
+  border-top: 1px solid color-mix(in srgb, var(--tone), transparent 72%);
+}
 
 /* web search: detailed, numbered, linked where resolved */
-.tx-search .tx-query {
+.tx-fold--search .tx-query {
   font-size: var(--fs-sm); color: var(--ink-2); line-height: 1.6;
   margin-bottom: 0.6rem; text-wrap: pretty;
 }
-.tx-search .tx-query::before { content: '“'; color: var(--grey-1); }
-.tx-search .tx-query::after { content: '”'; color: var(--grey-1); }
+.tx-fold--search .tx-query::before { content: '“'; color: var(--grey-1); }
+.tx-fold--search .tx-query::after { content: '”'; color: var(--grey-1); }
 .tx-results { list-style: none; counter-reset: r; }
 .tx-res {
   counter-increment: r; position: relative;
@@ -187,11 +201,25 @@ a.tx-res-title:hover { text-decoration: underline; text-underline-offset: 3px; }
 
 /* ── Sources + back ── */
 .doc-sources {
-  display: flex; flex-wrap: wrap; align-items: baseline;
-  gap: 0.45rem 0.55rem; margin-top: 1.1rem;
+  display: flex; flex-direction: column; gap: 0.55rem;
+  margin-top: var(--tx-gap, 1.35rem);
 }
-.doc-src-label { font-size: var(--fs-xs); color: var(--grey-1); margin-right: 0.2rem; }
-.doc-sources .inline-link { font-size: var(--fs-sm); font-weight: 500; }
+.doc-src-label { font-size: var(--fs-xs); color: var(--grey-1); }
+.doc-src-list {
+  list-style: none; counter-reset: src;
+  display: flex; flex-direction: column; gap: 0.5rem;
+}
+.doc-src-item {
+  counter-increment: src; position: relative;
+  padding-left: 1.6rem;
+}
+.doc-src-item::before {
+  content: counter(src) ".";
+  position: absolute; left: 0; top: 0.05rem;
+  font-size: var(--fs-sm); color: var(--grey-2);
+  font-variant-numeric: tabular-nums;
+}
+.doc-src-item .inline-link { font-size: var(--fs-sm); font-weight: 500; }
 
 .doc-foot { margin-top: 1.6rem; display: flex; }
 .doc-back {

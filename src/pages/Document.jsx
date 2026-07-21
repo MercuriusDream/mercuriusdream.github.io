@@ -52,41 +52,36 @@ function Prose({ text }) {
 }
 
 // ── Segment views ─────────────────────────────────────────────────────────
-function Fold({ label, tone, peek, open = false, children }) {
+function Fold({ label, tone, peek, defaultOpen = false, children }) {
+  const [open, setOpen] = useState(defaultOpen);
   return (
-    <details className={`tx-fold tx-fold--${tone}`} open={open}>
-      <summary>
+    <div className={`tx-fold tx-fold--${tone}${open ? ' is-open' : ''}`}>
+      <button type="button" className="tx-summary" aria-expanded={open}
+        onClick={() => setOpen(o => !o)}>
         <span className="tx-chev" aria-hidden="true" />
         <span className="tx-label">{label}</span>
         {peek && <span className="tx-peek">{peek}</span>}
-      </summary>
-      <div className="tx-fold-body">{children}</div>
-    </details>
+      </button>
+      <div className="tx-fold-body"><div className="tx-fold-body-inner">{children}</div></div>
+    </div>
   );
 }
 
 function Search({ query, results }) {
   return (
-    <details className="tx-fold tx-fold--search">
-      <summary>
-        <span className="tx-chev" aria-hidden="true" />
-        <span className="tx-label">Web search</span>
-        <span className="tx-peek">{query}</span>
-      </summary>
-      <div className="tx-fold-body">
-        <p className="tx-query">{query}</p>
-        <ol className="tx-results">
-          {results.map((r, i) => (
-            <li key={i} className="tx-res">
-              {r.u
-                ? <a className="tx-res-title" href={r.u} target="_blank" rel="noopener noreferrer" data-glow>{r.t} <span className="tx-res-ext" aria-hidden="true">↗</span></a>
-                : <span className="tx-res-title tx-res-plain">{r.t}</span>}
-              <span className="tx-res-src">{r.s}</span>
-            </li>
-          ))}
-        </ol>
-      </div>
-    </details>
+    <Fold label="Web search" tone="search" peek={query}>
+      <p className="tx-query">{query}</p>
+      <ol className="tx-results">
+        {results.map((r, i) => (
+          <li key={i} className="tx-res">
+            {r.u
+              ? <a className="tx-res-title" href={r.u} target="_blank" rel="noopener noreferrer" data-glow>{r.t} <span className="tx-res-ext" aria-hidden="true">↗</span></a>
+              : <span className="tx-res-title tx-res-plain">{r.t}</span>}
+            <span className="tx-res-src">{r.s}</span>
+          </li>
+        ))}
+      </ol>
+    </Fold>
   );
 }
 
@@ -114,10 +109,10 @@ function Segment({ seg, doc, lang, searchIndex }) {
   }
   if (seg.t === 'py') {
     return (
-      <div className="tx-py">
-        <Fold label="Code" tone="code"><pre className="tx-code">{seg.code}</pre></Fold>
-        {seg.out && <Fold label="Output" tone="out" open><pre className="tx-out">{seg.out}</pre></Fold>}
-      </div>
+      <Fold label="Code" tone="code">
+        <pre className="tx-code">{seg.code}</pre>
+        {seg.out && <pre className="tx-out">{seg.out}</pre>}
+      </Fold>
     );
   }
   if (seg.t === 'search') {
@@ -189,12 +184,16 @@ function Document() {
           {doc.sources?.length > 0 && (
             <div className="doc-sources reveal">
               <span className="doc-src-label">sources</span>
-              {doc.sources.map(s => (
-                <a key={s.href} href={s.href} target="_blank" rel="noopener noreferrer"
-                  className="inline-link" data-glow style={{ '--link-accent': s.c }}>
-                  {s.label}
-                </a>
-              ))}
+              <ol className="doc-src-list">
+                {doc.sources.map(s => (
+                  <li key={s.href} className="doc-src-item">
+                    <a href={s.href} target="_blank" rel="noopener noreferrer"
+                      className="inline-link" data-glow style={{ '--link-accent': s.c }}>
+                      {s.label}
+                    </a>
+                  </li>
+                ))}
+              </ol>
             </div>
           )}
 
