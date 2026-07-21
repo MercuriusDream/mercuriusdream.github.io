@@ -202,20 +202,20 @@ a.tx-res-title:hover { text-decoration: underline; text-underline-offset: 3px; }
 
 /* ── User/model exchange + sources + back ── */
 .doc-exchange {
-  background: color-mix(in srgb, var(--c-kimi), var(--sky-2) 85%);
-  padding: 0.8rem 1.1rem;
-  display: flex; flex-direction: column; gap: 0.5rem;
+  background: color-mix(in srgb, var(--c-grey), var(--sky-2) 84%);
+  padding: 0.9rem 1.15rem;
+  display: flex; flex-direction: column; gap: 0.55rem;
   margin-top: var(--tx-gap, 1.35rem);
 }
-.doc-exchange-line { display: flex; gap: 0.7rem; align-items: baseline; }
+.doc-exchange-line { display: flex; gap: 0.75rem; align-items: baseline; }
 .doc-exchange-role {
-  flex: none; font-size: var(--fs-md); font-weight: 500;
-  color: var(--c-kimi);
+  flex: none; font-size: var(--fs-lg); font-weight: 500; font-style: italic;
+  color: var(--ink-2);
 }
 .doc-exchange-role::after { content: ':'; }
 .doc-exchange-msg {
-  font-size: var(--fs-md); color: var(--ink-2);
-  line-height: 1.6; text-wrap: pretty;
+  font-size: var(--fs-lg); font-style: italic;
+  color: var(--ink-2); line-height: 1.5; text-wrap: pretty;
 }
 
 .doc-sources {
