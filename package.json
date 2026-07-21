@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "vite build && cp dist/index.html dist/404.html && mkdir -p dist/logos && cp dist/index.html dist/logos/index.html && mkdir -p dist/writings/minus-two && cp dist/index.html dist/writings/index.html && cp dist/index.html dist/writings/minus-two/index.html",
+    "build": "vite build && bun scripts/embeds.js",
     "preview": "vite preview",
     "deploy": "npm run build && gh-pages -d dist"
   },
@@ -15,6 +15,7 @@
     "react-router-dom": "^7.18.0"
   },
   "devDependencies": {
+    "@resvg/resvg-js": "^2.6.2",
     "@types/react": "^18.2.43",
     "@types/react-dom": "^18.2.17",
     "@vitejs/plugin-react": "^4.2.1",

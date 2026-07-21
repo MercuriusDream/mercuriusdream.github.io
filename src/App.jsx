@@ -1,8 +1,9 @@
-import { Fragment, useState } from 'react';
-import { BrowserRouter, Routes, Route, Link } from 'react-router-dom';
+import { Fragment, useState, useEffect } from 'react';
+import { BrowserRouter, Routes, Route, Link, useLocation } from 'react-router-dom';
 import { KaomojiIcon } from './components/Icons';
 import Starfield from './components/Starfield';
 import { useNavTransition } from './hooks/useNavTransition';
+import { seoFor } from './seo';
 import Logos from './pages/Logos';
 import Document from './pages/Document';
 import Writings from './pages/Writings';
@@ -140,9 +141,21 @@ function HomePage() {
   );
 }
 
+function RouteTitle() {
+  const { pathname } = useLocation();
+  useEffect(() => {
+    const seg = seoFor(pathname);
+    document.title = seg.title;
+    const d = document.querySelector('meta[name="description"]');
+    if (d) d.setAttribute('content', seg.description);
+  }, [pathname]);
+  return null;
+}
+
 function App() {
   return (
     <BrowserRouter>
+      <RouteTitle />
       <Starfield />
       <Routes>
         <Route path="/" element={<HomePage />} />

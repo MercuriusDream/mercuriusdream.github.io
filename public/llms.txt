@@ -1,6 +1,6 @@
 # 마라향 안개구름
 
-> @mercuriusdream — Korean security researcher building multi-agent and browser-automation systems.
+> @mercuriusdream — runs Project Logos (open defensive cybersecurity on generally available models). Made TideSurf and Agent-Estate.
 
 ## Made
 

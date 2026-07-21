@@ -1,4 +1,5 @@
 import { IconKimi } from '../components/Icons';
+import { bySlug } from './meta';
 import transcript from './kimi-jacobian.txt?raw';
 import searchResults from './kimi-searches.js';
 
@@ -6,25 +7,13 @@ import searchResults from './kimi-searches.js';
 // counterexample. The transcript is vendored verbatim (my private notes to the
 // model redacted). English translations for the Korean segments are matched
 // onto the prose by prefix; search results are linked where a URL resolved.
+// Lightweight metadata (title/subtitle/blurb/accent/…) lives once in ./meta.
 
 const doc = {
-  slug: 'minus-two',
-  accent: 'var(--c-gold)',
-  kicker: 'field log · 2026·07·21',
+  ...bySlug['minus-two'],
   mark: IconKimi,
-  markLabel: 'Kimi K3',
-
-  // /writings index card
-  date: 'Jul 21, 2026',
-  listTitle: 'i handed the jacobian thing to kimi k3',
-  blurb: `Kimi K3's unedited log verifying the July 2026 Jacobian-conjecture counterexample: det ≡ −2, three points, one image. An open-weights model, cold.`,
-
-  title: 'i handed the jacobian thing to kimi k3',
-  subtitle: `it works somehow, and no, Chinese models aren't six months behind, fyi.`,
 
   intro: `saw the {tweet} and decided to give it to Kimi K3.`,
-
-  tweet: { url: 'https://x.com/__alpoge__/status/2079028340955197566', label: 'original tweet' },
 
   transcript,
   searchResults,
