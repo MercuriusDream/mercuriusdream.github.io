@@ -6,7 +6,7 @@
 export const writings = [
   {
     slug: 'minus-two',
-    accent: 'var(--c-gold)',
+    accent: '#B8BCC8', // bright grey — no gold
     kicker: 'field log · 2026·07·21',
     markLabel: 'Kimi K3',
     date: 'Jul 21, 2026',
