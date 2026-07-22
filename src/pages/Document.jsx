@@ -130,6 +130,31 @@ function BackLink() {
   );
 }
 
+function ShareButton({ doc }) {
+  const [copied, setCopied] = useState(false);
+  const onShare = async () => {
+    const url = window.location.href;
+    if (navigator.share) {
+      try {
+        await navigator.share({ title: doc.title, text: doc.blurb || doc.subtitle || doc.title, url });
+        return;
+      } catch (e) {
+        if (e?.name === 'AbortError') return; // user dismissed the sheet
+      }
+    }
+    try {
+      await navigator.clipboard.writeText(url);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 1500);
+    } catch { /* no clipboard access — nothing to do */ }
+  };
+  return (
+    <button type="button" onClick={onShare} className="doc-share" data-glow aria-label="Share this writing">
+      {copied ? 'copied ✓' : 'share ↗'}
+    </button>
+  );
+}
+
 function Document() {
   const { slug } = useParams();
   const doc = docs[slug];
@@ -214,7 +239,7 @@ function Document() {
             </div>
           )}
 
-          <footer className="doc-foot reveal"><BackLink /></footer>
+          <footer className="doc-foot reveal"><BackLink /><ShareButton doc={doc} /></footer>
 
           {bilingual && <LangSwitch lang={lang} setLang={setLang} place="bot" />}
         </article>

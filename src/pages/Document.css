@@ -24,10 +24,7 @@
   width: min(920px, 100%);
   gap: 1.5rem;
   padding: clamp(1.9rem, 4.5vw, 3.5rem) clamp(1.35rem, 4vw, 3rem);
-  background:
-    radial-gradient(130% 55% at 50% -8%,
-      color-mix(in srgb, var(--doc-accent), transparent 89%), transparent 62%),
-    color-mix(in srgb, var(--sky-2) 92%, transparent);
+  background: color-mix(in srgb, var(--sky-2) 92%, transparent);
 }
 
 /* ── KO / EN switch (top + bottom) ── */
@@ -239,7 +236,7 @@ a.tx-res-title:hover { text-decoration: underline; text-underline-offset: 3px; }
 }
 .doc-src-item .inline-link { font-size: var(--fs-sm); font-weight: 500; }
 
-.doc-foot { margin-top: 1.6rem; display: flex; }
+.doc-foot { margin-top: 1.6rem; display: flex; justify-content: space-between; align-items: center; }
 .doc-back {
   display: inline-flex; align-items: center; min-height: 28px;
   padding: 0.15rem 0.55rem;
@@ -254,10 +251,25 @@ a.tx-res-title:hover { text-decoration: underline; text-underline-offset: 3px; }
 }
 .doc-back:active { transform: scale(0.96) rotate(0deg); transition-duration: 0.08s; }
 
+.doc-share {
+  display: inline-flex; align-items: center; min-height: 28px;
+  padding: 0.15rem 0.55rem;
+  font-size: calc(var(--fs-xs) * 1.25); font-weight: 500;
+  color: var(--ink);
+  background-color: color-mix(in srgb, var(--c-grey), var(--sky) 55%);
+  transition: background-color 0.45s var(--ease-out-expo), transform 0.45s var(--ease-out-expo);
+}
+.doc-share:hover {
+  background-color: color-mix(in srgb, var(--c-grey), var(--sky) 30%);
+  transform: scale(1.12) rotate(3deg);
+}
+.doc-share:active { transform: scale(0.96) rotate(0deg); transition-duration: 0.08s; }
+
 /* ── Standalone figure (image-only writings) ── */
-.doc-figure { display: flex; }
+/* Screenshots are retina-dense; showing them at half width keeps them crisp. */
+.doc-figure { display: flex; justify-content: center; }
 .doc-figure img {
-  display: block; width: 100%; height: auto;
+  display: block; width: 50%; height: auto;
   background: var(--sky-2);
 }
 
@@ -294,6 +306,10 @@ a.tx-res-title:hover { text-decoration: underline; text-underline-offset: 3px; }
   letter-spacing: -0.01em; line-height: 1.25; text-wrap: balance;
 }
 .doc-entry-blurb { font-size: var(--fs-sm); color: var(--ink-3); line-height: 1.55; text-wrap: pretty; }
+
+@media (max-width: 720px) {
+  .doc-figure img { width: 100%; }
+}
 
 @media (max-width: 460px) {
   .doc-head { gap: 0.45rem; }

@@ -10,10 +10,18 @@
 
 import { readFile, writeFile, mkdir } from 'node:fs/promises';
 import { dirname, join } from 'node:path';
+import { fileURLToPath } from 'node:url';
 import { routes, SITE, PROVIDER, ACCENT, SKY, INK } from '../src/seo.js';
 
 const INK2 = '#B8BCC8'; // bright grey — the embed accent (no gold)
 const GREY = '#6A7080';
+const SKY2 = '#0A0F1F'; // the article panel colour from the site
+
+// The site's own display face, vendored so cards look like the site, not like
+// a system-font fallback. Weights match global.css (body 400, headings 500).
+const FONT_DIR = join(dirname(fileURLToPath(import.meta.url)), 'fonts');
+const FONT_FILES = ['ZalandoSans-400.ttf', 'ZalandoSans-500.ttf'].map(f => join(FONT_DIR, f));
+const FONT = 'Zalando Sans';
 const HANDLE = '@mercuriusdream';
 
 let Resvg = null;
@@ -47,37 +55,32 @@ function witness(cx, cy, s) {
 
 function svgFor(r) {
   const hasEmblem = r.emblem === 'witness';
-  const textX = 80;
-  const textW = hasEmblem ? 690 : 1040;
+  const pad = 120; // inner padding of the "article panel"
+  const textW = W - pad * 2 - (hasEmblem ? 330 : 0);
   // Latin-safe display title for the card (avoids Korean tofu on CI runners).
   const cardTitle = r.cardTitle || r.title;
   const titleSize = cardTitle.length > 40 ? 54 : 66;
   const titleLines = wrap(cardTitle, Math.max(10, Math.floor(textW / (titleSize * 0.52)))).slice(0, 3);
-  const descLines = wrap(r.description, Math.max(14, Math.floor(textW / (30 * 0.52)))).slice(0, 4);
+  const descLines = wrap(r.description, Math.max(14, Math.floor(textW / (29 * 0.52)))).slice(0, 4);
 
-  const titleTop = 196;
+  const titleTop = 226;
   const titleLh = titleSize * 1.16;
-  const descTop = titleTop + (titleLines.length - 1) * titleLh + 70;
+  const descTop = titleTop + (titleLines.length - 1) * titleLh + 60;
   const descLh = 42;
 
   const tspans = (lines, lh) => lines.map((l, i) =>
-    `<tspan x="${textX}" dy="${i === 0 ? 0 : lh}">${esc(l)}</tspan>`).join('');
+    `<tspan x="${pad}" dy="${i === 0 ? 0 : lh}">${esc(l)}</tspan>`).join('');
 
   return `<svg xmlns="http://www.w3.org/2000/svg" width="${W}" height="${H}" viewBox="0 0 ${W} ${H}">
-  <defs>
-    <radialGradient id="g" cx="50%" cy="0%" r="75%">
-      <stop offset="0%" stop-color="${INK2}" stop-opacity="0.10"/>
-      <stop offset="60%" stop-color="${INK2}" stop-opacity="0.02"/>
-      <stop offset="100%" stop-color="${INK2}" stop-opacity="0"/>
-    </radialGradient>
-  </defs>
   <rect width="${W}" height="${H}" fill="${SKY}"/>
-  <rect width="${W}" height="${H}" fill="url(#g)"/>
-  ${hasEmblem ? witness(1012, 318, 2.5) : ''}
-  <text x="${textX}" y="112" font-family="DejaVu Sans, Arial, sans-serif" font-size="26" font-weight="500" letter-spacing="0.02em" fill="${INK2}" opacity="0.92">${esc(r.kicker || HANDLE)}</text>
-  <text x="${textX}" y="${titleTop}" font-family="DejaVu Sans, Arial, sans-serif" font-size="${titleSize}" font-weight="600" fill="${INK}">${tspans(titleLines, titleLh)}</text>
-  <text x="${textX}" y="${descTop}" font-family="DejaVu Sans, Arial, sans-serif" font-size="30" font-weight="400" fill="${INK2}" opacity="0.82">${tspans(descLines, descLh)}</text>
-  <text x="${textX}" y="584" font-family="DejaVu Sans, Arial, sans-serif" font-size="26" font-weight="500" fill="${GREY}">${esc(HANDLE)}</text>
+  <rect x="56" y="56" width="${W - 112}" height="${H - 112}" fill="${SKY2}"/>
+  <rect x="${pad}" y="104" width="13" height="13" fill="${INK2}"/>
+  <text x="${pad + 26}" y="116" font-family="${FONT}" font-size="24" font-weight="500" letter-spacing="1" fill="${GREY}">${esc(r.kicker || HANDLE)}</text>
+  <text x="${pad}" y="${titleTop}" font-family="${FONT}" font-size="${titleSize}" font-weight="500" letter-spacing="-1" fill="${INK}">${tspans(titleLines, titleLh)}</text>
+  <text x="${pad}" y="${descTop}" font-family="${FONT}" font-size="28" font-weight="400" fill="${INK2}">${tspans(descLines, descLh)}</text>
+  <text x="${pad}" y="534" font-family="${FONT}" font-size="24" font-weight="500" fill="${GREY}">${esc(HANDLE)}</text>
+  <text x="${W - pad}" y="534" text-anchor="end" font-family="${FONT}" font-size="24" font-weight="500" fill="${GREY}">mercuriusdream.com</text>
+  ${hasEmblem ? witness(1006, 315, 2.5) : ''}
 </svg>`;
 }
 
@@ -87,7 +90,7 @@ async function renderPng(r) {
     const svg = svgFor(r);
     const png = new Resvg(svg, {
       fitTo: { mode: 'width', value: W },
-      font: { loadSystemFonts: true, family: 'DejaVu Sans' },
+      font: { fontFiles: FONT_FILES, loadSystemFonts: true, family: FONT },
     }).render().asPng();
     return Buffer.from(png);
   } catch (e) {
@@ -107,11 +110,14 @@ function metaTags(r, path, imageHref) {
   <meta property="og:image" content="${imageHref}"/>
   <meta property="og:image:width" content="1200"/>
   <meta property="og:image:height" content="630"/>
+  <meta property="og:image:alt" content="${esc(r.title)} — ${esc(r.description)}"/>
   <meta name="twitter:card" content="summary_large_image"/>
   <meta name="twitter:site" content="${HANDLE}"/>
   <meta name="twitter:title" content="${esc(r.title)}"/>
   <meta name="twitter:description" content="${esc(r.description)}"/>
   <meta name="twitter:image" content="${imageHref}"/>
+  <meta name="twitter:image:alt" content="${esc(r.title)} — ${esc(r.description)}"/>
+  <meta name="theme-color" content="${SKY}"/>
   <link rel="canonical" href="${url}"/>
   <link rel="alternate" type="application/json+oembed" href="${SITE}${path === '/' ? '' : path}/oembed.json" title="${esc(r.title)}"/>`;
 }
