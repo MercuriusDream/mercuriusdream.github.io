@@ -20,6 +20,10 @@
 .doc { margin-inline: auto; display: flex; flex-direction: column; }
 
 /* ── The article reading surface (the middle thing over the sky) ── */
+/* The panel always stretches to fill the scroll viewport between the top and
+   bottom gutters, even when the writing is short. */
+.doc-scroll { display: flex; flex-direction: column; }
+.doc { flex: 1 1 auto; }
 .doc-article {
   width: min(920px, 100%);
   gap: 1.5rem;
@@ -28,7 +32,7 @@
 }
 
 /* ── KO / EN switch (top + bottom) ── */
-.doc-lang { display: inline-flex; gap: 0.3rem; align-self: flex-end; }
+.doc-lang { display: inline-flex; gap: 0.3rem; align-self: flex-start; }
 .doc-lang--top { margin-bottom: 0.2rem; }
 .doc-lang--bot { margin-top: 1.4rem; }
 .doc-lang-btn {
@@ -56,7 +60,7 @@
 }
 .doc-kicker-meta { display: inline-flex; align-items: center; gap: 0.4em; min-width: 0; }
 .doc-kicker-home {
-  color: var(--ink-3); font-weight: 500;
+  color: inherit; font: inherit;
   transition: color 0.3s var(--ease-out-expo);
 }
 .doc-kicker-home:hover { color: var(--ink); text-decoration: underline; text-underline-offset: 3px; }
@@ -272,8 +276,10 @@ a.tx-res-title:hover { text-decoration: underline; text-underline-offset: 3px; }
 .doc-share.is-copied { color: var(--doc-accent); }
 
 /* ── Standalone figure (image-only writings) ── */
-/* Screenshots are retina-dense; showing them at half width keeps them crisp. */
-.doc-figure { display: flex; justify-content: center; }
+/* Screenshots are retina-dense; showing them at half width keeps them crisp.
+   Left-aligned like the rest of the page; doc.image.align = 'center' opts out. */
+.doc-figure { display: flex; justify-content: flex-start; }
+.doc-figure--center { justify-content: center; }
 .doc-figure img {
   display: block; width: 50%; height: auto;
   background: var(--sky-2);

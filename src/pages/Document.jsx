@@ -206,7 +206,7 @@ function Document() {
           </header>
 
           {doc.image && (
-            <figure className="doc-figure reveal" style={delay(1020)}>
+            <figure className={`doc-figure reveal${doc.image.align === 'center' ? ' doc-figure--center' : ''}`} style={delay(1020)}>
               <img src={doc.image.src} alt={doc.image.alt} loading="lazy" />
             </figure>
           )}
