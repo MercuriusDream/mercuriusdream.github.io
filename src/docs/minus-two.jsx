@@ -13,8 +13,6 @@ const doc = {
   ...bySlug['minus-two'],
   mark: IconKimi,
 
-  intro: `here's the response.`,
-
   // The one-line exchange that frames the transcript — shown above sources.
   exchange: [
     { role: 'user', text: "here's a counterexample to the jacobian conjecture" },
