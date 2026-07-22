@@ -53,6 +53,22 @@ export const IconBlog = (p) => (
   </svg>
 );
 
+// Share: export arrow, stroke-style, square caps (matches the flat UI)
+export const IconShare = (p) => (
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="square" aria-hidden={true} focusable={false} {...p}>
+    <path d="M12 3.5v12" />
+    <path d="M7 8l5-4.5L17 8" />
+    <path d="M5 11.5v9h14v-9" />
+  </svg>
+);
+
+// Check: copied confirmation
+export const IconCheck = (p) => (
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="square" aria-hidden={true} focusable={false} {...p}>
+    <path d="M4.5 12.5l5 5L19.5 6.5" />
+  </svg>
+);
+
 // Kaomoji >_<
 export const KaomojiIcon = ({ alt = '', blink = false, ...p }) => (
   <img src={blink ? '/logo-blink.svg' : '/logo.svg'} alt={alt} {...p} />

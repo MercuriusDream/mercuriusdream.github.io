@@ -1,6 +1,7 @@
 import { useMemo, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { useNavTransition } from '../hooks/useNavTransition';
+import { IconShare, IconCheck } from '../components/Icons';
 import docs from '../docs';
 import './Document.css';
 
@@ -149,8 +150,10 @@ function ShareButton({ doc }) {
     } catch { /* no clipboard access — nothing to do */ }
   };
   return (
-    <button type="button" onClick={onShare} className="doc-share" data-glow aria-label="Share this writing">
-      {copied ? 'copied ✓' : 'share ↗'}
+    <button type="button" onClick={onShare}
+      className={`doc-share${copied ? ' is-copied' : ''}`} data-glow
+      aria-label={copied ? 'Link copied' : 'Share this writing'}>
+      {copied ? <IconCheck /> : <IconShare />}
     </button>
   );
 }
@@ -189,8 +192,13 @@ function Document() {
 
           <header className="doc-head">
             <p className="doc-kicker reveal-hero" style={delay(680)}>
-              {doc.kicker}
-              {Mark && <> · <span className="doc-mark" aria-hidden="true"><Mark /></span> {doc.markLabel}</>}
+              <span className="doc-kicker-meta">
+                <button type="button" className="doc-kicker-home" data-glow onClick={() => navTo('/')}>mercuriusdream</button>
+                <span aria-hidden="true">·</span>
+                {doc.kicker}
+                {Mark && <> <span aria-hidden="true">·</span> <span className="doc-mark" aria-hidden="true"><Mark /></span> {doc.markLabel}</>}
+              </span>
+              <ShareButton doc={doc} />
             </p>
             <h1 className="doc-title reveal-hero" style={delay(760)}>{doc.title}</h1>
             {doc.subtitle && <p className="doc-subtitle reveal" style={delay(840)}>{doc.subtitle}</p>}
@@ -239,7 +247,7 @@ function Document() {
             </div>
           )}
 
-          <footer className="doc-foot reveal"><BackLink /><ShareButton doc={doc} /></footer>
+          <footer className="doc-foot reveal"><BackLink /></footer>
 
           {bilingual && <LangSwitch lang={lang} setLang={setLang} place="bot" />}
         </article>

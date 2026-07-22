@@ -50,9 +50,16 @@
 /* ── Header ── */
 .doc-head { display: flex; flex-direction: column; gap: 0.5rem; }
 .doc-kicker {
-  display: inline-flex; align-items: center; gap: 0.4em;
+  display: flex; align-items: center; justify-content: space-between; gap: 0.75rem;
+  width: 100%;
   font-size: var(--fs-sm); letter-spacing: 0.02em; color: var(--grey-1);
 }
+.doc-kicker-meta { display: inline-flex; align-items: center; gap: 0.4em; min-width: 0; }
+.doc-kicker-home {
+  color: var(--ink-3); font-weight: 500;
+  transition: color 0.3s var(--ease-out-expo);
+}
+.doc-kicker-home:hover { color: var(--ink); text-decoration: underline; text-underline-offset: 3px; }
 .doc-mark { display: inline-flex; color: var(--doc-accent); }
 .doc-mark svg { width: 0.95em; height: 0.95em; display: block; }
 .doc-title {
@@ -236,7 +243,7 @@ a.tx-res-title:hover { text-decoration: underline; text-underline-offset: 3px; }
 }
 .doc-src-item .inline-link { font-size: var(--fs-sm); font-weight: 500; }
 
-.doc-foot { margin-top: 1.6rem; display: flex; justify-content: space-between; align-items: center; }
+.doc-foot { margin-top: 1.6rem; display: flex; }
 .doc-back {
   display: inline-flex; align-items: center; min-height: 28px;
   padding: 0.15rem 0.55rem;
@@ -252,18 +259,17 @@ a.tx-res-title:hover { text-decoration: underline; text-underline-offset: 3px; }
 .doc-back:active { transform: scale(0.96) rotate(0deg); transition-duration: 0.08s; }
 
 .doc-share {
-  display: inline-flex; align-items: center; min-height: 28px;
-  padding: 0.15rem 0.55rem;
-  font-size: calc(var(--fs-xs) * 1.25); font-weight: 500;
-  color: var(--ink);
-  background-color: color-mix(in srgb, var(--c-grey), var(--sky) 55%);
-  transition: background-color 0.45s var(--ease-out-expo), transform 0.45s var(--ease-out-expo);
+  flex: none;
+  display: inline-flex; align-items: center; justify-content: center;
+  width: 28px; height: 28px;
+  color: var(--ink-3);
+  background-color: color-mix(in srgb, var(--grey-1) 14%, transparent);
+  transition: color 0.4s var(--ease-out-expo), background-color 0.4s var(--ease-out-expo), transform 0.4s var(--ease-out-expo);
 }
-.doc-share:hover {
-  background-color: color-mix(in srgb, var(--c-grey), var(--sky) 30%);
-  transform: scale(1.12) rotate(3deg);
-}
-.doc-share:active { transform: scale(0.96) rotate(0deg); transition-duration: 0.08s; }
+.doc-share:hover { color: var(--ink); background-color: color-mix(in srgb, var(--ink) 12%, transparent); }
+.doc-share:active { transform: scale(0.9); transition-duration: 0.08s; }
+.doc-share svg { width: 15px; height: 15px; display: block; }
+.doc-share.is-copied { color: var(--doc-accent); }
 
 /* ── Standalone figure (image-only writings) ── */
 /* Screenshots are retina-dense; showing them at half width keeps them crisp. */
