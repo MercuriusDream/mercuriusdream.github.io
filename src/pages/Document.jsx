@@ -172,12 +172,20 @@ function Document() {
             {doc.intro && <p className="doc-intro reveal" style={delay(920)}>{renderIntro(doc.intro, doc.tweet)}</p>}
           </header>
 
+          {doc.image && (
+            <figure className="doc-figure reveal" style={delay(1020)}>
+              <img src={doc.image.src} alt={doc.image.alt} loading="lazy" />
+            </figure>
+          )}
+
+          {doc.transcript && (
           <div className="tx reveal" style={delay(1020)}>
             {segs.map((seg, i) => {
               const si = seg.t === 'search' ? searchIndex++ : 0;
               return <Segment key={i} seg={seg} doc={doc} lang={lang} searchIndex={si} />;
             })}
           </div>
+          )}
 
           {doc.exchange?.length > 0 && (
             <div className="doc-exchange reveal">

@@ -5,6 +5,15 @@
 
 export const writings = [
   {
+    slug: 'distillation-attacks',
+    accent: 'var(--c-rust)',
+    kicker: 'field log · 2026·07·22',
+    date: 'Jul 22, 2026',
+    listTitle: 'distillation attacks',
+    title: 'distillation attacks',
+    blurb: `one prompt, one screenshot: ask a frontier chat model what its name is, and it introduces itself as another lab's model.`,
+  },
+  {
     slug: 'minus-two',
     accent: 'var(--c-grey)', // bright grey — Kimi things (mark/witness/exchange) stay blue
     kicker: 'field log · 2026·07·21',
