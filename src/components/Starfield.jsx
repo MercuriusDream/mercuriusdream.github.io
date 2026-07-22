@@ -8,13 +8,28 @@ const LAYERS = [
   { n: MID,  depth: 1, rMin: 0.5, rMax: 1.3, aMin: 0.30, aMax: 0.65, twMin: 0.3, twMax: 0.8, px: 8  },
   { n: NEAR, depth: 2, rMin: 0.8, rMax: 2.0, aMin: 0.40, aMax: 0.75, twMin: 0.4, twMax: 1.0, px: 20 },
 ];
-const NEBULAE = [
-  { color: '79,123,134',  alpha: 0.055, size: 0.45 },
-  { color: '118,102,141', alpha: 0.045, size: 0.38 },
-  { color: '184,106,142', alpha: 0.035, size: 0.32 },
-];
-const TINTS = ['79,123,134', '118,102,141', '184,106,142', '138,109,78'];
-const WHITE = '232,234,240';
+// Palette per theme. Night: ink-white stars + tinted nebulae on deep navy.
+// Day: slate stars on porcelain — the same sky, seen in the morning.
+const PALETTES = {
+  dark: {
+    star: '232,234,240',
+    tints: ['79,123,134', '118,102,141', '184,106,142', '138,109,78'],
+    nebulae: [
+      { color: '79,123,134',  alpha: 0.055, size: 0.45 },
+      { color: '118,102,141', alpha: 0.045, size: 0.38 },
+      { color: '184,106,142', alpha: 0.035, size: 0.32 },
+    ],
+  },
+  day: {
+    star: '74,88,116',
+    tints: ['54,94,106', '96,80,118', '150,84,118', '122,94,58'],
+    nebulae: [
+      { color: '79,123,134',  alpha: 0.05,  size: 0.45 },
+      { color: '118,102,141', alpha: 0.04,  size: 0.38 },
+      { color: '184,106,142', alpha: 0.03,  size: 0.32 },
+    ],
+  },
+};
 
 const ENTRANCE_MS = 2200;
 const SMOOTH_RATE = 5.0;
@@ -42,6 +57,7 @@ function Starfield() {
 
     let W = 0, H = 0;
     let stars = [], nebulae = [];
+    let pal = document.documentElement.dataset.theme === 'day' ? PALETTES.day : PALETTES.dark;
     const mouse = { tx: 0, ty: 0, cx: 0, cy: 0 };
     let hover = null;
     let entrance = 0, entranceStart = 0;
@@ -74,7 +90,7 @@ function Starfield() {
             depth: L.depth,
             parallax: L.px,
             tint: L.depth === 2 && Math.random() < 0.35
-              ? TINTS[Math.floor(Math.random() * TINTS.length)]
+              ? pal.tints[Math.floor(Math.random() * pal.tints.length)]
               : null,
           });
         }
@@ -82,7 +98,7 @@ function Starfield() {
     }
 
     function buildNebulae() {
-      nebulae = NEBULAE.map((c, i) => ({
+      nebulae = pal.nebulae.map((c, i) => ({
         bx: W * (0.2 + i * 0.3 + Math.random() * 0.1),
         by: H * (0.3 + Math.random() * 0.4),
         r: Math.max(W, H) * c.size,
@@ -125,7 +141,7 @@ function Starfield() {
 
         if (warpP > 0) a = Math.min(1, a + warpP * 0.25 * lp);
 
-        const c = s.tint || WHITE;
+        const c = s.tint || pal.star;
         ctx.beginPath();
         ctx.arc(sx, sy, s.r, 0, Math.PI * 2);
         ctx.fillStyle = `rgba(${c},${a})`;
@@ -155,9 +171,6 @@ function Starfield() {
       mouse.cx = lerp(mouse.cx, mouse.tx, sm);
       mouse.cy = lerp(mouse.cy, mouse.ty, sm);
 
-      document.documentElement.style.setProperty('--mx', mouse.cx.toFixed(4));
-      document.documentElement.style.setProperty('--my', mouse.cy.toFixed(4));
-
       ctx.clearRect(0, 0, W, H);
       drawNebulae(nebIn(entrance), time);
       drawStars(entrance, time, warp);
@@ -185,6 +198,21 @@ function Starfield() {
     const onRoute = () => {
       if (entrance > 0.5) { warpStart = performance.now(); warp = 1; }
     };
+    const onTheme = () => {
+      pal = document.documentElement.dataset.theme === 'day' ? PALETTES.day : PALETTES.dark;
+      buildStars();
+      buildNebulae();
+      if (reduced) staticFrame();
+    };
+    // Don't burn GPU on an invisible tab.
+    const onVis = () => {
+      if (document.hidden) {
+        if (raf) { cancelAnimationFrame(raf); raf = null; }
+      } else if (!raf) {
+        lastT = performance.now();
+        raf = requestAnimationFrame(frame);
+      }
+    };
     let resizeTimer;
     const onResize = () => {
       clearTimeout(resizeTimer);
@@ -197,12 +225,15 @@ function Starfield() {
 
     if (reduced) {
       staticFrame();
+      window.addEventListener('theme:change', onTheme);
     } else {
       window.addEventListener('mousemove', onMove, { passive: true });
       window.addEventListener('pointerover', onOver, { passive: true });
       window.addEventListener('pointerout', onOut, { passive: true });
       window.addEventListener('starfield:route', onRoute);
+      window.addEventListener('theme:change', onTheme);
       window.addEventListener('resize', onResize);
+      document.addEventListener('visibilitychange', onVis);
       raf = requestAnimationFrame(frame);
     }
 
@@ -212,7 +243,9 @@ function Starfield() {
       window.removeEventListener('pointerover', onOver);
       window.removeEventListener('pointerout', onOut);
       window.removeEventListener('starfield:route', onRoute);
+      window.removeEventListener('theme:change', onTheme);
       window.removeEventListener('resize', onResize);
+      document.removeEventListener('visibilitychange', onVis);
       clearTimeout(resizeTimer);
     };
   }, []);

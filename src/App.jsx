@@ -1,12 +1,15 @@
-import { Fragment, useState, useEffect } from 'react';
+import { Fragment, useState, useEffect, lazy, Suspense } from 'react';
 import { BrowserRouter, Routes, Route, Link, useLocation } from 'react-router-dom';
 import { KaomojiIcon } from './components/Icons';
 import Starfield from './components/Starfield';
 import { useNavTransition } from './hooks/useNavTransition';
 import { seoFor } from './seo';
-import Logos from './pages/Logos';
-import Document from './pages/Document';
-import Writings from './pages/Writings';
+
+// Route-level code splitting: the homepage stays in the entry chunk; the
+// writings reader (and its vendored transcripts) load only when visited.
+const Logos = lazy(() => import('./pages/Logos'));
+const Writings = lazy(() => import('./pages/Writings'));
+const Document = lazy(() => import('./pages/Document'));
 
 const LOVE_LINKS = [
   { label: 'Zhilin Yang', href: 'https://kimiyoung.github.io/', accent: '#B8634A' },
@@ -47,6 +50,27 @@ function InlineLinkList({ links }) {
       <HighlightLink link={link} />
     </Fragment>
   ));
+}
+
+function ThemeToggle() {
+  const [theme, setTheme] = useState(() =>
+    document.documentElement.dataset.theme === 'day' ? 'day' : 'dark');
+  const toggle = () => {
+    const next = theme === 'day' ? 'dark' : 'day';
+    document.documentElement.dataset.theme = next;
+    try { localStorage.setItem('theme', next); } catch { /* private mode */ }
+    const m = document.querySelector('meta[name="theme-color"]');
+    if (m) m.setAttribute('content', next === 'day' ? '#E8ECF4' : '#060912');
+    window.dispatchEvent(new Event('theme:change'));
+    setTheme(next);
+  };
+  return (
+    <button type="button" onClick={toggle} className="footer-btn" data-glow
+      style={{ ...delay(2300), '--btn-color': theme === 'day' ? '#1A88FF' : '#D89478' }}
+      aria-label={theme === 'day' ? 'Switch to night sky' : 'Switch to day sky'}>
+      {theme === 'day' ? 'night' : 'day'}
+    </button>
+  );
 }
 
 function HomePage() {
@@ -131,6 +155,7 @@ function HomePage() {
             >
               writings
             </Link>
+            <ThemeToggle />
           </div>
           <div className="footer-icp">
             <a href="https://icp.gov.moe/?keyword=20260535" target="_blank" rel="noopener noreferrer" className="footer-btn" data-glow style={{ '--btn-color': '#6D5A66' }}>萌ICP备20260535号</a>
@@ -157,12 +182,14 @@ function App() {
     <BrowserRouter>
       <RouteTitle />
       <Starfield />
-      <Routes>
-        <Route path="/" element={<HomePage />} />
-        <Route path="/logos" element={<Logos />} />
-        <Route path="/writings" element={<Writings />} />
-        <Route path="/writings/:slug" element={<Document />} />
-      </Routes>
+      <Suspense fallback={null}>
+        <Routes>
+          <Route path="/" element={<HomePage />} />
+          <Route path="/logos" element={<Logos />} />
+          <Route path="/writings" element={<Writings />} />
+          <Route path="/writings/:slug" element={<Document />} />
+        </Routes>
+      </Suspense>
     </BrowserRouter>
   );
 }

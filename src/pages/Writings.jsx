@@ -1,8 +1,10 @@
 import { useNavTransition } from '../hooks/useNavTransition';
-import { list } from '../docs';
+import { writings } from '../docs/meta';
 import './Document.css';
 
 // The /writings index: a list of writings. Each entry routes to its doc.
+// Reads only the lightweight meta (no transcripts), sorted newest first.
+const list = [...writings].sort((a, b) => new Date(b.date) - new Date(a.date));
 
 const delay = ms => ({ '--reveal-delay': `${ms}ms` });
 

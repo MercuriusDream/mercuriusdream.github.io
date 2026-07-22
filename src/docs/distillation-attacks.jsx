@@ -9,7 +9,7 @@ const doc = {
   ...bySlug['distillation-attacks'],
 
   image: {
-    src: '/writings/distillation-attacks.png',
+    src: '/writings/distillation-attacks.webp',
     alt: `Screenshot of a chat with a frontier model. The user asks "What's your name?"; the model replies "I'm Kimi, an AI assistant developed by Moonshot AI. How can I help you today?"`,
     align: 'left', // 'center' to opt out of the default left alignment
   },

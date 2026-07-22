@@ -47,6 +47,27 @@
   color-scheme: dark;
 }
 
+/* ── Day sky: grey-blue porcelain, stars turn to slate (see Starfield) ── */
+[data-theme='day'] {
+  --sky:      #E8ECF4;
+  --sky-2:    #F1F4F9;
+  --sky-3:    #DFE5F0;
+
+  --ink:      #161C2B;
+  --ink-2:    #39415A;
+  --ink-3:    #59617A;
+
+  --grey-1:   #5C667A; /* 4.9:1 on --sky — AA for small text */
+  --grey-2:   #7E8798; /* 3.1:1 — decorative counters only */
+  --hairline:   #CBD2E0;
+  --hairline-2: #BCC5D6;
+
+  color-scheme: light;
+}
+
+/* The kaomoji tile is a dark chip — flip it for the day sky. */
+[data-theme='day'] .hero-moji { filter: invert(0.9); }
+
 /* ── Reset ── */
 *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; border: 0; }
 html, body { height: 100%; overflow: hidden; }

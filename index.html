@@ -20,15 +20,32 @@
 
   <title>마라향 안개구름</title>
 
+  <script>
+    // Apply the saved/preferred theme before first paint (no flash).
+    (function () {
+      try {
+        var t = localStorage.getItem('theme');
+        if (!t && window.matchMedia('(prefers-color-scheme: light)').matches) t = 'day';
+        if (t === 'day') {
+          document.documentElement.dataset.theme = 'day';
+          var m = document.querySelector('meta[name="theme-color"]');
+          if (m) m.setAttribute('content', '#E8ECF4');
+        }
+      } catch (e) {}
+    })();
+  </script>
+
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
     html { color-scheme: dark; }
+    html[data-theme='day'] { color-scheme: light; }
     html body {
       --sky: #060912;
       --star: #E8EAF0;
       background: var(--sky);
       color: var(--star);
     }
+    html[data-theme='day'] body { --sky: #E8ECF4; --star: #161C2B; }
     body {
       font-family: 'Zalando Sans', 'Gothic A1', system-ui, -apple-system, sans-serif;
       min-height: 100vh;
