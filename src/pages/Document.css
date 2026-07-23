@@ -247,7 +247,7 @@ a.tx-res-title:hover { text-decoration: underline; text-underline-offset: 3px; }
 }
 .doc-src-item .inline-link { font-size: var(--fs-sm); font-weight: 500; }
 
-.doc-foot { margin-top: 1.6rem; display: flex; }
+.doc-foot { margin-top: 1.6rem; display: flex; gap: 0.35rem; }
 .doc-back {
   display: inline-flex; align-items: center; min-height: 28px;
   padding: 0.15rem 0.55rem;

@@ -30,7 +30,9 @@ jobs:
       - name: Install dependencies
         run: bun install
 
-      - name: Build
+      # `bun run build` also derives every social preview and atom.xml from
+      # src/seo.js + src/docs/meta.js, so new writings need no hand-edited feed.
+      - name: Build site, previews, and Atom feed
         run: bun run build
 
       - name: Upload artifact

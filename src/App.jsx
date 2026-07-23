@@ -1,4 +1,4 @@
-import { Fragment, useState, useEffect, lazy, Suspense } from 'react';
+import { Fragment, useState, useEffect, useRef, lazy, Suspense } from 'react';
 import { BrowserRouter, Routes, Route, Link, useLocation } from 'react-router-dom';
 import { KaomojiIcon } from './components/Icons';
 import Starfield from './components/Starfield';
@@ -21,6 +21,13 @@ const LOVE_LINKS = [
 const MADE_LINKS = [
   { label: 'TideSurf', href: 'https://github.com/tidesurf/core', accent: '#4F7B86' },
   { label: 'Agent-Estate', href: 'https://github.com/MercuriusDream/agent-estate', accent: '#B8BCC8' },
+];
+
+const SOCIAL_LINKS = [
+  { label: 'github', href: 'https://github.com/mercuriusdream', accent: '#4F7B86' },
+  { label: 'x', href: 'https://x.com/mercuriusdream', accent: '#6F7D63' },
+  { label: 'vrp', href: 'https://bughunters.google.com/profile/3dfc69d5-8b8a-4754-80ab-ba59a56e7295', accent: '#76668D' },
+  { label: 'email', href: 'mailto:mercuriusdream@mercuriusdream.com', accent: '#B8634A' },
 ];
 
 const delay = ms => ({ '--reveal-delay': `${ms}ms` });
@@ -70,6 +77,61 @@ function ThemeToggle() {
       aria-label={theme === 'day' ? 'Switch to night sky' : 'Switch to day sky'}>
       {theme === 'day' ? 'night' : 'day'}
     </button>
+  );
+}
+
+function SocialsMenu() {
+  const [open, setOpen] = useState(false);
+  const triggerRef = useRef(null);
+
+  useEffect(() => {
+    if (!open) return undefined;
+    const closeOnEscape = event => {
+      if (event.key === 'Escape') {
+        setOpen(false);
+        triggerRef.current?.focus();
+      }
+    };
+    window.addEventListener('keydown', closeOnEscape);
+    return () => window.removeEventListener('keydown', closeOnEscape);
+  }, [open]);
+
+  return (
+    <div className={`socials-menu${open ? ' is-open' : ''}`}>
+      <button
+        ref={triggerRef}
+        type="button"
+        className="footer-btn socials-trigger"
+        data-glow
+        style={{ '--btn-color': '#4F7B86' }}
+        aria-expanded={open}
+        aria-controls="landing-social-links"
+        onClick={() => setOpen(value => !value)}
+      >
+        socials
+      </button>
+      <nav
+        id="landing-social-links"
+        className="socials-drawer"
+        aria-label="Social links"
+        aria-hidden={!open}
+      >
+        {SOCIAL_LINKS.map(link => (
+          <a
+            key={link.label}
+            href={link.href}
+            target={link.href.startsWith('mailto:') ? undefined : '_blank'}
+            rel={link.href.startsWith('mailto:') ? undefined : 'noopener noreferrer'}
+            className="footer-btn socials-link"
+            data-glow
+            tabIndex={open ? undefined : -1}
+            style={{ '--btn-color': link.accent }}
+          >
+            {link.label}
+          </a>
+        ))}
+      </nav>
+    </div>
   );
 }
 
@@ -129,23 +191,7 @@ function HomePage() {
 
         <footer className="site-footer reveal" style={delay(1600)}>
           <div className="footer-links">
-            <a href="https://github.com/mercuriusdream" target="_blank" rel="noopener noreferrer" className="footer-btn" data-glow style={{ ...delay(1800), '--btn-color': '#4F7B86' }}>
-              github
-            </a>
-            <a href="https://x.com/mercuriusdream" target="_blank" rel="noopener noreferrer" className="footer-btn" data-glow style={{ ...delay(1900), '--btn-color': '#6F7D63' }}>
-              x
-            </a>
-            <a
-              href="https://bughunters.google.com/profile/3dfc69d5-8b8a-4754-80ab-ba59a56e7295"
-              target="_blank" rel="noopener noreferrer"
-              className="footer-btn" data-glow
-              style={{ ...delay(2000), '--btn-color': '#76668D' }}
-            >
-              vrp
-            </a>
-            <a href="mailto:mercuriusdream@mercuriusdream.com" className="footer-btn" data-glow style={{ ...delay(2100), '--btn-color': '#B8634A' }}>
-              email
-            </a>
+            <SocialsMenu />
             <Link
               to="/writings"
               className="footer-btn"

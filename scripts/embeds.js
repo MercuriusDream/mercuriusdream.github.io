@@ -1,10 +1,10 @@
 // Build-time embed generator. For every route in src/seo.js it:
-//   • composes a 1200×630 OG card (bright-grey accent, no gold) and rasterizes
-//     it to dist/<route>/og.png via @resvg/resvg-js (graceful fallback to the
-//     shared avatar.png if the rasterizer is unavailable);
+//   • composes a 1200×630 OG image on the site's open starfield (sans-serif,
+//     with no card/panel treatment) and rasterizes it to dist/<route>/og.png
+//     via @resvg/resvg-js (falling back to avatar.png if unavailable);
 //   • injects OpenGraph + Twitter-card + canonical + oEmbed <link> meta into a
 //     per-route index.html (replacing the homepage <title>/<description>);
-//   • writes a per-route oembed.json.
+//   • writes each route's oembed.json and derives atom.xml from writing meta.
 // Routes are derived generically from src/seo.js — nothing is hardcoded per
 // page. Run via `bun scripts/embeds.js` after `vite build`.
 
@@ -12,10 +12,11 @@ import { readFile, writeFile, mkdir } from 'node:fs/promises';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { routes, SITE, PROVIDER, ACCENT, SKY, INK } from '../src/seo.js';
+import { writings } from '../src/docs/meta.js';
 
-const INK2 = '#B8BCC8'; // bright grey — the embed accent (no gold)
+const INK2 = '#B8BCC8';
 const GREY = '#6A7080';
-const SKY2 = '#0A0F1F'; // the article panel colour from the site
+const STAR_TINTS = ['#E8EAF0', '#4F7B86', '#76668D', '#B86A8E'];
 
 // The site's own display face, vendored so cards look like the site, not like
 // a system-font fallback. Weights match global.css (body 400, headings 500).
@@ -45,6 +46,36 @@ const wrap = (text, maxChars) => {
   return out;
 };
 
+const hash = text => {
+  let n = 2166136261;
+  for (const c of text) {
+    n ^= c.charCodeAt(0);
+    n = Math.imul(n, 16777619);
+  }
+  return n >>> 0;
+};
+
+function starsFor(seedText) {
+  let seed = hash(seedText);
+  const random = () => {
+    seed = (Math.imul(seed, 1664525) + 1013904223) >>> 0;
+    return seed / 4294967296;
+  };
+
+  return Array.from({ length: 58 }, (_, i) => {
+    const x = 24 + random() * (W - 48);
+    const y = 24 + random() * (H - 48);
+    const near = i > 50;
+    const r = near ? 1.5 + random() * 1.2 : 0.45 + random() * 0.85;
+    const color = near ? STAR_TINTS[1 + Math.floor(random() * (STAR_TINTS.length - 1))] : STAR_TINTS[0];
+    const opacity = near ? 0.42 + random() * 0.2 : 0.14 + random() * 0.28;
+    const cross = near
+      ? `<path d="M ${(x - r * 3).toFixed(1)} ${y.toFixed(1)}h ${(r * 6).toFixed(1)} M ${x.toFixed(1)} ${(y - r * 3).toFixed(1)}v ${(r * 6).toFixed(1)}" stroke="${color}" stroke-opacity="${(opacity * 0.38).toFixed(2)}" stroke-width="0.7"/>`
+      : '';
+    return `<circle cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="${r.toFixed(1)}" fill="${color}" fill-opacity="${opacity.toFixed(2)}"/>${cross}`;
+  }).join('');
+}
+
 function witness(cx, cy, s) {
   const pts = [[50, 13], [82, 31.5], [82, 68.5], [50, 87], [18, 68.5], [18, 31.5]];
   let g = '';
@@ -55,32 +86,44 @@ function witness(cx, cy, s) {
 
 function svgFor(r) {
   const hasEmblem = r.emblem === 'witness';
-  const pad = 120; // inner padding of the "article panel"
-  const textW = W - pad * 2 - (hasEmblem ? 330 : 0);
-  // Latin-safe display title for the card (avoids Korean tofu on CI runners).
+  const pad = 104;
+  const textW = W - pad * 2 - (hasEmblem ? 280 : 0);
+  // Latin-safe display title for the home image avoids Korean tofu in CI.
   const cardTitle = r.cardTitle || r.title;
-  const titleSize = cardTitle.length > 40 ? 54 : 66;
+  const titleSize = cardTitle.length > 46 ? 52 : cardTitle.length > 30 ? 60 : 70;
   const titleLines = wrap(cardTitle, Math.max(10, Math.floor(textW / (titleSize * 0.52)))).slice(0, 3);
-  const descLines = wrap(r.description, Math.max(14, Math.floor(textW / (29 * 0.52)))).slice(0, 4);
 
-  const titleTop = 226;
-  const titleLh = titleSize * 1.16;
-  const descTop = titleTop + (titleLines.length - 1) * titleLh + 60;
-  const descLh = 42;
-
+  const titleTop = 244;
+  const titleLh = titleSize * 1.1;
+  const descTop = titleTop + (titleLines.length - 1) * titleLh + 64;
+  const descLh = 40;
+  const descLimit = Math.min(4, Math.max(1, Math.floor((510 - descTop) / descLh) + 1));
+  const descLines = wrap(r.description, Math.max(14, Math.floor(textW / (28 * 0.52)))).slice(0, descLimit);
   const tspans = (lines, lh) => lines.map((l, i) =>
     `<tspan x="${pad}" dy="${i === 0 ? 0 : lh}">${esc(l)}</tspan>`).join('');
 
   return `<svg xmlns="http://www.w3.org/2000/svg" width="${W}" height="${H}" viewBox="0 0 ${W} ${H}">
+  <defs>
+    <radialGradient id="nebula-teal">
+      <stop offset="0" stop-color="#4F7B86" stop-opacity="0.15"/>
+      <stop offset="1" stop-color="#4F7B86" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="nebula-violet">
+      <stop offset="0" stop-color="#76668D" stop-opacity="0.11"/>
+      <stop offset="1" stop-color="#76668D" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
   <rect width="${W}" height="${H}" fill="${SKY}"/>
-  <rect x="56" y="56" width="${W - 112}" height="${H - 112}" fill="${SKY2}"/>
-  <rect x="${pad}" y="104" width="13" height="13" fill="${INK2}"/>
-  <text x="${pad + 26}" y="116" font-family="${FONT}" font-size="24" font-weight="500" letter-spacing="1" fill="${GREY}">${esc(r.kicker || HANDLE)}</text>
-  <text x="${pad}" y="${titleTop}" font-family="${FONT}" font-size="${titleSize}" font-weight="500" letter-spacing="-1" fill="${INK}">${tspans(titleLines, titleLh)}</text>
-  <text x="${pad}" y="${descTop}" font-family="${FONT}" font-size="28" font-weight="400" fill="${INK2}">${tspans(descLines, descLh)}</text>
-  <text x="${pad}" y="534" font-family="${FONT}" font-size="24" font-weight="500" fill="${GREY}">${esc(HANDLE)}</text>
-  <text x="${W - pad}" y="534" text-anchor="end" font-family="${FONT}" font-size="24" font-weight="500" fill="${GREY}">mercuriusdream.com</text>
-  ${hasEmblem ? witness(1006, 315, 2.5) : ''}
+  <ellipse cx="250" cy="250" rx="470" ry="390" fill="url(#nebula-teal)"/>
+  <ellipse cx="970" cy="390" rx="430" ry="360" fill="url(#nebula-violet)"/>
+  ${starsFor(`${r.title}|${r.kicker || HANDLE}`)}
+  <text x="${pad}" y="112" font-family="${FONT}, sans-serif" font-size="24" font-weight="500" letter-spacing="1" fill="${GREY}">${esc(r.kicker || HANDLE)}</text>
+  <path d="M ${pad} 147h 48" stroke="${ACCENT}" stroke-width="3"/>
+  <text x="${pad}" y="${titleTop}" font-family="${FONT}, sans-serif" font-size="${titleSize}" font-weight="500" letter-spacing="-1" fill="${INK}">${tspans(titleLines, titleLh)}</text>
+  <text x="${pad}" y="${descTop}" font-family="${FONT}, sans-serif" font-size="28" font-weight="400" fill="${INK2}">${tspans(descLines, descLh)}</text>
+  <text x="${pad}" y="552" font-family="${FONT}, sans-serif" font-size="24" font-weight="500" fill="${GREY}">${esc(HANDLE)}</text>
+  <text x="${W - pad}" y="552" text-anchor="end" font-family="${FONT}, sans-serif" font-size="24" font-weight="500" fill="${GREY}">mercuriusdream.com</text>
+  ${hasEmblem ? witness(1008, 315, 2.25) : ''}
 </svg>`;
 }
 
@@ -138,6 +181,47 @@ function oembed(r, path, imageHref) {
   };
 }
 
+function atomFeed() {
+  const ordered = [...writings].sort((a, b) => new Date(b.published) - new Date(a.published));
+  const published = writing => {
+    const date = new Date(writing.published);
+    if (!writing.published || Number.isNaN(date.valueOf())) {
+      throw new Error(`[embeds] Invalid published date for writing "${writing.slug}"`);
+    }
+    return date.toISOString();
+  };
+  const updated = ordered.length ? published(ordered[0]) : new Date(0).toISOString();
+  const entries = ordered.map(writing => {
+    const href = `${SITE}/writings/${writing.slug}/`;
+    const date = published(writing);
+    const summary = writing.blurb || writing.subtitle || writing.listTitle || writing.title;
+    return `  <entry>
+    <title>${esc(writing.title)}</title>
+    <id>${href}</id>
+    <link rel="alternate" type="text/html" href="${href}"/>
+    <published>${date}</published>
+    <updated>${date}</updated>
+    <summary>${esc(summary)}</summary>
+  </entry>`;
+  }).join('\n');
+
+  return `<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom" xml:lang="en">
+  <title>MercuriusDream writings</title>
+  <subtitle>tried writing things — field logs and notes.</subtitle>
+  <id>${SITE}/writings/</id>
+  <link rel="alternate" type="text/html" href="${SITE}/writings/"/>
+  <link rel="self" type="application/atom+xml" href="${SITE}/atom.xml"/>
+  <updated>${updated}</updated>
+  <author>
+    <name>${HANDLE}</name>
+    <uri>${SITE}/</uri>
+  </author>
+${entries}
+</feed>
+`;
+}
+
 async function writeRoute(path, r, baseHtml) {
   const isHome = path === '/';
   const dir = isHome ? dist : join(dist, path);
@@ -170,6 +254,9 @@ for (const path of Object.keys(routes)) {
   const r = path === '/' ? homeRoute : routes[path];
   await writeRoute(path, r, baseHtml);
 }
+
+await writeFile(join(dist, 'atom.xml'), atomFeed());
+console.log('[embeds] wrote dist/atom.xml');
 
 // 404 mirrors the home card.
 await writeFile(join(dist, '404.html'), await readFile(join(dist, 'index.html'), 'utf8'));

@@ -44,6 +44,16 @@ function Writings() {
             <button onClick={() => navTo('/')} className="doc-back" data-glow aria-label="Back to home">
               ← back
             </button>
+            <a
+              href="/atom.xml"
+              className="doc-back"
+              data-glow
+              rel="alternate"
+              type="application/atom+xml"
+              aria-label="Open the Atom feed"
+            >
+              atom
+            </a>
           </footer>
         </div>
       </main>

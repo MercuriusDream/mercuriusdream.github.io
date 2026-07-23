@@ -257,7 +257,7 @@ ul, ol { list-style: none; }
   gap: clamp(0.75rem, 2vw, 1.5rem);
 }
 
-.footer-links { display: inline-flex; gap: 0.35rem; }
+.footer-links { display: inline-flex; align-items: flex-start; gap: 0.35rem; }
 
 .footer-btn {
   display: inline-flex;
@@ -278,6 +278,46 @@ ul, ol { list-style: none; }
 .footer-btn:active {
   transform: scale(0.96) rotate(0deg);
   transition-duration: 0.08s;
+}
+
+.socials-menu {
+  position: relative;
+  z-index: 2;
+}
+.socials-trigger { gap: 0.35em; }
+.socials-trigger::after {
+  content: '↓';
+  font-size: 0.82em;
+  color: var(--grey-1);
+  transform: translateY(-0.03em);
+  transition: transform 0.45s var(--ease-out-expo), color 0.45s var(--ease-out-expo);
+}
+.socials-menu.is-open .socials-trigger::after {
+  color: var(--ink);
+  transform: rotate(180deg) translateY(0.03em);
+}
+.socials-drawer {
+  position: absolute;
+  top: calc(100% + 0.35rem);
+  left: 0;
+  display: flex;
+  gap: 0.35rem;
+  white-space: nowrap;
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transform: translateY(-0.7rem);
+  transition:
+    opacity 0.24s ease,
+    transform 0.45s var(--ease-out-expo),
+    visibility 0s linear 0.45s;
+}
+.socials-menu.is-open .socials-drawer {
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+  transform: translateY(0);
+  transition-delay: 0s;
 }
 
 .footer-icp {
@@ -612,4 +652,5 @@ button.logos-hl:hover {
   .reveal, .reveal-hero { animation: none; opacity: 1; transform: none; }
   .hero-parallax { transform: none; transition: none; }
   .app { animation: none; }
+  .socials-drawer { transition-delay: 0s; }
 }
