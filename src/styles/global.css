@@ -243,6 +243,16 @@ ul, ol { list-style: none; }
   transition-duration: 0.08s;
 }
 
+/* ── Cute link: pink → blue hover, smooth return on unhover ── */
+.inline-link.cute-link:hover {
+  animation: cute-pink-blue 1.4s ease-in-out forwards;
+}
+@keyframes cute-pink-blue {
+  0%   { background-color: #FF8FB2; }
+  40%  { background-color: #FF8FB2; }
+  100% { background-color: #55CDFC; }
+}
+
 /* ── Footer ── */
 .site-footer {
   width: 100%;

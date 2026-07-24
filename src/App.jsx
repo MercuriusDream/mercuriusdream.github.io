@@ -21,6 +21,16 @@ const LOVE_LINKS = [
 const MADE_LINKS = [
   { label: 'TideSurf', href: 'https://github.com/tidesurf/core', accent: '#4F7B86' },
   { label: 'Agent-Estate', href: 'https://github.com/MercuriusDream/agent-estate', accent: '#B8BCC8' },
+  { label: 'Project Logos', to: '/logos', accent: '#B8634A' },
+];
+
+const CUTE_LINKS = [
+  {
+    label: 'Smirnova Oyama',
+    href: 'https://mizukiakiyama.com',
+    accent: '#F7A8B8',
+    className: 'cute-link',
+  },
 ];
 
 const SOCIAL_LINKS = [
@@ -36,14 +46,32 @@ const linkSep = (i, n) =>
   i === 0 ? '' : i === n - 1 ? (n === 2 ? ' and ' : ', and ') : ', ';
 
 function HighlightLink({ link }) {
+  const navTo = useNavTransition();
+  const style = { '--link-accent': link.accent, ...link.style };
+  const className = `inline-link${link.className ? ` ${link.className}` : ''}`;
+
+  if (link.to) {
+    return (
+      <Link
+        to={link.to}
+        className={className}
+        data-glow
+        style={style}
+        onClick={e => { e.preventDefault(); navTo(link.to); }}
+      >
+        {link.label}
+      </Link>
+    );
+  }
+
   return (
     <a
       href={link.href}
       target="_blank"
       rel="noopener noreferrer"
-      className="inline-link"
+      className={className}
       data-glow
-      style={{ '--link-accent': link.accent }}
+      style={style}
     >
       {link.label}
     </a>
@@ -175,17 +203,7 @@ function HomePage() {
 
         <div className="hero-row reveal" style={delay(1300)}>
           <p className="made-line">
-            Also runs {' '}
-            <Link
-              to="/logos"
-              className="inline-link"
-              data-glow
-              style={{ '--link-accent': '#B8634A' }}
-              onClick={e => { e.preventDefault(); navTo('/logos'); }}
-            >
-              Project Logos
-            </Link>
-            , open defensive cybersecurity for the web.
+            <InlineLinkList links={CUTE_LINKS} /> is cute
           </p>
         </div>
 
