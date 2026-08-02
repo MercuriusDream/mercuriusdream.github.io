@@ -185,6 +185,14 @@ ul, ol { list-style: none; }
   letter-spacing: -0.005em;
 }
 
+.hero-tagline {
+  font-size: var(--fs-sm);
+  color: var(--grey-1);
+  letter-spacing: -0.005em;
+  margin-top: 0.15rem;
+}
+.hero-tagline strong { font-weight: 700; }
+
 .hero-cii {
   font-size: 0.42em;
   color: var(--grey-1);
@@ -244,7 +252,8 @@ ul, ol { list-style: none; }
 }
 
 /* ── Cute link: pink → blue hover, smooth return on unhover ── */
-.inline-link.cute-link:hover {
+.inline-link.cute-link:hover,
+.footer-btn.cute-link:hover {
   animation: cute-pink-blue 1.4s ease-in-out forwards;
 }
 @keyframes cute-pink-blue {

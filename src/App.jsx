@@ -24,20 +24,17 @@ const MADE_LINKS = [
   { label: 'Project Logos', to: '/logos', accent: '#B8634A' },
 ];
 
-const CUTE_LINKS = [
-  {
-    label: 'Smirnova Oyama',
-    href: 'https://mizukiakiyama.com',
-    accent: '#F7A8B8',
-    className: 'cute-link',
-  },
-];
-
 const SOCIAL_LINKS = [
   { label: 'github', href: 'https://github.com/mercuriusdream', accent: '#4F7B86' },
   { label: 'x', href: 'https://x.com/mercuriusdream', accent: '#6F7D63' },
   { label: 'vrp', href: 'https://bughunters.google.com/profile/3dfc69d5-8b8a-4754-80ab-ba59a56e7295', accent: '#76668D' },
   { label: 'email', href: 'mailto:mercuriusdream@mercuriusdream.com', accent: '#B8634A' },
+  {
+    label: 'Smirnova Oyama is cute',
+    href: 'https://mizukiakiyama.com',
+    accent: '#F7A8B8',
+    className: 'cute-link',
+  },
 ];
 
 const delay = ms => ({ '--reveal-delay': `${ms}ms` });
@@ -150,7 +147,7 @@ function SocialsMenu() {
             href={link.href}
             target={link.href.startsWith('mailto:') ? undefined : '_blank'}
             rel={link.href.startsWith('mailto:') ? undefined : 'noopener noreferrer'}
-            className="footer-btn socials-link"
+            className={`footer-btn socials-link${link.className ? ` ${link.className}` : ''}`}
             data-glow
             tabIndex={open ? undefined : -1}
             style={{ '--btn-color': link.accent }}
@@ -189,6 +186,7 @@ function HomePage() {
               <span className="hero-cii" aria-hidden="true">CII</span>
             </h1>
             <p className="hero-handle">@mercuriusdream</p>
+            <p className="hero-tagline"><strong>NOT</strong> YC S67 / Korean Undergrad</p>
           </div>
         </header>
 
@@ -198,12 +196,6 @@ function HomePage() {
           </p>
           <p className="hero-bio">
             People I admire: <InlineLinkList links={LOVE_LINKS} />
-          </p>
-        </div>
-
-        <div className="hero-row reveal" style={delay(1300)}>
-          <p className="made-line">
-            <InlineLinkList links={CUTE_LINKS} /> is cute
           </p>
         </div>
 
