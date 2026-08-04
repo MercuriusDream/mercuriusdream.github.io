@@ -7,9 +7,9 @@ export const writings = [
   {
     slug: 'exhausted',
     accent: 'var(--c-grey)',
-    kicker: '2025·08·04',
-    date: 'Aug 4, 2025',
-    published: '2025-08-04T00:00:00Z',
+    kicker: '2026·08·04',
+    date: 'Aug 4, 2026',
+    published: '2026-08-04T00:00:00Z',
     listTitle: 'exhausted',
     title: 'Exhausted',
     blurb: `I don't even know why I'm even writing this but I just feel so exhausted.`,
