@@ -5,6 +5,16 @@
 
 export const writings = [
   {
+    slug: 'exhausted',
+    accent: 'var(--c-grey)',
+    kicker: '2025·08·04',
+    date: 'Aug 4, 2025',
+    published: '2025-08-04T00:00:00Z',
+    listTitle: 'exhausted',
+    title: 'Exhausted',
+    blurb: `I don't even know why I'm even writing this but I just feel so exhausted.`,
+  },
+  {
     slug: 'distillation-attacks',
     accent: 'var(--c-rust)',
     kicker: '2026·07·22',
