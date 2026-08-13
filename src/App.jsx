@@ -11,13 +11,6 @@ const Logos = lazy(() => import('./pages/Logos'));
 const Writings = lazy(() => import('./pages/Writings'));
 const Document = lazy(() => import('./pages/Document'));
 
-const LOVE_LINKS = [
-  { label: 'Zhilin Yang', href: 'https://kimiyoung.github.io/', accent: '#B8634A' },
-  { label: 'Thebes', href: 'https://vgel.me', accent: '#6F7D63' },
-  { label: 'Ghostfail', href: 'https://ghost.fail', accent: '#76668D' },
-  { label: 'SaltyAom', href: 'https://saltyaom.com', accent: '#B86A8E' },
-];
-
 const MADE_LINKS = [
   { label: 'TideSurf', href: 'https://github.com/tidesurf/core', accent: '#4F7B86' },
   { label: 'Agent-Estate', href: 'https://github.com/MercuriusDream/agent-estate', accent: '#B8BCC8' },
@@ -38,9 +31,6 @@ const SOCIAL_LINKS = [
 ];
 
 const delay = ms => ({ '--reveal-delay': `${ms}ms` });
-
-const linkSep = (i, n) =>
-  i === 0 ? '' : i === n - 1 ? (n === 2 ? ' and ' : ', and ') : ', ';
 
 function HighlightLink({ link }) {
   const navTo = useNavTransition();
@@ -76,12 +66,22 @@ function HighlightLink({ link }) {
 }
 
 function InlineLinkList({ links }) {
-  return links.map((link, i) => (
-    <Fragment key={link.label}>
-      {linkSep(i, links.length)}
-      <HighlightLink link={link} />
-    </Fragment>
-  ));
+  const n = links.length;
+  // Each link is glued to its trailing comma (and the final "and" to its
+  // link) inside a nowrap unit, so line breaks never orphan a separator.
+  return links.map((link, i) => {
+    const last = i === n - 1;
+    return (
+      <Fragment key={link.label}>
+        {i > 0 ? ' ' : ''}
+        <span className="link-unit">
+          {last && n > 1 ? 'and ' : ''}
+          <HighlightLink link={link} />
+          {last ? '' : ','}
+        </span>
+      </Fragment>
+    );
+  });
 }
 
 function ThemeToggle() {
@@ -193,9 +193,6 @@ function HomePage() {
         <div className="hero-row reveal" style={delay(1200)}>
           <p className="made-line">
             Made <InlineLinkList links={MADE_LINKS} />
-          </p>
-          <p className="hero-bio">
-            People I admire: <InlineLinkList links={LOVE_LINKS} />
           </p>
         </div>
 

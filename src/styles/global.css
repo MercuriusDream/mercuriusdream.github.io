@@ -211,7 +211,9 @@ ul, ol { list-style: none; }
   cursor: pointer;
   transition: transform 0.45s var(--ease-out-expo);
 }
-.hero-moji:hover { transform: rotate(-2deg) scale(1.08) translateY(-2px); }
+@media (hover: hover) {
+  .hero-moji:hover { transform: rotate(-2deg) scale(1.08) translateY(-2px); }
+}
 .hero-moji.poked {
   transform: rotate(-8deg) scale(1.12) translateY(-4px);
   transition-duration: 0.08s;
@@ -225,13 +227,15 @@ ul, ol { list-style: none; }
   max-width: 100%;
 }
 
-.hero-bio, .made-line {
+.made-line {
   font-size: var(--fs-md);
   color: var(--ink-2);
   line-height: 1.55;
 }
 
 /* ── Inline links: flat pill highlights ── */
+.link-unit { white-space: nowrap; }
+
 .inline-link {
   font-weight: 500;
   color: var(--ink);
@@ -242,9 +246,13 @@ ul, ol { list-style: none; }
   display: inline-block;
   transition: background-color 0.45s var(--ease-out-expo), transform 0.45s var(--ease-out-expo);
 }
-.inline-link:hover {
-  background-color: color-mix(in srgb, var(--link-accent, var(--accent-soft)), var(--sky) 30%);
-  transform: scale(1.12) rotate(-3deg);
+/* Hover lift only where a real pointer can hover — otherwise taps on
+   touch screens leave the tilted/scaled state stuck on. */
+@media (hover: hover) {
+  .inline-link:hover {
+    background-color: color-mix(in srgb, var(--link-accent, var(--accent-soft)), var(--sky) 30%);
+    transform: scale(1.12) rotate(-3deg);
+  }
 }
 .inline-link:active {
   transform: scale(0.96) rotate(0deg);
@@ -252,9 +260,11 @@ ul, ol { list-style: none; }
 }
 
 /* ── Cute link: pink → blue hover, smooth return on unhover ── */
-.inline-link.cute-link:hover,
-.footer-btn.cute-link:hover {
-  animation: cute-pink-blue 1.4s ease-in-out forwards;
+@media (hover: hover) {
+  .inline-link.cute-link:hover,
+  .footer-btn.cute-link:hover {
+    animation: cute-pink-blue 1.4s ease-in-out forwards;
+  }
 }
 @keyframes cute-pink-blue {
   0%   { background-color: #FF8FB2; }
@@ -290,9 +300,11 @@ ul, ol { list-style: none; }
   background-color: color-mix(in srgb, var(--btn-color, var(--accent-soft)), var(--sky) 55%);
   transition: background-color 0.45s var(--ease-out-expo), transform 0.45s var(--ease-out-expo);
 }
-.footer-btn:hover {
-  background-color: color-mix(in srgb, var(--btn-color, var(--accent-soft)), var(--sky) 30%);
-  transform: scale(1.12) rotate(-3deg);
+@media (hover: hover) {
+  .footer-btn:hover {
+    background-color: color-mix(in srgb, var(--btn-color, var(--accent-soft)), var(--sky) 30%);
+    transform: scale(1.12) rotate(-3deg);
+  }
 }
 .footer-btn:active {
   transform: scale(0.96) rotate(0deg);
@@ -406,7 +418,9 @@ ul, ol { list-style: none; }
   margin-bottom: 0.55rem;
   transition: transform 0.7s var(--ease-out-expo);
 }
-.logos-emblem:hover { transform: rotate(60deg); }
+@media (hover: hover) {
+  .logos-emblem:hover { transform: rotate(60deg); }
+}
 
 .logos-wordmark {
   position: relative;
@@ -507,7 +521,9 @@ ul, ol { list-style: none; }
   color: var(--mk, var(--accent));
   transition: transform 0.5s var(--ease-out-expo);
 }
-.logos-mark:hover svg { transform: translateY(-3px) scale(1.08); }
+@media (hover: hover) {
+  .logos-mark:hover svg { transform: translateY(-3px) scale(1.08); }
+}
 .logos-mark-lg svg { width: 1.875rem; height: 1.875rem; }
 
 .logos-foot { margin-top: 0.2rem; display: flex; }
@@ -522,9 +538,11 @@ ul, ol { list-style: none; }
   background-color: color-mix(in srgb, var(--c-teal), var(--sky) 55%);
   transition: background-color 0.45s var(--ease-out-expo), transform 0.45s var(--ease-out-expo);
 }
-.logos-back:hover {
-  background-color: color-mix(in srgb, var(--c-teal), var(--sky) 30%);
-  transform: scale(1.12) rotate(-3deg);
+@media (hover: hover) {
+  .logos-back:hover {
+    background-color: color-mix(in srgb, var(--c-teal), var(--sky) 30%);
+    transform: scale(1.12) rotate(-3deg);
+  }
 }
 .logos-back:active {
   transform: scale(0.96) rotate(0deg);
@@ -537,9 +555,11 @@ ul, ol { list-style: none; }
   cursor: pointer;
   transition: background-color 0.45s var(--ease-out-expo), transform 0.45s var(--ease-out-expo);
 }
-.logos-hl-btn:hover {
-  background-color: color-mix(in srgb, var(--hl, var(--accent-soft)), var(--sky) 30%);
-  transform: scale(1.07) rotate(-2deg);
+@media (hover: hover) {
+  .logos-hl-btn:hover {
+    background-color: color-mix(in srgb, var(--hl, var(--accent-soft)), var(--sky) 30%);
+    transform: scale(1.07) rotate(-2deg);
+  }
 }
 .logos-hl-btn:active {
   transform: scale(0.96) rotate(0deg);
@@ -603,9 +623,11 @@ ul, ol { list-style: none; }
   background: color-mix(in srgb, var(--grey-1) 14%, transparent);
   transition: color 0.4s var(--ease-out-expo), background-color 0.4s var(--ease-out-expo), transform 0.4s var(--ease-out-expo);
 }
-.logos-modal-close:hover {
-  color: var(--ink);
-  background: color-mix(in srgb, var(--ink) 12%, transparent);
+@media (hover: hover) {
+  .logos-modal-close:hover {
+    color: var(--ink);
+    background: color-mix(in srgb, var(--ink) 12%, transparent);
+  }
 }
 
 /* ── Article: flowing prose ── */
@@ -634,8 +656,10 @@ button.logos-hl {
   cursor: pointer;
   transition: background-color 0.3s var(--ease-out-expo);
 }
-button.logos-hl:hover {
-  background-color: color-mix(in srgb, var(--hl, var(--accent-soft)), var(--sky) 30%);
+@media (hover: hover) {
+  button.logos-hl:hover {
+    background-color: color-mix(in srgb, var(--hl, var(--accent-soft)), var(--sky) 30%);
+  }
 }
 
 @keyframes logos-scrim { from { opacity: 0; } }
@@ -648,6 +672,13 @@ button.logos-hl:hover {
 
 /* Landing page mobile polish: ~527×875 portrait viewport */
 @media (max-width: 640px) {
+  /* The one-pager may exceed the viewport on short screens (or with the
+     socials dropdown open) — let it scroll instead of clipping. */
+  html, body {
+    overflow-x: hidden;
+    overflow-y: auto;
+  }
+
   .app {
     padding: 0;
   }
@@ -656,7 +687,7 @@ button.logos-hl:hover {
     width: 100%;
     padding: clamp(1.5rem, 5vh, 3rem) clamp(0.85rem, 3vw, 1.25rem);
     gap: clamp(1.25rem, 3.5vh, 2rem);
-    justify-content: center;
+    justify-content: safe center;
   }
 
   .hero-title,
@@ -682,21 +713,22 @@ button.logos-hl:hover {
     gap: 0.65rem;
   }
 
-  .made-line,
-  .hero-bio {
-    line-height: 1.7;
+  .made-line {
+    line-height: 1.75;
     text-wrap: pretty;
   }
 
+  /* Slimmer pills than desktop — the tall ones made wrapped lines cramped */
   .inline-link {
-    line-height: 1.55;
-    padding: 0.06em 0.24em 0.1em;
+    line-height: 1.3;
+    padding: 0.02em 0.24em 0.06em;
   }
 
+  /* Footer keeps the desktop arrangement: one row of compact pills, ICP
+     hugging the right edge; wraps gracefully on very narrow screens. */
   .site-footer {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 0.65rem;
+    justify-content: flex-start;
+    gap: 0.5rem 0.75rem;
     margin-top: 0.25rem;
   }
 
@@ -706,33 +738,29 @@ button.logos-hl:hover {
   }
 
   .footer-icp {
-    text-align: left;
-    width: 100%;
+    margin-inline-start: auto;
   }
 
-  .socials-menu {
-    width: 100%;
-  }
-
+  /* Socials keeps the desktop dropdown: absolute below the trigger, pills
+     at natural size. It only wraps when the row would overflow the screen. */
   .socials-drawer {
-    position: static;
     flex-wrap: wrap;
-    opacity: 0;
-    visibility: hidden;
-    transform: none;
-    margin-top: 0.35rem;
+    row-gap: 0.35rem;
+    width: max-content;
+    max-width: calc(100vw - var(--gutter) * 2);
   }
 
-  .socials-menu.is-open .socials-drawer {
-    opacity: 1;
-    visibility: visible;
+  /* Logos: let the marks row use the full width — side-by-side with the
+     bounty stat it wraps mid-set on narrow screens. */
+  .logos-built-row {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.6rem;
   }
 
-  .socials-link {
-    white-space: normal;
-    text-align: center;
-    flex: 1 1 auto;
-    min-height: 32px;
+  .logos-marks {
+    flex-wrap: nowrap;
+    gap: clamp(0.85rem, 4vw, 1.4rem);
   }
 }
 
@@ -742,7 +770,6 @@ button.logos-hl:hover {
 
 @media (max-width: 400px) {
   .onepage { padding: 1.5rem 0.75rem 0.75rem; gap: 1rem; }
-  .site-footer { justify-content: flex-start; row-gap: 0.35rem; }
 }
 
 @media (max-height: 720px) and (min-width: 721px) {
