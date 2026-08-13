@@ -646,12 +646,102 @@ button.logos-hl:hover {
   .onepage { padding: 2rem 0 1rem; }
 }
 
+/* Landing page mobile polish: ~527×875 portrait viewport */
+@media (max-width: 640px) {
+  .app {
+    padding: 0;
+  }
+
+  .onepage {
+    width: 100%;
+    padding: clamp(1.5rem, 5vh, 3rem) clamp(0.85rem, 3vw, 1.25rem);
+    gap: clamp(1.25rem, 3.5vh, 2rem);
+    justify-content: center;
+  }
+
+  .hero-title,
+  .hero-parallax {
+    gap: 0.25rem;
+  }
+
+  .hero-headline {
+    line-height: 1.15;
+    letter-spacing: -0.015em;
+  }
+
+  .hero-handle {
+    line-height: 1.4;
+  }
+
+  .hero-tagline {
+    margin-top: 0.25rem;
+    line-height: 1.4;
+  }
+
+  .hero-row {
+    gap: 0.65rem;
+  }
+
+  .made-line,
+  .hero-bio {
+    line-height: 1.7;
+    text-wrap: pretty;
+  }
+
+  .inline-link {
+    line-height: 1.55;
+    padding: 0.06em 0.24em 0.1em;
+  }
+
+  .site-footer {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.65rem;
+    margin-top: 0.25rem;
+  }
+
+  .footer-links {
+    flex-wrap: wrap;
+    gap: 0.4rem;
+  }
+
+  .footer-icp {
+    text-align: left;
+    width: 100%;
+  }
+
+  .socials-menu {
+    width: 100%;
+  }
+
+  .socials-drawer {
+    position: static;
+    flex-wrap: wrap;
+    opacity: 0;
+    visibility: hidden;
+    transform: none;
+    margin-top: 0.35rem;
+  }
+
+  .socials-menu.is-open .socials-drawer {
+    opacity: 1;
+    visibility: visible;
+  }
+
+  .socials-link {
+    white-space: normal;
+    text-align: center;
+    flex: 1 1 auto;
+    min-height: 32px;
+  }
+}
+
 @media (max-width: 460px) {
   .logos-name { letter-spacing: 0.16em; }
 }
 
 @media (max-width: 400px) {
-  .onepage { padding: 1.5rem 0 0.75rem; gap: 1rem; }
+  .onepage { padding: 1.5rem 0.75rem 0.75rem; gap: 1rem; }
   .site-footer { justify-content: flex-start; row-gap: 0.35rem; }
 }
 
