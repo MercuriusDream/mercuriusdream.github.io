@@ -248,8 +248,6 @@ function Document() {
           )}
 
           <footer className="doc-foot reveal"><BackLink /></footer>
-
-          {bilingual && <LangSwitch lang={lang} setLang={setLang} place="bot" />}
         </article>
       </main>
     </div>

@@ -143,7 +143,43 @@ ul, ol { list-style: none; }
   width: 100%;
   isolation: isolate;
 }
-.app > :not(.skip-link):not(.starfield):not(.logos-modal) { position: relative; z-index: 1; }
+.app > :not(.skip-link):not(.starfield):not(.logos-modal):not(.corner-stack) { position: relative; z-index: 1; }
+
+/* Bottom-right corner: theme switch stacked above the ICP badge. Same
+   0.4rem gap as the footer pill row. */
+.corner-stack {
+  position: absolute;
+  right: var(--gutter);
+  bottom: clamp(1.25rem, 4vh, 2.5rem);
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 0.4rem;
+  z-index: 2;
+}
+
+/* Corner chrome: the theme switch is a chip parked near the middle between
+   the two skies — ink leaned heavily toward sky so night isn't blinding and
+   day isn't murky, with sky text either way. The ICP badge wears the same
+   idea only fainter ("thinner"), at normal pill size. */
+.footer-btn.theme-btn {
+  background-color: color-mix(in srgb, var(--ink) 80%, var(--sky));
+  color: var(--sky);
+}
+@media (hover: hover) {
+  .footer-btn.theme-btn:hover {
+    background-color: color-mix(in srgb, var(--ink) 94%, var(--sky));
+    transform: scale(1.12) rotate(-3deg);
+  }
+}
+.footer-btn.icp-btn {
+  background-color: color-mix(in srgb, var(--ink) 24%, transparent);
+}
+@media (hover: hover) {
+  .footer-btn.icp-btn:hover {
+    background-color: color-mix(in srgb, var(--ink) 40%, transparent);
+  }
+}
 
 /* ── One page: centered column ── */
 .onepage {
@@ -184,14 +220,6 @@ ul, ol { list-style: none; }
   color: var(--grey-1);
   letter-spacing: -0.005em;
 }
-
-.hero-tagline {
-  font-size: var(--fs-sm);
-  color: var(--grey-1);
-  letter-spacing: -0.005em;
-  margin-top: 0.15rem;
-}
-.hero-tagline strong { font-weight: 700; }
 
 .hero-cii {
   font-size: 0.42em;
@@ -286,7 +314,7 @@ ul, ol { list-style: none; }
   gap: clamp(0.75rem, 2vw, 1.5rem);
 }
 
-.footer-links { display: inline-flex; align-items: flex-start; gap: 0.35rem; }
+.footer-links { display: inline-flex; align-items: flex-start; flex-wrap: wrap; gap: 0.4rem; }
 
 .footer-btn {
   display: inline-flex;
@@ -297,12 +325,12 @@ ul, ol { list-style: none; }
   font-size: calc(var(--fs-xs) * 1.25);
   font-weight: 500;
   color: var(--ink);
-  background-color: color-mix(in srgb, var(--btn-color, var(--accent-soft)), var(--sky) 55%);
+  background-color: color-mix(in srgb, var(--btn-color, var(--grey-1)), var(--sky) 55%);
   transition: background-color 0.45s var(--ease-out-expo), transform 0.45s var(--ease-out-expo);
 }
 @media (hover: hover) {
   .footer-btn:hover {
-    background-color: color-mix(in srgb, var(--btn-color, var(--accent-soft)), var(--sky) 30%);
+    background-color: color-mix(in srgb, var(--btn-color, var(--grey-1)), var(--sky) 30%);
     transform: scale(1.12) rotate(-3deg);
   }
 }
@@ -311,48 +339,14 @@ ul, ol { list-style: none; }
   transition-duration: 0.08s;
 }
 
-.socials-menu {
-  position: relative;
-  z-index: 2;
-}
-.socials-trigger { gap: 0.35em; }
-.socials-trigger::after {
-  content: '↓';
-  font-size: 0.82em;
-  color: var(--grey-1);
-  transform: translateY(-0.03em);
-  transition: transform 0.45s var(--ease-out-expo), color 0.45s var(--ease-out-expo);
-}
-.socials-menu.is-open .socials-trigger::after {
-  color: var(--ink);
-  transform: rotate(180deg) translateY(0.03em);
-}
-.socials-drawer {
-  position: absolute;
-  top: calc(100% + 0.35rem);
-  left: 0;
-  display: flex;
-  gap: 0.35rem;
-  white-space: nowrap;
-  opacity: 0;
-  visibility: hidden;
-  pointer-events: none;
-  transform: translateY(-0.7rem);
-  transition:
-    opacity 0.24s ease,
-    transform 0.45s var(--ease-out-expo),
-    visibility 0s linear 0.45s;
-}
-.socials-menu.is-open .socials-drawer {
-  opacity: 1;
-  visibility: visible;
-  pointer-events: auto;
-  transform: translateY(0);
-  transition-delay: 0s;
-}
-
-.footer-icp {
-  text-align: right;
+/* ── Theme change: the new sky rectangle-expands from the bottom-right corner
+   (where the toggle lives). The View Transitions API snapshots old/new
+   states; JS drives an inset clip-path wipe, so the default cross-fade is
+   killed here. ── */
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation: none;
+  mix-blend-mode: normal;
 }
 
 /* ── Entrance: pure CSS animations (no useEffect needed) ── */
@@ -672,8 +666,8 @@ button.logos-hl {
 
 /* Landing page mobile polish: ~527×875 portrait viewport */
 @media (max-width: 640px) {
-  /* The one-pager may exceed the viewport on short screens (or with the
-     socials dropdown open) — let it scroll instead of clipping. */
+  /* The one-pager may exceed the viewport on short screens — let it scroll
+     instead of clipping. */
   html, body {
     overflow-x: hidden;
     overflow-y: auto;
@@ -704,11 +698,6 @@ button.logos-hl {
     line-height: 1.4;
   }
 
-  .hero-tagline {
-    margin-top: 0.25rem;
-    line-height: 1.4;
-  }
-
   .hero-row {
     gap: 0.65rem;
   }
@@ -735,19 +724,6 @@ button.logos-hl {
   .footer-links {
     flex-wrap: wrap;
     gap: 0.4rem;
-  }
-
-  .footer-icp {
-    margin-inline-start: auto;
-  }
-
-  /* Socials keeps the desktop dropdown: absolute below the trigger, pills
-     at natural size. It only wraps when the row would overflow the screen. */
-  .socials-drawer {
-    flex-wrap: wrap;
-    row-gap: 0.35rem;
-    width: max-content;
-    max-width: calc(100vw - var(--gutter) * 2);
   }
 
   /* Logos: let the marks row use the full width — side-by-side with the
@@ -788,5 +764,4 @@ button.logos-hl {
   .reveal, .reveal-hero { animation: none; opacity: 1; transform: none; }
   .hero-parallax { transform: none; transition: none; }
   .app { animation: none; }
-  .socials-drawer { transition-delay: 0s; }
 }

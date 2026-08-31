@@ -1,9 +1,10 @@
 /* ==========================================================================
    Document : a reusable reader that renders a raw model transcript one-to-one.
-   Article pages float a wide reading surface in the middle of the starfield.
-   Tool blocks (thinking / web search / code / output) are simple flat colour
-   blocks drawn from the main palette, no outlines. A KO/EN switch sits at the
-   top and bottom. Own design; inherits tokens from global.
+   Writing sits directly on the starfield like every other page — flat
+   restrained content over the sky. Tool blocks (thinking / web search / code /
+   output) are simple flat colour chips drawn from the main palette, no
+   outlines, in the same spirit as the pill highlights elsewhere. A KO/EN
+   switch sits at the top and bottom. Own design; inherits tokens from global.
    ========================================================================== */
 .doc-scroll {
   --doc-accent: var(--c-teal);
@@ -19,22 +20,17 @@
 
 .doc { margin-inline: auto; display: flex; flex-direction: column; }
 
-/* ── The article reading surface (the middle thing over the sky) ── */
-/* The panel always stretches to fill the scroll viewport between the top and
-   bottom gutters, even when the writing is short. */
+/* ── The article: plain column on the sky, no panel background ── */
 .doc-scroll { display: flex; flex-direction: column; }
 .doc { flex: 1 1 auto; }
 .doc-article {
-  width: min(920px, 100%);
+  width: min(830px, 100%);
   gap: 1.5rem;
-  padding: clamp(1.9rem, 4.5vw, 3.5rem) clamp(1.35rem, 4vw, 3rem);
-  background: color-mix(in srgb, var(--sky-2) 92%, transparent);
 }
 
-/* ── KO / EN switch (top + bottom) ── */
+/* ── KO / EN switch (top of article) ── */
 .doc-lang { display: inline-flex; gap: 0.3rem; align-self: flex-start; }
 .doc-lang--top { margin-bottom: 0.2rem; }
-.doc-lang--bot { margin-top: 1.4rem; }
 .doc-lang-btn {
   min-height: 27px;
   padding: 0.12rem 0.6rem;
@@ -326,6 +322,5 @@ a.tx-res-title:hover { text-decoration: underline; text-underline-offset: 3px; }
 @media (max-width: 460px) {
   .doc-head { gap: 0.45rem; }
   .tx-code, .tx-out { font-size: 0.84rem; }
-  .doc-article { padding-left: 1.1rem; padding-right: 1.1rem; }
   .doc-subtitle { white-space: normal; text-overflow: clip; text-wrap: pretty; }
 }

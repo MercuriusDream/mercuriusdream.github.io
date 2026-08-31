@@ -1,4 +1,5 @@
-import { Fragment, useState, useEffect, useRef, lazy, Suspense } from 'react';
+import { Fragment, useState, useEffect, lazy, Suspense } from 'react';
+import { flushSync } from 'react-dom';
 import { BrowserRouter, Routes, Route, Link, useLocation } from 'react-router-dom';
 import { KaomojiIcon } from './components/Icons';
 import Starfield from './components/Starfield';
@@ -17,13 +18,16 @@ const MADE_LINKS = [
   { label: 'Project Logos', to: '/logos', accent: '#B8634A' },
 ];
 
+const WRITINGS_LINK = { label: 'Field notes', to: '/writings', accent: '#B8BCC8' };
+
 const SOCIAL_LINKS = [
   { label: 'github', href: 'https://github.com/mercuriusdream', accent: '#4F7B86' },
   { label: 'x', href: 'https://x.com/mercuriusdream', accent: '#6F7D63' },
   { label: 'vrp', href: 'https://bughunters.google.com/profile/3dfc69d5-8b8a-4754-80ab-ba59a56e7295', accent: '#76668D' },
   { label: 'email', href: 'mailto:mercuriusdream@mercuriusdream.com', accent: '#B8634A' },
   {
-    label: 'Smirnova Oyama is cute',
+    label: '🍥',
+    ariaLabel: 'Smirnova Oyama is cute',
     href: 'https://mizukiakiyama.com',
     accent: '#F7A8B8',
     className: 'cute-link',
@@ -87,81 +91,51 @@ function InlineLinkList({ links }) {
 function ThemeToggle() {
   const [theme, setTheme] = useState(() =>
     document.documentElement.dataset.theme === 'day' ? 'day' : 'dark');
-  const toggle = () => {
-    const next = theme === 'day' ? 'dark' : 'day';
+
+  const applyTheme = next => {
     document.documentElement.dataset.theme = next;
     try { localStorage.setItem('theme', next); } catch { /* private mode */ }
     const m = document.querySelector('meta[name="theme-color"]');
     if (m) m.setAttribute('content', next === 'day' ? '#E8ECF4' : '#060912');
     window.dispatchEvent(new Event('theme:change'));
-    setTheme(next);
   };
+
+  const toggle = () => {
+    const next = theme === 'day' ? 'dark' : 'day';
+    const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    // Plain swap on browsers without the View Transitions API, or when the
+    // user asked for less motion.
+    if (!document.startViewTransition || reduce) {
+      setTheme(next);
+      applyTheme(next);
+      return;
+    }
+
+    // Rectangle wipe: the new sky grows out of the bottom-right corner
+    // (where the toggle sits) as a button-shaped rectangle.
+    const vt = document.startViewTransition(() => {
+      flushSync(() => setTheme(next));
+      applyTheme(next);
+    });
+    vt.ready.then(() => {
+      document.documentElement.animate(
+        { clipPath: ['inset(100% 0 0 100%)', 'inset(0% 0% 0% 0%)'] },
+        { duration: 600, easing: 'cubic-bezier(0.16, 1, 0.3, 1)', pseudoElement: '::view-transition-new(root)' },
+      );
+    }).catch(() => { /* transition skipped mid-flight — fine */ });
+  };
+
   return (
-    <button type="button" onClick={toggle} className="footer-btn" data-glow
-      style={{ ...delay(2300), '--btn-color': theme === 'day' ? '#1A88FF' : '#D89478' }}
-      aria-label={theme === 'day' ? 'Switch to night sky' : 'Switch to day sky'}>
-      {theme === 'day' ? 'night' : 'day'}
+    <button type="button" onClick={toggle} className="footer-btn theme-btn" data-glow
+      style={delay(2200)}
+      aria-label={theme === 'day' ? 'Switch to dark sky' : 'Switch to white sky'}>
+      {theme === 'day' ? 'dark' : 'white'}
     </button>
   );
 }
 
-function SocialsMenu() {
-  const [open, setOpen] = useState(false);
-  const triggerRef = useRef(null);
-
-  useEffect(() => {
-    if (!open) return undefined;
-    const closeOnEscape = event => {
-      if (event.key === 'Escape') {
-        setOpen(false);
-        triggerRef.current?.focus();
-      }
-    };
-    window.addEventListener('keydown', closeOnEscape);
-    return () => window.removeEventListener('keydown', closeOnEscape);
-  }, [open]);
-
-  return (
-    <div className={`socials-menu${open ? ' is-open' : ''}`}>
-      <button
-        ref={triggerRef}
-        type="button"
-        className="footer-btn socials-trigger"
-        data-glow
-        style={{ '--btn-color': '#4F7B86' }}
-        aria-expanded={open}
-        aria-controls="landing-social-links"
-        onClick={() => setOpen(value => !value)}
-      >
-        socials
-      </button>
-      <nav
-        id="landing-social-links"
-        className="socials-drawer"
-        aria-label="Social links"
-        aria-hidden={!open}
-      >
-        {SOCIAL_LINKS.map(link => (
-          <a
-            key={link.label}
-            href={link.href}
-            target={link.href.startsWith('mailto:') ? undefined : '_blank'}
-            rel={link.href.startsWith('mailto:') ? undefined : 'noopener noreferrer'}
-            className={`footer-btn socials-link${link.className ? ` ${link.className}` : ''}`}
-            data-glow
-            tabIndex={open ? undefined : -1}
-            style={{ '--btn-color': link.accent }}
-          >
-            {link.label}
-          </a>
-        ))}
-      </nav>
-    </div>
-  );
-}
-
 function HomePage() {
-  const navTo = useNavTransition();
   const [mojiPoked, setMojiPoked] = useState(false);
   const pokeMoji = () => {
     setMojiPoked(true);
@@ -171,6 +145,14 @@ function HomePage() {
   return (
     <div className="app">
       <a href="#main" className="skip-link">Skip to content</a>
+
+      <div className="corner-stack">
+        <ThemeToggle />
+        <a href="https://icp.gov.moe/?keyword=20260535" target="_blank" rel="noopener noreferrer"
+          className="footer-btn icp-btn" data-glow style={delay(2100)}>
+          萌ICP备20260535号
+        </a>
+      </div>
 
       <main id="main" className="onepage">
         <header className="hero-title reveal-hero" style={delay(800)}>
@@ -186,11 +168,13 @@ function HomePage() {
               <span className="hero-cii" aria-hidden="true">CII</span>
             </h1>
             <p className="hero-handle">@mercuriusdream</p>
-            <p className="hero-tagline"><strong>NOT</strong> YC S67 / Korean Undergrad</p>
           </div>
         </header>
 
         <div className="hero-row reveal" style={delay(1200)}>
+          <p className="made-line">
+            <HighlightLink link={WRITINGS_LINK} />, if you mind
+          </p>
           <p className="made-line">
             Made <InlineLinkList links={MADE_LINKS} />
           </p>
@@ -198,20 +182,20 @@ function HomePage() {
 
         <footer className="site-footer reveal" style={delay(1600)}>
           <div className="footer-links">
-            <SocialsMenu />
-            <Link
-              to="/writings"
-              className="footer-btn"
-              data-glow
-              style={{ ...delay(2200), '--btn-color': '#B8BCC8' }}
-              onClick={e => { e.preventDefault(); navTo('/writings'); }}
-            >
-              writings
-            </Link>
-            <ThemeToggle />
-          </div>
-          <div className="footer-icp">
-            <a href="https://icp.gov.moe/?keyword=20260535" target="_blank" rel="noopener noreferrer" className="footer-btn" data-glow style={{ '--btn-color': '#6D5A66' }}>萌ICP备20260535号</a>
+            {SOCIAL_LINKS.map((link, i) => (
+              <a
+                key={link.label}
+                href={link.href}
+                target={link.href.startsWith('mailto:') ? undefined : '_blank'}
+                rel={link.href.startsWith('mailto:') ? undefined : 'noopener noreferrer'}
+                className={`footer-btn${link.className ? ` ${link.className}` : ''}`}
+                data-glow
+                aria-label={link.ariaLabel}
+                style={{ ...delay(2000 + i * 90), '--btn-color': link.accent }}
+              >
+                {link.label}
+              </a>
+            ))}
           </div>
         </footer>
       </main>
