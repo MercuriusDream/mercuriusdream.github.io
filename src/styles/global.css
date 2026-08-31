@@ -65,8 +65,7 @@
   color-scheme: light;
 }
 
-/* The kaomoji tile is a dark chip — flip it for the day sky. */
-[data-theme='day'] .hero-moji { filter: invert(0.9); }
+/* The hero moji is the pfp — it keeps its dark-chip look in both themes. */
 
 /* ── Reset ── */
 *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; border: 0; }
@@ -145,10 +144,10 @@ ul, ol { list-style: none; }
 }
 .app > :not(.skip-link):not(.starfield):not(.logos-modal):not(.corner-stack) { position: relative; z-index: 1; }
 
-/* Bottom-right corner: theme switch stacked above the ICP badge. Same
-   0.4rem gap as the footer pill row. */
+/* Bottom-right corner: theme switch stacked above the ICP badge. Fixed so
+   the pair stays put regardless of page content/scroll height. */
 .corner-stack {
-  position: absolute;
+  position: fixed;
   right: var(--gutter);
   bottom: clamp(1.25rem, 4vh, 2.5rem);
   display: flex;
