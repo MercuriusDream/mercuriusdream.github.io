@@ -30,12 +30,18 @@
   --focus-width: 2px;
   --control-edge-width: 0px;
   --dur-feedback: 50ms;
+  --dur-fade: 90ms;
+  --dur-detail: 71ms;
+  --ease-morph: cubic-bezier(0.2, 0, 0, 1);
+  --travel: 1;
 
   --font: 'Zalando Sans', 'Gothic A1', system-ui, -apple-system, sans-serif;
-  --text-display: 500 6.5rem / 1.1 var(--font);
+  --font-ja: 'Zen Kaku Gothic New', 'Hiragino Sans', 'Yu Gothic', 'Noto Sans CJK JP', sans-serif;
+  --font-zh: 'Zalando Sans', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', 'Noto Sans CJK SC', sans-serif;
+  --text-display: 400 clamp(4.5rem, 8vw, 7.5rem) / 1 var(--font-ja);
   --text-body: 400 1.0625rem / 1.6 var(--font);
   --text-small: 400 0.875rem / 1.5 var(--font);
-  --text-ruby: 400 1rem / 1.5 var(--font);
+  --text-ruby: 400 0.16em / 1.5 var(--font-ja);
   --portrait-opacity: 0.9;
 }
 
@@ -137,31 +143,53 @@ img {
   clip-path: none;
 }
 
+/* The profile is centered in the stage; the portrait is then placed so its eyes meet the title. */
+.stage {
+  --stage-h: max(100vh, 40rem);
+  --edge: clamp(2rem, 11vw, 12rem);
+  --title-size: clamp(4.5rem, min(var(--stage-h) * 0.16, 10vw), 9rem);
+  /* From the top of the title's box, ruby included, to the middle of its glyphs. */
+  --title-center: calc(var(--title-size) * 0.69);
+  /* Title with ruby, the gap under it, the TideSurf card with its detail row, the gap, and the links. */
+  --profile-h: calc(
+    var(--title-size) * 1.17 + var(--space-8) + var(--control-height) * 2 + 1.125rem + var(--space-5)
+  );
+  --eye-line: calc(var(--stage-h) * 0.48 - var(--profile-h) / 2 + var(--title-center));
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  max-width: 100rem;
+  min-height: var(--stage-h);
+  margin-inline: auto;
+  padding-inline: var(--edge);
+}
+
+@supports (height: 100svh) {
+  .stage {
+    --stage-h: max(100svh, 40rem);
+  }
+}
+
 .profile {
   position: relative;
   z-index: 2;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  width: 52%;
-  min-height: 100vh;
-  min-height: 100svh;
-  padding: var(--space-8) var(--space-5) var(--space-9);
-}
-
-.identity,
-.link-groups {
   width: min(26rem, 100%);
+  padding-top: var(--eye-line);
+  padding-bottom: var(--space-8);
 }
 
 .identity {
   margin-bottom: var(--space-8);
 }
 
+/* Pull the title up by its ruby and half its glyph, and in by the side bearing of 霧. */
 h1 {
+  margin-top: calc(var(--title-center) * -1);
+  margin-inline-start: calc(var(--title-bearing) * -1);
   font: var(--text-display);
+  font-size: var(--title-size);
   letter-spacing: 0;
+  --title-bearing: 0.037em;
 }
 
 h1 ruby {
@@ -175,42 +203,89 @@ h1 rt {
   letter-spacing: 0;
 }
 
+[lang='zh-CN'] {
+  font-family: var(--font-zh);
+}
+
 .link-groups {
   display: flex;
   flex-direction: column;
-  gap: var(--space-6);
+  gap: var(--space-5);
 }
 
+/* Planes hang outside the ink line, so every label starts on the title's edge. */
 .project-list {
   display: grid;
   gap: 2px;
+  margin-inline: calc(var(--inset-control) * -1);
 }
 
 .project-link {
+  position: relative;
+  isolation: isolate;
   display: grid;
   grid-template-columns: minmax(0, 1fr) var(--space-4);
+  grid-template-rows: var(--control-height) auto;
   align-items: center;
-  gap: var(--space-2);
-  min-height: var(--control-height);
-  padding: 0 var(--inset-control);
+  column-gap: var(--space-2);
+  padding-inline: var(--inset-control);
   border-radius: var(--radius-floor);
   color: var(--ink-1);
-  background: var(--plane-raised);
-  box-shadow: inset 0 0 0 var(--control-edge-width) var(--ink-boundary);
   font: var(--text-body);
-  transition: background-color var(--dur-feedback) linear;
 }
 
-.project-link:hover {
+/* The surface grows from the name row to hold the detail; the space it grows into is already reserved. */
+.project-link::before {
+  content: '';
+  position: absolute;
+  inset: 0 0 auto;
+  z-index: -1;
+  height: var(--control-height);
+  border-radius: inherit;
+  background: var(--plane-raised);
+  box-shadow: inset 0 0 0 var(--control-edge-width) var(--ink-boundary);
+  transition:
+    height calc(var(--dur-detail) * var(--travel)) var(--ease-morph),
+    background-color var(--dur-feedback) linear;
+}
+
+.project-detail {
+  grid-column: 1 / -1;
+  margin-top: calc(var(--space-2) * -1);
+  padding-bottom: var(--inset-control);
+  color: var(--ink-2);
+  font: var(--text-small);
+  text-box: trim-both cap alphabetic;
+  opacity: 0;
+  transition: opacity var(--dur-fade) linear;
+}
+
+.project-link:hover::before,
+.project-link:focus-visible::before {
+  height: 100%;
   background: var(--plane-control);
 }
 
-.project-link:active {
+.project-link:active::before {
   background: var(--plane-control-hover);
 }
 
+.project-link:hover .project-detail,
+.project-link:focus-visible .project-detail {
+  opacity: 1;
+}
+
+@media (hover: none) {
+  .project-link::before {
+    height: 100%;
+  }
+
+  .project-detail {
+    opacity: 1;
+  }
+}
+
 .project-link:focus-visible {
-  position: relative;
   z-index: 1;
   outline-offset: calc(var(--focus-width) * -1);
 }
@@ -230,10 +305,12 @@ h1 rt {
   display: flex;
   flex-wrap: wrap;
   gap: var(--space-1);
+  margin-inline-start: calc(var(--space-2) * -1);
 }
 
 .social-link,
 .icp-link,
+.egg-link,
 .account-handle {
   display: inline-flex;
   align-items: center;
@@ -246,7 +323,6 @@ h1 rt {
 }
 
 .account-handle {
-  padding-inline-start: 0;
   color: var(--ink-2);
 }
 
@@ -255,44 +331,90 @@ h1 rt {
 }
 
 .social-link:hover,
-.icp-link:hover {
+.icp-link:hover,
+.egg-link:hover {
   background: var(--plane-control);
 }
 
 .social-link:active,
-.icp-link:active {
+.icp-link:active,
+.egg-link:active {
   background: var(--plane-control-hover);
 }
 
+/* The only color on the page waits for the pointer. */
+.emoji {
+  filter: grayscale(1);
+  transition: filter var(--dur-fade) linear;
+}
+
+.egg-link:hover .emoji,
+.egg-link:focus-visible .emoji {
+  filter: none;
+}
+
 .site-footer {
-  position: absolute;
-  bottom: var(--space-5);
-  left: var(--space-5);
+  position: relative;
   z-index: 3;
   display: flex;
   flex-wrap: wrap;
   align-items: center;
-  gap: var(--space-2) var(--space-4);
+  gap: var(--space-1) 0;
+  margin-top: auto;
+  margin-inline-start: calc(var(--inset-control) * -1);
+  padding-bottom: var(--space-5);
 }
 
 .icp-link {
   color: var(--ink-2);
 }
 
+/* Face center at 73% of the stage, eyes on --eye-line, edges fading into the plane.
+   On narrower screens it shrinks so the fingertips stop short of the links and the hands stay whole.
+   The bottom fade ends where the portrait leaves the stage, or at its own edge if that comes first. */
 .portrait {
+  --portrait-h: min(
+    var(--stage-h) * 1.08,
+    (min(100vw, 100rem) - var(--edge) - 26rem - var(--space-6)) / 0.63
+  );
+  --portrait-top: calc(var(--eye-line) - var(--portrait-h) * 0.347);
+  --fade-end: min(var(--portrait-h), var(--stage-h) - var(--portrait-top));
   position: absolute;
-  inset: 0 0 0 auto;
+  top: var(--portrait-top);
+  left: max(
+    calc(73% - var(--portrait-h) * 0.75 * 0.489),
+    calc(var(--edge) + 26rem + var(--space-6) - var(--portrait-h) * 0.75 * 0.08)
+  );
   z-index: 1;
-  width: 68vw;
+  width: calc(var(--portrait-h) * 0.75);
+  height: var(--portrait-h);
   pointer-events: none;
   user-select: none;
+  -webkit-mask-image:
+    linear-gradient(to right, transparent, #000 18%),
+    linear-gradient(
+      to bottom,
+      #000 calc(var(--fade-end) - var(--portrait-h) * 0.16),
+      transparent var(--fade-end)
+    ),
+    radial-gradient(14% 11% at 21% 47%, rgb(0 0 0 / 0.55) 30%, #000),
+    radial-gradient(13% 10% at 80% 54%, rgb(0 0 0 / 0.55) 30%, #000);
+  -webkit-mask-composite: source-in;
+  mask-image:
+    linear-gradient(to right, transparent, #000 18%),
+    linear-gradient(
+      to bottom,
+      #000 calc(var(--fade-end) - var(--portrait-h) * 0.16),
+      transparent var(--fade-end)
+    ),
+    radial-gradient(14% 11% at 21% 47%, rgb(0 0 0 / 0.55) 30%, #000),
+    radial-gradient(13% 10% at 80% 54%, rgb(0 0 0 / 0.55) 30%, #000);
+  mask-composite: intersect;
 }
 
 .portrait img {
   width: 100%;
   height: 100%;
-  object-fit: contain;
-  object-position: right bottom;
   opacity: var(--portrait-opacity);
 }
 
@@ -302,41 +424,44 @@ h1 rt {
   }
 }
 
+/* Narrow screens: the upper body sits behind the text, cropped by the bottom edge. */
 @media (max-width: 56.25em) {
-  .app,
-  .profile {
-    min-height: max(100svh, 46rem);
+  .stage {
+    --stage-h: max(100svh, 46rem);
   }
 
   .profile {
-    width: 100%;
-    padding: var(--space-8) var(--space-5) var(--space-9);
+    padding-top: var(--space-9);
+  }
+
+  h1 {
+    margin-top: 0;
   }
 
   .portrait {
-    top: auto;
-    bottom: calc(var(--space-6) * -1);
-    width: 115vw;
-    height: 65%;
-    opacity: 0.5;
-    transform: translateX(12vw);
-    mask-image: linear-gradient(to bottom, transparent, black 38%);
+    --portrait-h: min(150vw, calc(var(--stage-h) * 0.9));
+    --portrait-top: calc(var(--stage-h) * 0.55 - var(--portrait-h) * 0.347);
+    left: calc(58% - var(--portrait-h) * 0.75 * 0.489);
+    -webkit-mask-image: linear-gradient(to bottom, transparent, #000 30%);
+    mask-image: linear-gradient(to bottom, transparent, #000 30%);
+  }
+
+  .portrait img {
+    opacity: calc(var(--portrait-opacity) * 0.5);
   }
 }
 
 @media (max-width: 40em) {
-  .profile {
-    padding-inline: var(--space-4);
-    padding-bottom: calc(var(--space-9) + var(--space-7));
-  }
-
-  .site-footer {
-    bottom: var(--space-4);
-    left: var(--space-4);
+  .stage {
+    --edge: 2rem;
   }
 }
 
 @media (prefers-reduced-motion: reduce) {
+  :root {
+    --travel: 0;
+  }
+
   *,
   *::before,
   *::after {
