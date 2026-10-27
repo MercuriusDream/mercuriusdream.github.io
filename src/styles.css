@@ -1,0 +1,345 @@
+:root {
+  color-scheme: light dark;
+
+  --plane-base: light-dark(oklch(0.965 0.003 250), oklch(0.2 0.004 250));
+  --plane-raised: light-dark(oklch(0.995 0.002 250), oklch(0.245 0.005 250));
+  --plane-control: light-dark(oklch(0.9 0.005 250), oklch(0.3 0.006 250));
+  --plane-control-hover: light-dark(oklch(0.865 0.006 250), oklch(0.355 0.006 250));
+  --plane-control-active: light-dark(oklch(0.85 0.006 250), oklch(0.395 0.007 250));
+  --ink-1: light-dark(oklch(0.24 0.01 250), oklch(0.95 0.004 250));
+  --ink-2: light-dark(oklch(0.42 0.01 250), oklch(0.8 0.006 250));
+  --ink-3: light-dark(oklch(0.45 0.01 250), oklch(0.78 0.008 250));
+  --ink-boundary: light-dark(oklch(0.55 0.01 250), oklch(0.67 0.01 250));
+  --ink-inverse: light-dark(oklch(0.985 0.002 250), oklch(0.2 0.004 250));
+  --signal-focus: light-dark(oklch(0.55 0.18 255), oklch(0.74 0.13 255));
+
+  --space-1: 0.25rem;
+  --space-2: 0.5rem;
+  --space-3: 0.75rem;
+  --space-4: 1rem;
+  --space-5: 1.5rem;
+  --space-6: 2rem;
+  --space-7: 3rem;
+  --space-8: 4rem;
+  --space-9: 6rem;
+  --control-height: 2.75rem;
+  --control-height-compact: 2.25rem;
+  --inset-control: var(--space-4);
+  --inset-control-compact: var(--space-3);
+  --radius-floor: 0.1875rem;
+  --focus-width: 2px;
+  --control-edge-width: 0px;
+  --dur-feedback: 50ms;
+
+  --font: 'Zalando Sans', 'Gothic A1', system-ui, -apple-system, sans-serif;
+  --text-display: 500 6.5rem / 1.1 var(--font);
+  --text-body: 400 1.0625rem / 1.6 var(--font);
+  --text-small: 400 0.875rem / 1.5 var(--font);
+  --text-ruby: 400 1rem / 1.5 var(--font);
+  --portrait-opacity: 0.9;
+}
+
+@media (prefers-contrast: more) {
+  :root {
+    --plane-base: light-dark(oklch(0.97 0.002 250), oklch(0.16 0.003 250));
+    --plane-raised: light-dark(oklch(1 0 0), oklch(0.26 0.004 250));
+    --plane-control: light-dark(oklch(0.82 0.004 250), oklch(0.36 0.005 250));
+    --plane-control-hover: light-dark(oklch(0.78 0.004 250), oklch(0.41 0.005 250));
+    --plane-control-active: light-dark(oklch(0.74 0.005 250), oklch(0.46 0.006 250));
+    --ink-1: light-dark(oklch(0.14 0.008 250), oklch(0.99 0.002 250));
+    --ink-2: light-dark(oklch(0.26 0.008 250), oklch(0.92 0.004 250));
+    --ink-3: light-dark(oklch(0.32 0.008 250), oklch(0.91 0.005 250));
+    --ink-boundary: light-dark(oklch(0.38 0.008 250), oklch(0.79 0.006 250));
+    --signal-focus: light-dark(oklch(0.45 0.14 255), oklch(0.8 0.1 255));
+    --focus-width: 3px;
+    --control-edge-width: 2px;
+  }
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  min-width: 320px;
+  background: var(--plane-base);
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  min-width: 320px;
+  min-height: 100vh;
+  min-height: 100svh;
+  overflow-wrap: anywhere;
+  color: var(--ink-1);
+  background: var(--plane-base);
+  font: var(--text-body);
+  font-synthesis: none;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}
+
+a {
+  color: inherit;
+  font: inherit;
+  text-decoration: none;
+  cursor: default;
+}
+
+ul {
+  list-style: none;
+}
+
+img {
+  display: block;
+}
+
+::selection {
+  color: var(--ink-inverse);
+  background: var(--ink-1);
+}
+
+:focus-visible {
+  outline: var(--focus-width) solid var(--signal-focus);
+  outline-offset: 2px;
+}
+
+.app {
+  position: relative;
+  isolation: isolate;
+  min-height: 100vh;
+  min-height: 100svh;
+  overflow: hidden;
+  background: var(--plane-base);
+}
+
+.skip-link {
+  position: fixed;
+  top: var(--space-4);
+  left: var(--space-4);
+  z-index: 20;
+  display: inline-flex;
+  align-items: center;
+  min-height: var(--control-height);
+  padding: 0 var(--inset-control);
+  border-radius: var(--radius-floor);
+  clip-path: inset(50%);
+  color: var(--ink-inverse);
+  background: var(--ink-1);
+}
+
+.skip-link:focus-visible {
+  clip-path: none;
+}
+
+.profile {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 52%;
+  min-height: 100vh;
+  min-height: 100svh;
+  padding: var(--space-8) var(--space-5) var(--space-9);
+}
+
+.identity,
+.link-groups {
+  width: min(26rem, 100%);
+}
+
+.identity {
+  margin-bottom: var(--space-8);
+}
+
+h1 {
+  font: var(--text-display);
+  letter-spacing: 0;
+}
+
+h1 ruby {
+  ruby-align: center;
+  ruby-position: over;
+}
+
+h1 rt {
+  color: var(--ink-2);
+  font: var(--text-ruby);
+  letter-spacing: 0;
+}
+
+.link-groups {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-6);
+}
+
+.project-list {
+  display: grid;
+  gap: 2px;
+}
+
+.project-link {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) var(--space-4);
+  align-items: center;
+  gap: var(--space-2);
+  min-height: var(--control-height);
+  padding: 0 var(--inset-control);
+  border-radius: var(--radius-floor);
+  color: var(--ink-1);
+  background: var(--plane-raised);
+  box-shadow: inset 0 0 0 var(--control-edge-width) var(--ink-boundary);
+  font: var(--text-body);
+  transition: background-color var(--dur-feedback) linear;
+}
+
+.project-link:hover {
+  background: var(--plane-control);
+}
+
+.project-link:active {
+  background: var(--plane-control-hover);
+}
+
+.project-link:focus-visible {
+  position: relative;
+  z-index: 1;
+  outline-offset: calc(var(--focus-width) * -1);
+}
+
+.project-link svg {
+  width: var(--space-4);
+  height: var(--space-4);
+  color: var(--ink-2);
+  fill: none;
+  stroke: currentColor;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-width: 1.2;
+}
+
+.social-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-1);
+}
+
+.social-link,
+.icp-link,
+.account-handle {
+  display: inline-flex;
+  align-items: center;
+  min-height: var(--control-height);
+  padding: 0 var(--inset-control);
+  border-radius: var(--radius-floor);
+  color: var(--ink-1);
+  font: var(--text-body);
+  transition: background-color var(--dur-feedback) linear;
+}
+
+.account-handle {
+  padding-inline-start: 0;
+  color: var(--ink-2);
+}
+
+.social-link {
+  padding-inline: var(--space-2);
+}
+
+.social-link:hover,
+.icp-link:hover {
+  background: var(--plane-control);
+}
+
+.social-link:active,
+.icp-link:active {
+  background: var(--plane-control-hover);
+}
+
+.site-footer {
+  position: absolute;
+  bottom: var(--space-5);
+  left: var(--space-5);
+  z-index: 3;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-2) var(--space-4);
+}
+
+.icp-link {
+  color: var(--ink-2);
+}
+
+.portrait {
+  position: absolute;
+  inset: 0 0 0 auto;
+  z-index: 1;
+  width: 68vw;
+  pointer-events: none;
+  user-select: none;
+}
+
+.portrait img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  object-position: right bottom;
+  opacity: var(--portrait-opacity);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --portrait-opacity: 0.68;
+  }
+}
+
+@media (max-width: 56.25em) {
+  .app,
+  .profile {
+    min-height: max(100svh, 46rem);
+  }
+
+  .profile {
+    width: 100%;
+    padding: var(--space-8) var(--space-5) var(--space-9);
+  }
+
+  .portrait {
+    top: auto;
+    bottom: calc(var(--space-6) * -1);
+    width: 115vw;
+    height: 65%;
+    opacity: 0.5;
+    transform: translateX(12vw);
+    mask-image: linear-gradient(to bottom, transparent, black 38%);
+  }
+}
+
+@media (max-width: 40em) {
+  .profile {
+    padding-inline: var(--space-4);
+    padding-bottom: calc(var(--space-9) + var(--space-7));
+  }
+
+  .site-footer {
+    bottom: var(--space-4);
+    left: var(--space-4);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    scroll-behavior: auto !important;
+  }
+}

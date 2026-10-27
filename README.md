@@ -1,7 +1,9 @@
-# Mercuriusdream.github.io
+# mercuriusdream.github.io
 
-*With my fullest respect to Claude Monet.*
+A minimal personal index built with React and Vite.
 
-## License
-
-AGPL 3.0
+```sh
+bun install
+bun run dev
+bun run build
+```
