@@ -2,7 +2,12 @@ const PROJECTS = [
   {
     name: 'TideSurf',
     href: 'https://github.com/tidesurf/core',
-    detail: 'Token-efficient DOM compression for LLM browser agents.',
+    advisories: [
+      {
+        name: 'CVE-2026-106340',
+        href: 'https://nvd.nist.gov/vuln/detail/cve-2026-106340',
+      },
+    ],
   },
 ];
 
@@ -57,12 +62,17 @@ export default function App() {
             <section className="link-group" aria-label="Projects">
               <ul className="project-list">
                 {PROJECTS.map(project => (
-                  <li key={project.name}>
+                  <li key={project.name} className="project-item">
                     <ExternalLink href={project.href} className="project-link">
                       <span className="project-name">{project.name}</span>
                       <Arrow />
-                      <span className="project-detail">{project.detail}</span>
                     </ExternalLink>
+                    {project.advisories.map(advisory => (
+                      <ExternalLink key={advisory.name} href={advisory.href} className="project-link">
+                        <span className="project-name">{advisory.name}</span>
+                        <Arrow />
+                      </ExternalLink>
+                    ))}
                   </li>
                 ))}
               </ul>
