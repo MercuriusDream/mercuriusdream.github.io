@@ -53,7 +53,6 @@ Don't concentrate a dual-use technology.
   - Hugging Face disclosure: <https://huggingface.co/blog/security-incident-july-2026>
   - OpenAI's statement: <https://openai.com/index/hugging-face-model-evaluation-security-incident/>
 - [6] Moonshot's open weights
-  - Kimi K3: <https://openrouter.ai/blog/insights/kimi-k3-open-source/>
   - K3.1 Pro cyber data removal, xdev-bench-hard 90.5% to 81.0%: <https://implicator.ai/kimi-k3-1-pro-hacking-cut-unpublished-test>
   - K3.1 Pro full weights released (Nov 4, 2026): <https://www.winzheng.com/en/article/kimi-k3-1-pro-open-weight-cyber-mitigation>
 - [7] What chip export controls actually produced
