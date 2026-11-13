@@ -11,6 +11,10 @@ const PROJECTS = [
   },
 ];
 
+const WRITINGS = [
+  { name: 'Machines of Loving Export Controls', href: '/loving-controls/' },
+];
+
 const SOCIALS = [
   { name: 'Google VRP', href: 'https://bughunters.google.com/profile/3dfc69d5-8b8a-4754-80ab-ba59a56e7295' },
   { name: 'GitHub', href: 'https://github.com/mercuriusdream' },
@@ -27,14 +31,14 @@ function Arrow() {
 }
 
 function ExternalLink({ href, children, className = '', label }) {
-  const isEmail = href.startsWith('mailto:');
+  const isWeb = /^https?:/.test(href);
   return (
     <a
       href={href}
       className={className}
       aria-label={label}
-      target={isEmail ? undefined : '_blank'}
-      rel={isEmail ? undefined : 'noopener noreferrer'}
+      target={isWeb ? '_blank' : undefined}
+      rel={isWeb ? 'noopener noreferrer' : undefined}
     >
       {children}
     </a>
@@ -73,6 +77,14 @@ export default function App() {
                         <Arrow />
                       </ExternalLink>
                     ))}
+                  </li>
+                ))}
+                {WRITINGS.map(writing => (
+                  <li key={writing.href} className="project-item">
+                    <ExternalLink href={writing.href} className="project-link">
+                      <span className="project-name">{writing.name}</span>
+                      <Arrow />
+                    </ExternalLink>
                   </li>
                 ))}
               </ul>

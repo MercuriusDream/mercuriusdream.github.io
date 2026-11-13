@@ -147,7 +147,7 @@ img {
   --title-center: calc(var(--title-size) * 0.69);
   /* Title, project links, and social links, including their gaps. */
   --profile-h: calc(
-    var(--title-size) * 1.17 + var(--space-8) + var(--control-height) * 3 + 0.125rem + var(--space-5)
+    var(--title-size) * 1.17 + var(--space-8) + var(--control-height) * 4 + 0.25rem + var(--space-5)
   );
   --eye-line: calc(var(--stage-h) * 0.48 - var(--profile-h) / 2 + var(--title-center));
   position: relative;

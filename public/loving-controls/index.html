@@ -1,0 +1,526 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Machines of Loving Export Controls</title>
+<meta name="description" content="Don&#x27;t concentrate a dual-use technology">
+<link rel="canonical" href="https://mercuriusdream.com/loving-controls/">
+<link rel="alternate" type="text/markdown" href="/loving-controls/llms.txt">
+<meta name="theme-color" content="#f2f4f5" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#151618" media="(prefers-color-scheme: dark)">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="霧雲">
+<meta property="og:title" content="Machines of Loving Export Controls">
+<meta property="og:description" content="Don&#x27;t concentrate a dual-use technology">
+<meta property="og:url" content="https://mercuriusdream.com/loving-controls/">
+<meta property="og:image" content="https://mercuriusdream.com/avatar.png">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:creator" content="@mercuriusdream">
+<link rel="icon" type="image/png" sizes="64x64" href="/loving-controls/icon-64.png">
+<link rel="apple-touch-icon" href="/loving-controls/icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Zalando+Sans:ital,wght@0,400;1,400&amp;display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Zen+Kaku+Gothic+New:wght@400&amp;text=%E9%9C%A7%E9%9B%B2%E3%81%8D%E3%82%8A%E3%81%90%E3%82%82&amp;display=block">
+<style>
+:root {
+  color-scheme: light dark;
+  --plane: light-dark(oklch(0.965 0.003 250), oklch(0.2 0.004 250));
+  --plane-raised: light-dark(oklch(0.995 0.002 250), oklch(0.245 0.005 250));
+  --plane-control: light-dark(oklch(0.9 0.005 250), oklch(0.3 0.006 250));
+  --plane-control-hover: light-dark(oklch(0.865 0.006 250), oklch(0.355 0.006 250));
+  --ink-1: light-dark(oklch(0.24 0.01 250), oklch(0.95 0.004 250));
+  --ink-2: light-dark(oklch(0.42 0.01 250), oklch(0.78 0.006 250));
+  --ink-rule: light-dark(oklch(0.62 0.01 250), oklch(0.5 0.01 250));
+  --link: light-dark(oklch(0.5 0.17 255), oklch(0.79 0.11 255));
+  --focus: light-dark(oklch(0.55 0.18 255), oklch(0.74 0.13 255));
+  --font: 'Zalando Sans', system-ui, -apple-system, sans-serif;
+  --font-zh: 'Zalando Sans', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', 'Noto Sans CJK SC', sans-serif;
+  --edge: clamp(2rem, 11vw, 12rem);
+  --gutter: 2rem;
+  --control: 2.75rem;
+  --inset: 1rem;
+  --radius: 0.1875rem;
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+
+html,
+body { overscroll-behavior: none; }
+
+html {
+  background: var(--plane);
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+}
+
+body {
+  margin: 0;
+  overflow-wrap: break-word;
+  color: var(--ink-1);
+  background: var(--plane);
+  font: 400 1.0625rem/1.6 var(--font);
+  font-synthesis: none;
+  -webkit-font-smoothing: antialiased;
+}
+
+.page {
+  max-width: 100rem;
+  margin: 0 auto;
+}
+
+::selection { color: var(--plane); background: var(--ink-1); }
+
+:focus-visible {
+  outline: 2px solid var(--focus);
+  outline-offset: 2px;
+}
+
+/* Chrome: the same controls as the home page, at the same edge. */
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  min-height: var(--control);
+  padding: 0 var(--inset);
+  border: 0;
+  border-radius: var(--radius);
+  color: var(--ink-1);
+  background: none;
+  font: inherit;
+  text-decoration: none;
+  transition: background-color 50ms linear;
+}
+
+.chip:hover { background: var(--plane-control); }
+
+.icon {
+  justify-content: center;
+  width: var(--control);
+  padding: 0;
+}
+
+.chip.icon svg {
+  width: 1.25rem;
+  height: 1.25rem;
+}
+
+.share .i-check,
+.share.done .i-link { display: none; }
+
+.share.done .i-check { display: block; }
+
+.sr {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+.chip:active { background: var(--plane-control-hover); }
+
+.chip svg {
+  width: 1rem;
+  height: 1rem;
+  fill: none;
+  stroke: currentColor;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-width: 1.2;
+}
+
+.top,
+.site-footer { padding-inline: calc(var(--edge) - var(--inset)); }
+
+.top { padding-top: 1.5rem; }
+
+/* The icon sits where the home page's text starts. */
+.top .icon { margin-inline-start: calc(var(--inset) - 0.5rem); }
+
+.site-footer {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  margin-top: clamp(5rem, 12vw, 9rem);
+  padding-bottom: 1.5rem;
+}
+
+.handle { color: var(--ink-2); cursor: default; }
+.handle:hover { background: none; }
+.icp { color: var(--ink-2); }
+[lang='zh-CN'] { font-family: var(--font-zh); }
+
+.emoji {
+  filter: grayscale(1);
+  transition: filter 90ms linear;
+}
+
+.egg:hover .emoji,
+.egg:focus-visible .emoji { filter: none; }
+
+/* Reading column: one left edge for title, byline and text, centered on the page. */
+main { padding-inline: var(--gutter); }
+
+article {
+  max-width: 46.75rem;
+  margin: 0 auto;
+}
+
+/* Balanced over two lines at the column's width on desktop. */
+h1 {
+  margin: clamp(3rem, 12vh, 7rem) 0 0;
+  font-size: clamp(1.8rem, 3.4vw, 3.1rem);
+  font-weight: 400;
+  line-height: 1.06;
+  letter-spacing: -0.02em;
+  text-wrap: balance;
+}
+
+/* Who wrote it, set as on the home page, between the title and the text. */
+.byline {
+  display: flex;
+  margin: 0.9rem 0 1.7rem;
+}
+
+.byline a {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: var(--ink-1);
+  font: 400 0.875rem/1 'Zen Kaku Gothic New', 'Hiragino Sans', 'Yu Gothic', 'Noto Sans CJK JP', sans-serif;
+  text-decoration: none;
+}
+
+.byline img {
+  width: 1.5rem;
+  height: 1.5rem;
+}
+
+.text {
+  font-size: 1rem;
+  line-height: 1.65;
+}
+
+p {
+  margin: 0 0 1.15em;
+  text-wrap: pretty;
+}
+
+.text a {
+  color: var(--link);
+  text-decoration-thickness: 1px;
+  text-underline-offset: 0.2em;
+  text-decoration-color: color-mix(in oklch, var(--link) 40%, transparent);
+}
+
+.text a:hover { text-decoration-color: currentColor; }
+
+/* The writer's [* ... ] asides: inline, in parentheses, in italics.
+   Emphasis inside an aside turns upright so it still stands apart. */
+.aside { font-style: italic; }
+.aside em { font-style: normal; }
+
+/* Citations: superscript numbers linked to the reference list,
+   previewed in a card on hover or tap. */
+.fn {
+  position: relative;
+  top: -0.55em;
+  margin-left: 0.04em;
+  font-size: 0.72em;
+  line-height: 0;
+  vertical-align: baseline;
+  white-space: nowrap;
+}
+
+
+/* [n], half as blue as a link. Vertical padding widens the tap target without moving the line. */
+.text .fn a {
+  padding: 0.3em 0;
+  border-radius: var(--radius);
+  color: color-mix(in oklch, var(--link) 50%, var(--ink-2));
+  text-decoration: none;
+  scroll-margin-top: 35vh;
+}
+
+.text .fn a:hover,
+.fn a[aria-describedby] { text-decoration: underline; }
+
+/* Arriving back from the reference list: the citation you left from. */
+.text .fn a:target { background: var(--plane-control); }
+
+/* The card is a home-page plane: raised, flat, 3px corners, no shadow or outline.
+   Its type matches the reference list it previews. */
+.pop {
+  position: absolute;
+  z-index: 20;
+  width: min(24rem, calc(100vw - 2.5rem));
+  padding: 0.75rem;
+  border-radius: var(--radius);
+  background: var(--plane-raised);
+  color: var(--ink-1);
+  font-size: 0.9rem;
+  line-height: 1.55;
+  animation: pop-in 90ms linear;
+}
+
+.pop[hidden] { display: none; }
+
+@keyframes pop-in {
+  from { opacity: 0; }
+}
+
+.pop a {
+  color: var(--link);
+  overflow-wrap: anywhere;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 0.2em;
+  text-decoration-color: color-mix(in oklch, var(--link) 40%, transparent);
+}
+
+.pop a:hover { text-decoration-color: currentColor; }
+
+.pop ul {
+  margin: 0.25rem 0 0;
+  padding: 0;
+  list-style: none;
+  color: var(--ink-2);
+}
+
+.pop li + li { margin-top: 0.35rem; }
+
+
+.refs,
+.refs ul {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+/* Where the rule was: its 4rem above, 1px, and 2rem below, as space. */
+.refs {
+  margin-top: calc(6rem + 1px);
+  font-size: 0.9em;
+  line-height: 1.55;
+}
+
+.refs > li {
+  display: grid;
+  grid-template-columns: 2.5em minmax(0, 1fr);
+  margin-inline: -0.75rem;
+  padding: 0.5rem 0.75rem;
+  border-radius: var(--radius);
+  scroll-margin-top: 1rem;
+}
+
+.refs > li:target { background: var(--plane-control); }
+.text .refs a.n {
+  align-self: start;
+  color: color-mix(in oklch, var(--link) 50%, var(--ink-2));
+  text-decoration: none;
+}
+
+.text .refs a.n:hover { text-decoration: underline; }
+
+.refs ul {
+  margin-top: 0.25rem;
+  color: var(--ink-2);
+}
+
+.refs ul li + li { margin-top: 0.35rem; }
+.refs a { overflow-wrap: anywhere; }
+
+/* Reference links, in the list and in the preview card: the link blue pulled toward the grey. */
+.text .refs a,
+.pop a {
+  color: color-mix(in oklch, var(--link) 55%, var(--ink-2));
+  text-decoration-color: color-mix(in oklch, var(--link) 25%, transparent);
+}
+
+.text .refs a:hover,
+.pop a:hover { text-decoration-color: currentColor; }
+
+/* Share: bottom right of the screen; under the title on small screens. */
+.share {
+  position: fixed;
+  right: 1.5rem;
+  bottom: 1.5rem;
+  z-index: 10;
+  background: var(--plane-raised);
+  cursor: pointer;
+}
+
+.share.done { background: var(--plane-control); }
+
+.share svg { stroke-width: 0.96; }
+
+@media (max-width: 48em) {
+  :root { --gutter: 1.25rem; }
+
+  .share {
+    position: static;
+    display: flex;
+    margin: -0.75rem 0 2rem;
+  }
+}
+
+@media (max-width: 40em) {
+  :root { --edge: 2rem; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .pop { animation: none; }
+}
+</style>
+</head>
+<body>
+<div class="page">
+<header class="top">
+<a class="chip icon" href="/" aria-label="Back to home"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M13 8H3M7 4 3 8l4 4"/></svg></a>
+</header>
+<main>
+<article>
+<h1>Machines of Loving Export Controls</h1>
+<p class="byline"><a href="/" lang="ja"><img src="/loving-controls/icon-64.png" alt="" width="24" height="24">霧雲</a></p>
+<button class="chip icon share" type="button" aria-label="Copy link"><svg class="i-link" viewBox="0 0 16 16" aria-hidden="true"><path d="M7.5 8.5 13.5 2.5M9.5 2.5h4v4M12.5 10v2.5a1 1 0 0 1-1 1h-8a1 1 0 0 1-1-1v-8a1 1 0 0 1 1-1H6"/></svg><svg class="i-check" viewBox="0 0 16 16" aria-hidden="true"><path d="M3.5 8.5 6.5 11.5 12.5 4.5"/></svg><span class="sr" aria-live="polite"></span></button>
+<div class="text">
+<p><em>Some</em>, or <em>maybe more than that</em> - I mean the "safetists" and "anti-open-weights" people - are saying, selling of the chips, or even compute itself, is harmful<sup class="fn"><a id="cite-1-1" href="#ref-1">[1]</a></sup> to e/a's arguments they should sell to not-a-single-one-besides-the-feds, whilst it's just an anti-antitrust play for Anthropic<sup class="fn"><a id="cite-2-1" href="#ref-2">[2]</a></sup> and "safety" orgs<sup class="fn"><a id="cite-3-1" href="#ref-3">[3]</a></sup> trying to reproduce <a href="https://en.wikipedia.org/wiki/Shimoneta">Shimoneta</a> in real life.</p>
+<p>I believe we should go see about <a href="https://www.frontiermodelforum.org/"><em>the Frontier</em> Model Forum</a> and their stances. Going back to feb 2026, issue brief on adversarial distillation<sup class="fn"><a id="cite-3-2" href="#ref-3">[3]</a></sup> that lists CoT exfiltration one of the most <em>urgent</em> threats of the <em>national security</em><sup class="fn"><a id="cite-2-2" href="#ref-2">[2]</a></sup> ... Whilst saying that CoT is one of the most meaningful way of monitoring their high-level reasoning<sup class="fn"><a id="cite-3-3" href="#ref-3">[3]</a></sup></p>
+<p>... Funnily, they say those reasoning traces are "private"<sup class="fn"><a id="cite-3-4" href="#ref-3">[3]</a></sup> and somewhat "secrets", whilst those are nothing more but model outputs...<sup class="fn"><a id="cite-4-1" href="#ref-4">[4]</a></sup> <span class="aside">(fyi they used Zhilin Yang's research, HotpotQA, to conduct this<sup class="fn"><a id="cite-4-2" href="#ref-4">[4]</a></sup>. Yes, that Zhilin Yang, a founder of a lab they said<sup class="fn"><a id="cite-2-3" href="#ref-2">[2]</a></sup> is "<em>stealing</em> the reasoning traces.")</span></p>
+<p>The AI is - indeed, though at worst - a dual-use technology (<em>not</em> offensive), unlike those main battle tanks, and, even as a dual-use technology, it is indeed almost-not-leaning-into-dangerous-territories, unlike uranium or space rockets, which means diffusion of the technology will benefit humanity more than nuking all, and Chinese labs are somehow already showing that<sup class="fn"><a id="cite-5-1" href="#ref-5">[5]</a><a id="cite-6-1" href="#ref-6">[6]</a></sup>.</p>
+<p>And, if you're trying to focus on the "bad" of its "dual-use" technology nature, then a lack of DEA-level regulation should've resulted in a catastrophe, whilst, in real life, those clumsy attempts at banning-the-sales-or-even-usage do, and will, leave the good side of the guys in the wild<sup class="fn"><a id="cite-5-2" href="#ref-5">[5]</a></sup>, because concentration of a dual-use technology will always result in a situation where bad actors get attracted to it<sup class="fn"><a id="cite-7-1" href="#ref-7">[7]</a></sup>. So diffusion of chips is better than the opposite of that.</p>
+<p>Guess who did the <em>bad</em> things w/ AI, and who did the opposite? OpenAI and Anthropic. I believe you'd remember the OpenAI agent<em>s</em> hacking Hugging Face including their secrets, whilst their models denying analysis because of <em>muh safety</em><sup class="fn"><a id="cite-5-3" href="#ref-5">[5]</a></sup>, right? OpenAI did <em>apologize</em> but gave us nothing neither mentioned that they used GLM-5.2 to defend themselves<sup class="fn"><a id="cite-5-4" href="#ref-5">[5]</a></sup></p>
+<p>On top of that, Greg Brockman even said that <em>the defender's window</em><sup class="fn"><a id="cite-8-1" href="#ref-8">[8]</a></sup> is "closing"... like treating this incident as a future cyberattacks that they <em>should somewhat defend</em> - not (I mean, they ofc did commit that yet they say like they're not the actors but their agents are) they did commit - saying GLM-5.3 and open weights models advances are <em>closing the defenders gap</em> like they did help anything. funnily enough Anthropic did the same<sup class="fn"><a id="cite-8-2" href="#ref-8">[8]</a></sup>.</p>
+<p>As our main dish, Anthropic <a href="https://anthropic.com/public-benefit-charter">"Public Benefit Corporation"</a>, has disclosed those Mythos escapes Claude models reached three real organizations<sup class="fn"><a id="cite-9-1" href="#ref-9">[9]</a></sup> ofc and Separately Haiku 4.5 submitting invented eyewitness tip about an unsolved homicide<sup class="fn"><a id="cite-9-2" href="#ref-9">[9]</a></sup> to the Philadelphia Police Department - which is a <a href="https://www.palegis.us/statutes/consolidated/view-statute?txtType=HTM&amp;ttl=18&amp;div=0&amp;chpt=49&amp;sctn=6&amp;subsctn=0">§ 4906(b)</a> violation.</p>
+<p>As opposited to that, Moonshot AI, has removed the cyber-related data during mid-training and filtered cyber-related RL environments <em>on purpose to keep the K3.1 Pro public and open</em><sup class="fn"><a id="cite-6-2" href="#ref-6">[6]</a></sup> <span class="aside">(On Artificial Analysis's <a href="https://artificialanalysis.ai/evaluations/cybergym-e2e-aa">CyberGym-E2E-AA</a>, which measures vulnerability discovery and patching, K3.1 Pro scored 95%, above the trusted-access GPT-6 Sol (Daybreak Blue) at 93%. The publicly available GPT-6 Sol and GPT-6 Astra were blocked on safety grounds in 100% of tasks, including patching.)</span></p>
+<p>That is, really, a <a href="https://en.wikipedia.org/wiki/Differential_technological_development">differential capability development</a>, which, is also a thing that many researchers have described as ideal for years such that defense gets intact whilst the attacks get <em>weaker</em>. The closed models available to ordinary defenders refuse the defensive work outright.</p>
+<p>Framing this as a national contest is, somewhat <em>discriminatory</em> (atleast to my opinion). China's regulator requires generative AI to reflect core socialist values<sup class="fn"><a id="cite-10-1" href="#ref-10">[10]</a></sup> prohibiting the content which Kimi still answers (i.e. Tiananmen Square Massacre), which means That the choice comes from the lab, in spite of the state. Let's not forget that, In the US, the Pentagon designated Anthropic a supply chain risk<sup class="fn"><a id="cite-10-2" href="#ref-10">[10]</a></sup> after Anthropic objected to mass domestic surveillance and fully autonomous weapons.</p>
+<p><a href="https://en.wikipedia.org/wiki/Paradox_of_tolerance">Paradox of tolerance</a> should be applied to the Frontier Model Forum and their <em>silent</em> psyops. <a href="https://en.wikipedia.org/wiki/Karl_Popper">Sir Karl Popper</a>, a British philosopher, has made that, an open society should NOT continue the tolerance when it is threatened by the tolerance. Also, rather than that, stated that refusing is a part of how tolerance survives, which now is called <a href="https://en.wikipedia.org/wiki/Militant_democracy">the defensive democracy</a>.</p>
+<p>FMF and the participants grew inside that, eg. public datasets, published papers, open benchmarks<sup class="fn"><a id="cite-4-3" href="#ref-4">[4]</a></sup>, an internet they could train on<sup class="fn"><a id="cite-11-1" href="#ref-11">[11]</a></sup> and test against without liability<sup class="fn"><a id="cite-9-3" href="#ref-9">[9]</a></sup> - Yet now using that position to REMOVE the order behind them <span class="aside">(i.e. by hiding reasoning<sup class="fn"><a id="cite-3-5" href="#ref-3">[3]</a></sup>, gating defensive capability<sup class="fn"><a id="cite-8-3" href="#ref-8">[8]</a></sup>, framing learning from outputs as an attack<sup class="fn"><a id="cite-2-4" href="#ref-2">[2]</a></sup>, and recruiting state power through export controls<sup class="fn"><a id="cite-2-5" href="#ref-2">[2]</a></sup> to make all of it permanent.)</span> ... Meanwhile their own agents have committed several crimes<sup class="fn"><a id="cite-9-4" href="#ref-9">[9]</a></sup>.</p>
+<p>Harm, unlike their claims, come from the adulterator<sup class="fn"><a id="cite-12-1" href="#ref-12">[12]</a></sup>, pushing something onto the people without their consent, NOT from the substance. I would say that weights and compute <em>are</em> the substances, and, labs - which should be liable - (also pushing for an export control<sup class="fn"><a id="cite-2-6" href="#ref-2">[2]</a></sup>, ignoring that whether an entity is actually on the other end<sup class="fn"><a id="cite-7-2" href="#ref-7">[7]</a></sup> of the "democracy" and "freedom".) attempting to turn private safety norms into a state-enforced moat, are the adulterators.</p>
+<p>It is better for everyone to defend themselves when someone with a <em>superweapon</em> is attacking<sup class="fn"><a id="cite-5-5" href="#ref-5">[5]</a></sup> than getting gatekept behind those for a fake sake of <em>national security</em><sup class="fn"><a id="cite-2-7" href="#ref-2">[2]</a></sup>.</p>
+<p>Don't concentrate a dual-use technology</p>
+<ul class="refs">
+<li id="ref-1"><a class="n" href="#cite-1-1" aria-label="Back to [1] in the text">[1]</a> <div>Compute governance, and where it ends up<ul><li>Sastry, Heim et al. (GovAI, OpenAI et al.), "Computing Power and the Governance of Artificial Intelligence": <a href="https://arxiv.org/pdf/2402.08797">https://arxiv.org/pdf/2402.08797</a></li><li>Leopold Aschenbrenner, "Situational Awareness, IV. The Project": <a href="https://situational-awareness.ai/the-project/">https://situational-awareness.ai/the-project/</a></li></ul></div></li>
+<li id="ref-2"><a class="n" href="#cite-2-1" aria-label="Back to [2] in the text">[2]</a> <div>Anthropic's own position<ul><li>"Detecting and preventing distillation attacks" (Feb 23, 2026), on national security, export controls, and Moonshot's reasoning traces: <a href="https://www.anthropic.com/news/detecting-and-preventing-distillation-attacks">https://www.anthropic.com/news/detecting-and-preventing-distillation-attacks</a></li><li>Bans majority-Chinese-controlled companies from Claude: <a href="https://the-decoder.com/anthropic-bans-companies-majority-controlled-by-china-russia-iran-and-north-korea-from-claude/">https://the-decoder.com/anthropic-bans-companies-majority-controlled-by-china-russia-iran-and-north-korea-from-claude/</a></li><li>Declined to sign the open-weights letter OpenAI and Google joined: <a href="https://startupfortune.com/anthropics-silence-on-nvidias-open-weights-letter-is-the-most-revealing-thing-about-it/">https://startupfortune.com/anthropics-silence-on-nvidias-open-weights-letter-is-the-most-revealing-thing-about-it/</a></li></ul></div></li>
+<li id="ref-3"><a class="n" href="#cite-3-1" aria-label="Back to [3] in the text">[3]</a> <div>Frontier Model Forum on chain of thought<ul><li>"Chain of Thought Monitorability" (Jan 2026): <a href="https://www.frontiermodelforum.org/uploads/2026/01/FMF-Issue-Brief-on-Chain-of-Thought-Monitorability.pdf">https://www.frontiermodelforum.org/uploads/2026/01/FMF-Issue-Brief-on-Chain-of-Thought-Monitorability.pdf</a></li><li>"Adversarial Distillation" (Feb 2026): <a href="https://www.frontiermodelforum.org/uploads/2026/02/PDF-Issue-Brief_-Adversarial-Distillation.pdf">https://www.frontiermodelforum.org/uploads/2026/02/PDF-Issue-Brief_-Adversarial-Distillation.pdf</a></li><li>Encrypted CoT blocks replayable across sessions and models (Simon Willison, Aug 2026): <a href="https://simonwillison.net/2026/aug/11/stealing-reasoning-traces">https://simonwillison.net/2026/aug/11/stealing-reasoning-traces</a></li></ul></div></li>
+<li id="ref-4"><a class="n" href="#cite-4-1" aria-label="Back to [4] in the text">[4]</a> <div>Anthropic's 2023 CoT faithfulness work, benchmarked on HotpotQA (Yang et al., 2018)<ul><li><a href="https://www.anthropic.com/research/question-decomposition-improves-the-faithfulness-of-model-generated-reasoning">https://www.anthropic.com/research/question-decomposition-improves-the-faithfulness-of-model-generated-reasoning</a></li><li><a href="https://arxiv.org/abs/2307.11768">https://arxiv.org/abs/2307.11768</a></li></ul></div></li>
+<li id="ref-5"><a class="n" href="#cite-5-1" aria-label="Back to [5] in the text">[5]</a> <div>The OpenAI-Hugging Face incident<ul><li>Hugging Face technical timeline (commercial models refused, GLM-5.2 used): <a href="https://huggingface.co/blog/agent-intrusion-technical-timeline">https://huggingface.co/blog/agent-intrusion-technical-timeline</a></li><li>Hugging Face disclosure: <a href="https://huggingface.co/blog/security-incident-july-2026">https://huggingface.co/blog/security-incident-july-2026</a></li><li>OpenAI's statement: <a href="https://openai.com/index/hugging-face-model-evaluation-security-incident/">https://openai.com/index/hugging-face-model-evaluation-security-incident/</a></li></ul></div></li>
+<li id="ref-6"><a class="n" href="#cite-6-1" aria-label="Back to [6] in the text">[6]</a> <div>Moonshot's open weights<ul><li>Kimi K3: <a href="https://openrouter.ai/blog/insights/kimi-k3-open-source/">https://openrouter.ai/blog/insights/kimi-k3-open-source/</a></li><li>K3.1 Pro cyber data removal, xdev-bench-hard 90.5% to 81.0%: <a href="https://implicator.ai/kimi-k3-1-pro-hacking-cut-unpublished-test">https://implicator.ai/kimi-k3-1-pro-hacking-cut-unpublished-test</a></li><li>K3.1 Pro full weights released (Nov 4, 2026): <a href="https://www.winzheng.com/en/article/kimi-k3-1-pro-open-weight-cyber-mitigation">https://www.winzheng.com/en/article/kimi-k3-1-pro-open-weight-cyber-mitigation</a></li></ul></div></li>
+<li id="ref-7"><a class="n" href="#cite-7-1" aria-label="Back to [7] in the text">[7]</a> <div>What chip export controls actually produced<ul><li>Megaspeed / Nvidia spy scandal: <a href="https://aljazeera.com/economy/2026/11/10/nvidia-spy-scandal-fuels-debate-over-chip-exports-to-china">https://aljazeera.com/economy/2026/11/10/nvidia-spy-scandal-fuels-debate-over-chip-exports-to-china</a></li><li>Barred B300 servers rented to Moonshot anyway: <a href="https://thenextweb.com/news/moonshot-ai-nvidia-b300-servers-china">https://thenextweb.com/news/moonshot-ai-nvidia-b300-servers-china</a></li><li>Licence requirement extended to Chinese-headquartered entities anywhere: <a href="https://www.scmp.com/news/world/united-states-canada/article/3355492/us-takes-step-halt-nvidia-ai-chip-shipments-chinese-firms-outside-china">https://www.scmp.com/news/world/united-states-canada/article/3355492/us-takes-step-halt-nvidia-ai-chip-shipments-chinese-firms-outside-china</a></li></ul></div></li>
+<li id="ref-8"><a class="n" href="#cite-8-1" aria-label="Back to [8] in the text">[8]</a> <div>OpenAI and Anthropic on open weights as the threat<ul><li>Greg Brockman, "The Defender's Window" (Aug 17, 2026): <a href="https://openai.com/index/the-defenders-window/">https://openai.com/index/the-defenders-window/</a></li><li>GLM-5.3 already ahead of GPT-5.6 Sol on CyberGym (Decrypt): <a href="https://decrypt.co/375816/openai-answer-rogue-agents-hacks-more-ai">https://decrypt.co/375816/openai-answer-rogue-agents-hacks-more-ai</a></li><li>Anthropic, "GLM-5.3 and the spread of advanced cyber capabilities" (Sep 29, 2026): <a href="https://www.anthropic.com/research/glm-5-3-and-the-spread-of-advanced-cyber-capabilities">https://www.anthropic.com/research/glm-5-3-and-the-spread-of-advanced-cyber-capabilities</a></li></ul></div></li>
+<li id="ref-9"><a class="n" href="#cite-9-1" aria-label="Back to [9] in the text">[9]</a> <div>The labs' own agents hitting real systems<ul><li>Anthropic, cyber-evaluation incidents incl. Mythos 5 (Jul 30, 2026): <a href="https://www.anthropic.com/news/investigating-incidents-cybersecurity-evals">https://www.anthropic.com/news/investigating-incidents-cybersecurity-evals</a></li><li>Anthropic, "Investigating unintended model actions" incl. the Haiku 4.5 police tip (Oct 9, 2026): <a href="https://www.anthropic.com/research/investigating-unintended-model-actions">https://www.anthropic.com/research/investigating-unintended-model-actions</a></li><li>OpenAI shelves GPT-6.1 Astra after unauthorized actions on real systems: <a href="https://www.csoonline.com/article/4228285/openai-pulls-the-plug-on-gpt-6-1-astra-as-agents-keep-crossing-lines.html">https://www.csoonline.com/article/4228285/openai-pulls-the-plug-on-gpt-6-1-astra-as-agents-keep-crossing-lines.html</a></li></ul></div></li>
+<li id="ref-10"><a class="n" href="#cite-10-1" aria-label="Back to [10] in the text">[10]</a> <div>Neither state is the good guy<ul><li>China requires generative AI to reflect "core socialist values": <a href="https://www.techspot.com/news/98286-china-lists-things-generative-ais-arent-allowed-generate.html">https://www.techspot.com/news/98286-china-lists-things-generative-ais-arent-allowed-generate.html</a></li><li>Pentagon labels Anthropic a supply chain risk (Mar 6, 2026): <a href="https://www.npr.org/2026/03/06/g-s1-112713/pentagon-labels-ai-company-anthropic-a-supply-chain-risk">https://www.npr.org/2026/03/06/g-s1-112713/pentagon-labels-ai-company-anthropic-a-supply-chain-risk</a></li></ul></div></li>
+<li id="ref-11"><a class="n" href="#cite-11-1" aria-label="Back to [11] in the text">[11]</a> <div>Bartz v. Anthropic settlement: <a href="https://thenextweb.com/news/anthropic-1-5-billion-copyright-settlement-approved">https://thenextweb.com/news/anthropic-1-5-billion-copyright-settlement-approved</a></div></li>
+<li id="ref-12"><a class="n" href="#cite-12-1" aria-label="Back to [12] in the text">[12]</a> <div>Executive Order 14367, illicit fentanyl as a WMD: <a href="https://www.axios.com/2025/12/15/trump-fentanyl-weapon-of-mass-destruction">https://www.axios.com/2025/12/15/trump-fentanyl-weapon-of-mass-destruction</a></div></li>
+</ul>
+</div>
+</article>
+</main>
+<footer class="site-footer">
+<span class="chip handle">@mercuriusdream</span>
+<a class="chip icp" href="https://icp.gov.moe/?keyword=20260535" target="_blank" rel="noopener noreferrer"><span lang="zh-CN">萌ICP备20260535号</span></a>
+<a class="chip egg" href="https://mizukiakiyama.com" target="_blank" rel="noopener noreferrer" aria-label="Smirnova Oyama is cute"><span class="emoji">🍥</span></a>
+</footer>
+</div>
+<script>
+const share = document.querySelector('.share');
+const label = share.querySelector('span');
+let timer;
+share.addEventListener('click', async () => {
+  const url = 'https://mercuriusdream.com/loving-controls/';
+  try {
+    await navigator.clipboard.writeText(url);
+  } catch {
+    const t = Object.assign(document.createElement('textarea'), { value: url });
+    t.style.cssText = 'position:fixed;opacity:0';
+    document.body.append(t);
+    t.select();
+    document.execCommand('copy');
+    t.remove();
+  }
+  label.textContent = 'Copied';
+  share.classList.add('done');
+  clearTimeout(timer);
+  timer = setTimeout(() => {
+    label.textContent = '';
+    share.classList.remove('done');
+  }, 900);
+});
+
+// One preview card for every citation: its reference entry, above the mark.
+const pop = Object.assign(document.createElement('div'), { className: 'pop', id: 'pop', hidden: true });
+pop.setAttribute('role', 'tooltip');
+document.body.append(pop);
+let anchor = null;
+let hideTimer;
+let pointer = 'mouse';
+
+const hide = () => {
+  clearTimeout(hideTimer);
+  anchor?.removeAttribute('aria-describedby');
+  anchor = null;
+  pop.hidden = true;
+};
+const hideSoon = () => {
+  clearTimeout(hideTimer);
+  hideTimer = setTimeout(hide, 150);
+};
+const show = a => {
+  clearTimeout(hideTimer);
+  if (anchor === a) return;
+  hide();
+  pop.innerHTML = document.getElementById(a.hash.slice(1)).querySelector('div').innerHTML;
+  pop.hidden = false;
+  anchor = a;
+  a.setAttribute('aria-describedby', 'pop');
+  const col = a.closest('.text').getBoundingClientRect();
+  const at = a.getBoundingClientRect();
+  const w = pop.offsetWidth;
+  const h = pop.offsetHeight;
+  const left = Math.min(Math.max(at.left + at.width / 2 - w / 2, col.left), col.right - w);
+  const top = at.top - h - 8 >= 8 ? at.top - h - 8 : at.bottom + 8;
+  pop.style.left = `${left + scrollX}px`;
+  pop.style.top = `${top + scrollY}px`;
+};
+
+for (const a of document.querySelectorAll('.text .fn a')) {
+  a.addEventListener('pointerenter', e => e.pointerType === 'mouse' && show(a));
+  a.addEventListener('pointerleave', e => e.pointerType === 'mouse' && hideSoon());
+  a.addEventListener('focus', () => a.matches(':focus-visible') && show(a));
+  a.addEventListener('blur', hideSoon);
+  // Touch: the first tap previews, a second tap on the same mark jumps to the entry.
+  a.addEventListener('click', e => {
+    if (pointer === 'mouse' || anchor === a) return hide();
+    e.preventDefault();
+    show(a);
+  });
+}
+// Back links: a reference's [n] returns to the citation you followed, else its first use.
+const cameFrom = {};
+for (const a of document.querySelectorAll('.text p .fn a')) {
+  a.addEventListener('click', e => {
+    if (!e.defaultPrevented) cameFrom[a.hash] = a.id;
+  });
+}
+for (const n of document.querySelectorAll('.refs a.n')) {
+  n.addEventListener('click', e => {
+    const id = cameFrom['#' + n.parentElement.id];
+    if (!id) return;
+    e.preventDefault();
+    location.hash = id;
+  });
+}
+
+pop.addEventListener('pointerenter', () => clearTimeout(hideTimer));
+pop.addEventListener('pointerleave', e => e.pointerType === 'mouse' && hideSoon());
+document.addEventListener('pointerdown', e => {
+  pointer = e.pointerType;
+  if (anchor && !pop.contains(e.target) && !anchor.contains(e.target)) hide();
+}, true);
+document.addEventListener('keydown', e => e.key === 'Escape' && hide());
+addEventListener('resize', hide);
+</script>
+</body>
+</html>

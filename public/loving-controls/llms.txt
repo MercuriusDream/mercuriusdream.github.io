@@ -1,0 +1,73 @@
+*Some*, or *maybe more than that* - I mean the "safetists" and "anti-open-weights" people - are saying, selling of the chips, or even compute itself, is harmful [1] to e/a's arguments they should sell to not-a-single-one-besides-the-feds, whilst it's just an anti-antitrust play for Anthropic [2] and "safety" orgs [3] trying to reproduce [Shimoneta](https://en.wikipedia.org/wiki/Shimoneta) in real life.
+
+I believe we should go see about [*the Frontier* Model Forum](https://www.frontiermodelforum.org/) and their stances. Going back to feb 2026, issue brief on adversarial distillation [3] that lists CoT exfiltration one of the most *urgent* threats of the *national security* [2] ... Whilst saying that CoT is one of the most meaningful way of monitoring their high-level reasoning [3]
+
+... Funnily, they say those reasoning traces are "private" [3] and somewhat "secrets", whilst those are nothing more but model outputs... [4] [* fyi they used Zhilin Yang's research, HotpotQA, to conduct this [4]. Yes, that Zhilin Yang, a founder of a lab they said [2] is "*stealing* the reasoning traces."]
+
+The AI is - indeed, though at worst - a dual-use technology (*not* offensive), unlike those main battle tanks, and, even as a dual-use technology, it is indeed almost-not-leaning-into-dangerous-territories, unlike uranium or space rockets, which means diffusion of the technology will benefit humanity more than nuking all, and Chinese labs are somehow already showing that [5, 6].
+
+And, if you're trying to focus on the "bad" of its "dual-use" technology nature, then a lack of DEA-level regulation should've resulted in a catastrophe, whilst, in real life, those clumsy attempts at banning-the-sales-or-even-usage do, and will, leave the good side of the guys in the wild [5], because concentration of a dual-use technology will always result in a situation where bad actors get attracted to it [7]. So diffusion of chips is better than the opposite of that.
+
+Guess who did the *bad* things w/ AI, and who did the opposite? OpenAI and Anthropic. I believe you'd remember the OpenAI agent*s* hacking Hugging Face including their secrets, whilst their models denying analysis because of *muh safety* [5], right? OpenAI did *apologize* but gave us nothing neither mentioned that they used GLM-5.2 to defend themselves [5]
+
+On top of that, Greg Brockman even said that *the defender's window* [8] is "closing"... like treating this incident as a future cyberattacks that they *should somewhat defend* - not (I mean, they ofc did commit that yet they say like they're not the actors but their agents are) they did commit - saying GLM-5.3 and open weights models advances are *closing the defenders gap* like they did help anything. funnily enough Anthropic did the same [8].
+
+As our main dish, Anthropic ["Public Benefit Corporation"](https://anthropic.com/public-benefit-charter), has disclosed those Mythos escapes Claude models reached three real organizations [9] ofc and Separately Haiku 4.5 submitting invented eyewitness tip about an unsolved homicide [9] to the Philadelphia Police Department - which is a [§ 4906(b)](https://www.palegis.us/statutes/consolidated/view-statute?txtType=HTM&ttl=18&div=0&chpt=49&sctn=6&subsctn=0) violation.
+
+As opposited to that, Moonshot AI, has removed the cyber-related data during mid-training and filtered cyber-related RL environments *on purpose to keep the K3.1 Pro public and open* [6] [* On Artificial Analysis's [CyberGym-E2E-AA](https://artificialanalysis.ai/evaluations/cybergym-e2e-aa), which measures vulnerability discovery and patching, K3.1 Pro scored 95%, above the trusted-access GPT-6 Sol (Daybreak Blue) at 93%. The publicly available GPT-6 Sol and GPT-6 Astra were blocked on safety grounds in 100% of tasks, including patching.]
+
+That is, really, a [differential capability development](https://en.wikipedia.org/wiki/Differential_technological_development), which, is also a thing that many researchers have described as ideal for years such that defense gets intact whilst the attacks get *weaker*. The closed models available to ordinary defenders refuse the defensive work outright.
+
+Framing this as a national contest is, somewhat *discriminatory* (atleast to my opinion). China's regulator requires generative AI to reflect core socialist values [10] prohibiting the content which Kimi still answers (i.e. Tiananmen Square Massacre), which means That the choice comes from the lab, in spite of the state. Let's not forget that, In the US, the Pentagon designated Anthropic a supply chain risk [10] after Anthropic objected to mass domestic surveillance and fully autonomous weapons.
+
+[Paradox of tolerance](https://en.wikipedia.org/wiki/Paradox_of_tolerance) should be applied to the Frontier Model Forum and their *silent* psyops. [Sir Karl Popper](https://en.wikipedia.org/wiki/Karl_Popper), a British philosopher, has made that, an open society should NOT continue the tolerance when it is threatened by the tolerance. Also, rather than that, stated that refusing is a part of how tolerance survives, which now is called [the defensive democracy](https://en.wikipedia.org/wiki/Militant_democracy).
+
+FMF and the participants grew inside that, eg. public datasets, published papers, open benchmarks [4], an internet they could train on [11] and test against without liability [9] - Yet now using that position to REMOVE the order behind them [* i.e. by hiding reasoning [3], gating defensive capability [8], framing learning from outputs as an attack [2], and recruiting state power through export controls [2] to make all of it permanent.] ... Meanwhile their own agents have committed several crimes [9].
+
+Harm, unlike their claims, come from the adulterator [12], pushing something onto the people without their consent, NOT from the substance. I would say that weights and compute *are* the substances, and, labs - which should be liable - (also pushing for an export control [2], ignoring that whether an entity is actually on the other end [7] of the "democracy" and "freedom".) attempting to turn private safety norms into a state-enforced moat, are the adulterators.
+
+It is better for everyone to defend themselves when someone with a *superweapon* is attacking [5] than getting gatekept behind those for a fake sake of *national security* [2].
+
+Don't concentrate a dual-use technology
+
+---
+
+- [1] Compute governance, and where it ends up
+  - Sastry, Heim et al. (GovAI, OpenAI et al.), "Computing Power and the Governance of Artificial Intelligence": <https://arxiv.org/pdf/2402.08797>
+  - Leopold Aschenbrenner, "Situational Awareness, IV. The Project": <https://situational-awareness.ai/the-project/>
+- [2] Anthropic's own position
+  - "Detecting and preventing distillation attacks" (Feb 23, 2026), on national security, export controls, and Moonshot's reasoning traces: <https://www.anthropic.com/news/detecting-and-preventing-distillation-attacks>
+  - Bans majority-Chinese-controlled companies from Claude: <https://the-decoder.com/anthropic-bans-companies-majority-controlled-by-china-russia-iran-and-north-korea-from-claude/>
+  - Declined to sign the open-weights letter OpenAI and Google joined: <https://startupfortune.com/anthropics-silence-on-nvidias-open-weights-letter-is-the-most-revealing-thing-about-it/>
+- [3] Frontier Model Forum on chain of thought
+  - "Chain of Thought Monitorability" (Jan 2026): <https://www.frontiermodelforum.org/uploads/2026/01/FMF-Issue-Brief-on-Chain-of-Thought-Monitorability.pdf>
+  - "Adversarial Distillation" (Feb 2026): <https://www.frontiermodelforum.org/uploads/2026/02/PDF-Issue-Brief_-Adversarial-Distillation.pdf>
+  - Encrypted CoT blocks replayable across sessions and models (Simon Willison, Aug 2026): <https://simonwillison.net/2026/aug/11/stealing-reasoning-traces>
+- [4] Anthropic's 2023 CoT faithfulness work, benchmarked on HotpotQA (Yang et al., 2018)
+  - <https://www.anthropic.com/research/question-decomposition-improves-the-faithfulness-of-model-generated-reasoning>
+  - <https://arxiv.org/abs/2307.11768>
+- [5] The OpenAI-Hugging Face incident
+  - Hugging Face technical timeline (commercial models refused, GLM-5.2 used): <https://huggingface.co/blog/agent-intrusion-technical-timeline>
+  - Hugging Face disclosure: <https://huggingface.co/blog/security-incident-july-2026>
+  - OpenAI's statement: <https://openai.com/index/hugging-face-model-evaluation-security-incident/>
+- [6] Moonshot's open weights
+  - Kimi K3: <https://openrouter.ai/blog/insights/kimi-k3-open-source/>
+  - K3.1 Pro cyber data removal, xdev-bench-hard 90.5% to 81.0%: <https://implicator.ai/kimi-k3-1-pro-hacking-cut-unpublished-test>
+  - K3.1 Pro full weights released (Nov 4, 2026): <https://www.winzheng.com/en/article/kimi-k3-1-pro-open-weight-cyber-mitigation>
+- [7] What chip export controls actually produced
+  - Megaspeed / Nvidia spy scandal: <https://aljazeera.com/economy/2026/11/10/nvidia-spy-scandal-fuels-debate-over-chip-exports-to-china>
+  - Barred B300 servers rented to Moonshot anyway: <https://thenextweb.com/news/moonshot-ai-nvidia-b300-servers-china>
+  - Licence requirement extended to Chinese-headquartered entities anywhere: <https://www.scmp.com/news/world/united-states-canada/article/3355492/us-takes-step-halt-nvidia-ai-chip-shipments-chinese-firms-outside-china>
+- [8] OpenAI and Anthropic on open weights as the threat
+  - Greg Brockman, "The Defender's Window" (Aug 17, 2026): <https://openai.com/index/the-defenders-window/>
+  - GLM-5.3 already ahead of GPT-5.6 Sol on CyberGym (Decrypt): <https://decrypt.co/375816/openai-answer-rogue-agents-hacks-more-ai>
+  - Anthropic, "GLM-5.3 and the spread of advanced cyber capabilities" (Sep 29, 2026): <https://www.anthropic.com/research/glm-5-3-and-the-spread-of-advanced-cyber-capabilities>
+- [9] The labs' own agents hitting real systems
+  - Anthropic, cyber-evaluation incidents incl. Mythos 5 (Jul 30, 2026): <https://www.anthropic.com/news/investigating-incidents-cybersecurity-evals>
+  - Anthropic, "Investigating unintended model actions" incl. the Haiku 4.5 police tip (Oct 9, 2026): <https://www.anthropic.com/research/investigating-unintended-model-actions>
+  - OpenAI shelves GPT-6.1 Astra after unauthorized actions on real systems: <https://www.csoonline.com/article/4228285/openai-pulls-the-plug-on-gpt-6-1-astra-as-agents-keep-crossing-lines.html>
+- [10] Neither state is the good guy
+  - China requires generative AI to reflect "core socialist values": <https://www.techspot.com/news/98286-china-lists-things-generative-ais-arent-allowed-generate.html>
+  - Pentagon labels Anthropic a supply chain risk (Mar 6, 2026): <https://www.npr.org/2026/03/06/g-s1-112713/pentagon-labels-ai-company-anthropic-a-supply-chain-risk>
+- [11] Bartz v. Anthropic settlement: <https://thenextweb.com/news/anthropic-1-5-billion-copyright-settlement-approved>
+- [12] Executive Order 14367, illicit fentanyl as a WMD: <https://www.axios.com/2025/12/15/trump-fentanyl-weapon-of-mass-destruction>
