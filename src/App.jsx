@@ -1,17 +1,9 @@
-const PROJECTS = [
-  {
-    name: 'TideSurf',
-    href: 'https://github.com/tidesurf/core',
-    advisories: [
-      {
-        name: 'CVE-2026-106340',
-        href: 'https://nvd.nist.gov/vuln/detail/cve-2026-106340',
-      },
-    ],
-  },
-];
-
-const WRITINGS = [
+// The rows, in the order they are shown.
+// A sibling is another site of mine: it opens in this tab, and the two pages hand over to each other.
+const LINKS = [
+  { name: 'TideSurf', href: 'https://github.com/tidesurf/core' },
+  { name: 'Project Yukigumo', href: 'https://yukigumo.mercuriusdream.com/', sibling: true },
+  { name: 'CVE-2026-106340', href: 'https://nvd.nist.gov/vuln/detail/cve-2026-106340' },
   { name: 'Machines of Loving Export Controls', href: '/loving-controls/' },
 ];
 
@@ -30,15 +22,31 @@ function Arrow() {
   );
 }
 
-function ExternalLink({ href, children, className = '', label }) {
-  const isWeb = /^https?:/.test(href);
+const LEAVE_MS = 170;
+
+// A sibling site is a different origin, so the browser cannot carry this page into it.
+// Both pages rest on this page's plane instead: this one fades to it before leaving,
+// and the sibling starts on it. See the veil rules in styles.css.
+function leaveTo(event, href) {
+  if (event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
+  event.preventDefault();
+  const root = document.documentElement;
+  root.dataset.veil = '';
+  setTimeout(() => location.assign(href), LEAVE_MS);
+  // If the visit is cancelled, the page comes back.
+  setTimeout(() => root.removeAttribute('data-veil'), 3000);
+}
+
+function ExternalLink({ href, children, className = '', label, sibling = false }) {
+  const newTab = /^https?:/.test(href) && !sibling;
   return (
     <a
       href={href}
       className={className}
       aria-label={label}
-      target={isWeb ? '_blank' : undefined}
-      rel={isWeb ? 'noopener noreferrer' : undefined}
+      target={newTab ? '_blank' : undefined}
+      rel={newTab ? 'noopener noreferrer' : undefined}
+      onClick={sibling ? event => leaveTo(event, href) : undefined}
     >
       {children}
     </a>
@@ -50,7 +58,7 @@ export default function App() {
     <div className="app">
       <a className="skip-link" href="#main">Skip to content</a>
 
-      <div className="stage">
+      <div className="stage" style={{ '--rows': LINKS.length }}>
         <div className="portrait" aria-hidden="true">
           <img src="/portrait.svg" alt="" />
         </div>
@@ -65,24 +73,10 @@ export default function App() {
           <nav className="link-groups" aria-label="Personal links">
             <section className="link-group" aria-label="Projects">
               <ul className="project-list">
-                {PROJECTS.map(project => (
-                  <li key={project.name} className="project-item">
-                    <ExternalLink href={project.href} className="project-link">
-                      <span className="project-name">{project.name}</span>
-                      <Arrow />
-                    </ExternalLink>
-                    {project.advisories.map(advisory => (
-                      <ExternalLink key={advisory.name} href={advisory.href} className="project-link">
-                        <span className="project-name">{advisory.name}</span>
-                        <Arrow />
-                      </ExternalLink>
-                    ))}
-                  </li>
-                ))}
-                {WRITINGS.map(writing => (
-                  <li key={writing.href} className="project-item">
-                    <ExternalLink href={writing.href} className="project-link">
-                      <span className="project-name">{writing.name}</span>
+                {LINKS.map(link => (
+                  <li key={link.href} className="project-item">
+                    <ExternalLink href={link.href} className="project-link" sibling={link.sibling}>
+                      <span className="project-name">{link.name}</span>
                       <Arrow />
                     </ExternalLink>
                   </li>

@@ -19,6 +19,12 @@
       rel="stylesheet"
     />
     <title>霧雲 | きりぐも</title>
+    <script>
+      // Arriving from a sibling site, which left on this page's plane: start veiled, so the page fades in.
+      try {
+        if (new URL(document.referrer).origin === 'https://yukigumo.mercuriusdream.com') document.documentElement.dataset.veil = '';
+      } catch {}
+    </script>
   </head>
   <body>
     <div id="root"></div>

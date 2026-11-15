@@ -30,6 +30,8 @@
   --control-edge-width: 0px;
   --dur-feedback: 50ms;
   --dur-fade: 90ms;
+  --dur-veil: 240ms;
+  --ease-morph: cubic-bezier(0.2, 0, 0, 1);
 
   --font: 'Zalando Sans', 'Gothic A1', system-ui, -apple-system, sans-serif;
   --font-ja: 'Zen Kaku Gothic New', 'Hiragino Sans', 'Yu Gothic', 'Noto Sans CJK JP', sans-serif;
@@ -145,9 +147,10 @@ img {
   --title-size: clamp(4.5rem, min(var(--stage-h) * 0.16, 10vw), 9rem);
   /* From the top of the title's box, ruby included, to the middle of its glyphs. */
   --title-center: calc(var(--title-size) * 0.69);
-  /* Title, project links, and social links, including their gaps. */
+  /* Title, project links, and social links, including their gaps. --rows is set from the list itself. */
   --profile-h: calc(
-    var(--title-size) * 1.17 + var(--space-8) + var(--control-height) * 4 + 0.25rem + var(--space-5)
+    var(--title-size) * 1.17 + var(--space-8) + var(--control-height) * (var(--rows) + 1) + 2px *
+      (var(--rows) - 1) + var(--space-5)
   );
   --eye-line: calc(var(--stage-h) * 0.48 - var(--profile-h) / 2 + var(--title-center));
   position: relative;
@@ -157,6 +160,19 @@ img {
   min-height: var(--stage-h);
   margin-inline: auto;
   padding-inline: var(--edge);
+  transition: opacity var(--dur-veil) var(--ease-morph);
+}
+
+/* The veil. A sibling site is a different origin, so the browser cannot carry this page into it.
+   Both pages rest on this plane instead: with data-veil set, everything on the plane fades.
+   The page leaves veiled when it goes to a sibling, and arrives veiled when it comes from one.
+   A change in place, so it stays under reduced motion. Leaving is quicker than arriving. */
+html[data-veil] {
+  --dur-veil: 160ms;
+}
+
+html[data-veil] .stage {
+  opacity: 0;
 }
 
 @supports (height: 100svh) {
@@ -400,36 +416,67 @@ h1 rt {
   }
 }
 
-/* Narrow screens: the upper body sits behind the text, cropped by the bottom edge. */
+/* Narrow screens: the portrait follows the links instead of sharing their place, so no link lies
+   across the face however many rows there are or however they wrap. Her eyes sit a little below the
+   last link, her hair fades up behind it, and the rest of her runs on behind the footer,
+   cropped by the bottom edge. */
 @media (max-width: 56.25em) {
   .stage {
     --stage-h: max(100svh, 46rem);
   }
 
   .profile {
+    order: 1;
     padding-top: var(--space-9);
+    padding-bottom: 0;
   }
 
   h1 {
     margin-top: 0;
   }
 
+  /* In the flow, from 22% of her height above the links' end to just under her chin.
+     The image keeps its full height and overflows the box downward. */
   .portrait {
     --portrait-h: min(150vw, calc(var(--stage-h) * 0.9));
-    --portrait-top: calc(var(--stage-h) * 0.55 - var(--portrait-h) * 0.347);
-    left: calc(58% - var(--portrait-h) * 0.75 * 0.489);
+    order: 2;
+    position: relative;
+    top: auto;
+    left: auto;
+    flex: none;
+    height: calc(var(--portrait-h) * 0.487);
+    margin-top: calc(var(--portrait-h) * -0.217);
+    margin-inline-start: calc(58vw - var(--portrait-h) * 0.75 * 0.489 - var(--edge));
+    -webkit-mask-image: none;
+    mask-image: none;
+  }
+
+  .portrait img {
+    height: var(--portrait-h);
+    opacity: calc(var(--portrait-opacity) * 0.5);
     -webkit-mask-image: linear-gradient(to bottom, transparent, #000 30%);
     mask-image: linear-gradient(to bottom, transparent, #000 30%);
   }
 
-  .portrait img {
-    opacity: calc(var(--portrait-opacity) * 0.5);
+  .site-footer {
+    order: 3;
   }
 }
 
 @media (max-width: 40em) {
   .stage {
     --edge: 2rem;
+  }
+}
+
+/* The narrowest screens: a little more width, so the four social links stay on one line. */
+@media (max-width: 22.5em) {
+  .stage {
+    --edge: 1.5rem;
+  }
+
+  .social-list {
+    gap: 2px;
   }
 }
 
