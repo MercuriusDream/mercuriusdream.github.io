@@ -14,9 +14,10 @@ const SOCIALS = [
   { name: 'Email', href: 'mailto:mercuriusdream@mercuriusdream.com' },
 ];
 
+// It points up and to the right. On the page it opens, it has turned round into the way back.
 function Arrow() {
   return (
-    <svg viewBox="0 0 16 16" aria-hidden="true">
+    <svg viewBox="0 0 16 16" aria-hidden="true" data-morph-part="arrow" data-morph-turn="-45">
       <path d="M4 12 12 4M5 4h7v7" />
     </svg>
   );
@@ -44,6 +45,7 @@ function ExternalLink({ href, children, className = '', label, sibling = false }
       href={href}
       className={className}
       aria-label={label}
+      data-morph-row={href.startsWith('/') ? '' : undefined}
       target={newTab ? '_blank' : undefined}
       rel={newTab ? 'noopener noreferrer' : undefined}
       onClick={sibling ? event => leaveTo(event, href) : undefined}
@@ -66,7 +68,10 @@ export default function App() {
         <main className="profile" id="main">
           <section className="identity" aria-labelledby="name">
             <h1 id="name" lang="ja">
-              <ruby>霧雲<rt>きりぐも</rt></ruby>
+              <ruby>
+                <span data-morph="name">霧雲</span>
+                <rt>きりぐも</rt>
+              </ruby>
             </h1>
           </section>
 
@@ -76,7 +81,7 @@ export default function App() {
                 {LINKS.map(link => (
                   <li key={link.href} className="project-item">
                     <ExternalLink href={link.href} className="project-link" sibling={link.sibling}>
-                      <span className="project-name">{link.name}</span>
+                      <span className="project-name" data-morph-part="title">{link.name}</span>
                       <Arrow />
                     </ExternalLink>
                   </li>

@@ -1,0 +1,120 @@
+/* Page morphs. Every page on this origin links this file and morph.js in its head.
+
+   A row and the page it opens are one object. Opening a row, its page grows out of the row's plane
+   until it fills the screen. Going back, the page collapses into its row. Parts that both pages have
+   (the title, the arrow, the name) travel between their two places.
+
+   morph.js names those parts and says where the row is. Without it, and under reduced motion, the
+   two pages crossfade in place. A browser without cross-document view transitions changes pages
+   as it always did. */
+@view-transition {
+  navigation: auto;
+}
+
+:root {
+  --morph-dur: 240ms;
+  --morph-ease: cubic-bezier(0.2, 0, 0, 1);
+  --morph-radius: 0.1875rem;
+}
+
+::view-transition-group(*),
+::view-transition-old(*),
+::view-transition-new(*) {
+  animation-duration: var(--morph-dur);
+}
+
+/* Opening. The old page stays where it is. The new page's plane opens over it from the row's plane,
+   empty at first: its contents arrive once there is room for them. */
+:root:active-view-transition-type(grow)::view-transition-old(root) {
+  animation: none;
+}
+
+:root:active-view-transition-type(grow)::view-transition-new(root) {
+  animation:
+    morph-open var(--morph-dur) var(--morph-ease) both,
+    morph-appear calc(var(--morph-dur) * 0.15) linear both;
+}
+
+/* Going back. The old page closes into the row's plane and thins out as it goes, over the new page. */
+:root:active-view-transition-type(collapse)::view-transition-new(root) {
+  animation: none;
+}
+
+:root:active-view-transition-type(collapse)::view-transition-old(root) {
+  z-index: 1;
+  animation:
+    morph-close var(--morph-dur) var(--morph-ease) both,
+    morph-vanish calc(var(--morph-dur) * 0.35) linear both;
+}
+
+/* The new page is drawn live, so its contents can wait for the parts in flight to pass.
+   The parts themselves are drawn apart from the page and stay whole. */
+:root:active-view-transition-type(grow) body,
+:root:active-view-transition-type(collapse) body {
+  animation: morph-arrive var(--morph-dur) linear both;
+}
+
+@keyframes morph-open {
+  from {
+    clip-path: inset(
+      var(--morph-top) var(--morph-right) var(--morph-bottom) var(--morph-left) round var(--morph-radius)
+    );
+  }
+
+  to {
+    clip-path: inset(0 round var(--morph-radius));
+  }
+}
+
+@keyframes morph-close {
+  from {
+    clip-path: inset(0 round var(--morph-radius));
+  }
+
+  to {
+    clip-path: inset(
+      var(--morph-top) var(--morph-right) var(--morph-bottom) var(--morph-left) round var(--morph-radius)
+    );
+  }
+}
+
+@keyframes morph-appear {
+  from {
+    opacity: 0;
+  }
+}
+
+@keyframes morph-vanish {
+  to {
+    opacity: 0;
+  }
+}
+
+@keyframes morph-arrive {
+  from,
+  25% {
+    opacity: 0;
+  }
+}
+
+/* Shared parts keep their own size. morph.js scales the two copies of each together, so a word
+   stays one word on the way, not two that disagree about its size. */
+::view-transition-group(*.morph-part),
+::view-transition-old(*.morph-part),
+::view-transition-new(*.morph-part) {
+  animation-timing-function: var(--morph-ease);
+}
+
+::view-transition-old(*.morph-part),
+::view-transition-new(*.morph-part) {
+  width: auto;
+  height: auto;
+  transform-origin: 0 0;
+}
+
+/* A part whose other half is off screen has nowhere to go. It fades where it is. */
+::view-transition-old(*.morph-part):only-child,
+::view-transition-new(*.morph-part):only-child {
+  animation-duration: 90ms;
+  animation-timing-function: linear;
+}
