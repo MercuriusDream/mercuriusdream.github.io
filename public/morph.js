@@ -317,12 +317,17 @@
     }
   });
 
-  // Arriving from a sibling, the page starts under the sibling's colour.
+  // Arriving from a sibling, the page starts under the sibling's colour. The plane collapses as
+  // soon as its row is on the page, which is the first frame: it does not wait for the scripts.
   const from = sibling(document.referrer);
   if (from && performance.getEntriesByType('navigation')[0]?.type === 'navigate') {
     root.dataset.veil = from;
-    if (document.readyState === 'loading') addEventListener('DOMContentLoaded', uncover);
-    else uncover();
+    const arrive = () => {
+      const parsed = [...document.querySelectorAll('a[data-morph-row]')].some(a => sibling(a.href) === from);
+      if (parsed || document.readyState !== 'loading') uncover();
+      else requestAnimationFrame(arrive);
+    };
+    requestAnimationFrame(arrive);
   }
 
   // The browser's back button restores this page as it was left: covered.
