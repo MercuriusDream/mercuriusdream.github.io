@@ -8,15 +8,15 @@
     <meta name="theme-color" content="#151618" media="(prefers-color-scheme: dark)" />
     <link rel="icon" type="image/png" href="/avatar.png" />
     <link rel="preload" href="/portrait.svg" as="image" type="image/svg+xml" />
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <!-- The page's fonts are served from here and fetched with its styles. src/styles.css declares them. -->
+    <link rel="preload" href="/fonts/zalando-sans-latin.woff2" as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href="/fonts/zen-kaku-gothic-new-kirigumo.woff2" as="font" type="font/woff2" crossorigin />
+    <!-- Hangul only, and from another site: it loads as a print sheet, so the first frame does not wait for it. -->
     <link
-      href="https://fonts.googleapis.com/css2?family=Zalando+Sans:wght@400;500&family=Gothic+A1:wght@400;500&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Gothic+A1:wght@400;500&display=swap"
       rel="stylesheet"
-    />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Zen+Kaku+Gothic+New:wght@400&text=%E9%9C%A7%E9%9B%B2%E3%81%8D%E3%82%8A%E3%81%90%E3%82%82&display=block"
-      rel="stylesheet"
+      media="print"
+      onload="this.media='all'"
     />
     <title>霧雲 | きりぐも</title>
     <link rel="stylesheet" href="/morph.css" />
