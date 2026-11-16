@@ -30,8 +30,6 @@
   --control-edge-width: 0px;
   --dur-feedback: 50ms;
   --dur-fade: 90ms;
-  --dur-veil: 240ms;
-  --ease-morph: cubic-bezier(0.2, 0, 0, 1);
 
   --font: 'Zalando Sans', 'Gothic A1', system-ui, -apple-system, sans-serif;
   --font-ja: 'Zen Kaku Gothic New', 'Hiragino Sans', 'Yu Gothic', 'Noto Sans CJK JP', sans-serif;
@@ -160,19 +158,6 @@ img {
   min-height: var(--stage-h);
   margin-inline: auto;
   padding-inline: var(--edge);
-  transition: opacity var(--dur-veil) var(--ease-morph);
-}
-
-/* The veil. A sibling site is a different origin, so the browser cannot carry this page into it.
-   Both pages rest on this plane instead: with data-veil set, everything on the plane fades.
-   The page leaves veiled when it goes to a sibling, and arrives veiled when it comes from one.
-   A change in place, so it stays under reduced motion. Leaving is quicker than arriving. */
-html[data-veil] {
-  --dur-veil: 160ms;
-}
-
-html[data-veil] .stage {
-  opacity: 0;
 }
 
 @supports (height: 100svh) {

@@ -2,13 +2,17 @@
 //
 // The markup says what takes part:
 //   data-morph="title"        a part of the page. It travels to the part with the same name on the other page.
-//   data-morph-row            a link that opens a page on this origin.
+//   data-morph-row            a link that opens a page on this origin, or a sibling site.
 //   data-morph-part="title"   inside a row: a part only while its row is the one opening or closing.
 //   data-morph-turn="180"     the way an arrow points, in degrees clockwise from right.
 //
 // The page being left writes a note: where its row is, and where each of its parts on screen sits.
 // The page being shown reads the note, names its matching parts, and tells morph.css where the
 // window starts or ends. A part that is off screen on either page stays out of it.
+//
+// A row may also open a sibling site: a site of mine one level down, like
+// yukigumo.mercuriusdream.com. That is another origin, and the browser carries nothing across.
+// The row's plane makes the trip by itself. See "Sibling sites" below.
 (() => {
   const NOTE = 'morph';
   const EASE = 'cubic-bezier(0.2, 0, 0, 1)';
@@ -19,6 +23,15 @@
   let cut = null;
 
   const rect = r => [r.left, r.top, r.width, r.height];
+
+  // How far a plane is from each edge of the screen, and how long it takes to cross that.
+  // A larger change takes longer: the time grows with the distance the plane's edge travels.
+  function reach([x, y, w, h]) {
+    const inset = { top: y, right: innerWidth - x - w, bottom: innerHeight - y - h, left: x };
+    const distance = Math.max(0, ...Object.values(inset));
+    return { inset, duration: Math.round(Math.min(360, Math.max(180, 100 + 1.25 * distance ** 0.75))) };
+  }
+
   const onScreen = ([x, y, w, h]) => w > 0 && h > 0 && x < innerWidth && x + w > 0 && y < innerHeight && y + h > 0;
 
   // Where a part sits, and where its ink starts. For text that is its first line, which may be
@@ -135,7 +148,17 @@
     clear();
     const note = take();
     const transition = event.viewTransition;
-    if (!transition?.types || !note || note.to !== location.pathname || still.matches) return;
+    if (!transition) return;
+
+    running = transition;
+    const done = () => {
+      if (running === transition) running = null;
+      if (mine === visit) clear();
+    };
+    transition.finished.then(done, done);
+
+    // From here on it is a morph. Without a note, or under reduced motion, the pages crossfade.
+    if (!transition.types || !note || note.to !== location.pathname || still.matches) return;
 
     // The note has a row when the last page opened this one from it. If not, this page may hold
     // the row the last page came out of.
@@ -149,13 +172,8 @@
       type = 'collapse';
     }
 
-    const [x, y, w, h] = plane;
-    const inset = { top: y, right: innerWidth - x - w, bottom: innerHeight - y - h, left: x };
+    const { inset, duration } = reach(plane);
     for (const side in inset) root.style.setProperty(`--morph-${side}`, `${inset[side]}px`);
-
-    // A larger change takes longer: the time grows with the distance the plane's edge travels.
-    const distance = Math.max(0, ...Object.values(inset));
-    const duration = Math.round(Math.min(360, Math.max(180, 100 + 1.25 * distance ** 0.75)));
     root.style.setProperty('--morph-dur', `${duration}ms`);
     transition.types.add(type);
 
@@ -172,17 +190,11 @@
       () => pairs.forEach(pair => travel(...pair, duration)),
       () => {},
     );
-    running = transition;
-    const done = () => {
-      if (running === transition) running = null;
-      if (mine === visit) clear();
-    };
-    transition.finished.then(done, done);
   });
 
-  // Nobody waits for a morph. While one runs, the browser gives every press to the page as a whole,
-  // not to what is under the pointer. So a press ends the morph at once, and its click is passed on
-  // to whatever it landed on.
+  // Nobody waits for a change of page. While one runs, the browser gives every press to the page as
+  // a whole, not to what is under the pointer. So a press ends it at once, and its click is passed
+  // on to whatever it landed on.
   addEventListener(
     'pointerdown',
     () => {
@@ -211,4 +223,110 @@
     },
     true,
   );
+
+  // Sibling sites.
+  //
+  // Leaving for one, the row's plane grows over this page and turns the sibling's colour. The
+  // sibling starts on that colour and brings its contents in. Coming back, this page starts under
+  // that colour, and the plane collapses into the row it came from.
+  //
+  // The plane is html::before. It is drawn while data-veil holds the sibling's name, and morph.css
+  // gives each sibling its colour. Under reduced motion it fades where it is.
+  const COVER = '::before';
+  let covering = [];
+  let going = null; // 'out' while the plane grows and the visit is under way, 'back' while it collapses
+
+  // The sibling a url belongs to: "yukigumo" for yukigumo.mercuriusdream.com. Null for anything else.
+  function sibling(url) {
+    try {
+      const { protocol, hostname } = new URL(url);
+      const tail = `.${location.hostname}`;
+      return protocol === location.protocol && hostname.endsWith(tail) ? hostname.slice(0, -tail.length) : null;
+    } catch {
+      return null;
+    }
+  }
+
+  function lift() {
+    for (const animation of covering) animation.cancel();
+    covering = [];
+    going = null;
+    root.removeAttribute('data-veil');
+  }
+
+  function cover(row, opening) {
+    for (const animation of covering) animation.cancel();
+    const target = { pseudoElement: COVER, fill: 'both' };
+    const fade = { opacity: opening ? [0, 1] : [1, 0] };
+
+    if (still.matches) {
+      covering = [root.animate(fade, { ...target, duration: 160 })];
+    } else {
+      const { inset, duration } = reach(rect(row.getBoundingClientRect()));
+      const radius = getComputedStyle(row).borderTopLeftRadius;
+      const atRow = {
+        clipPath: `inset(${inset.top}px ${inset.right}px ${inset.bottom}px ${inset.left}px round ${radius})`,
+        backgroundColor: getComputedStyle(row, '::before').backgroundColor,
+      };
+      const atScreen = {
+        clipPath: `inset(0px round ${radius})`,
+        backgroundColor: getComputedStyle(root, COVER).backgroundColor,
+      };
+      covering = [
+        root.animate(opening ? [atRow, atScreen] : [atScreen, atRow], { ...target, duration, easing: EASE }),
+        // It takes the row's place at the start, and gives it back at the end.
+        opening
+          ? root.animate(fade, { ...target, duration: duration * 0.15 })
+          : root.animate(fade, { ...target, duration: duration * 0.3, delay: duration * 0.7 }),
+      ];
+    }
+    return Promise.all(covering.map(animation => animation.finished));
+  }
+
+  function uncover() {
+    const name = root.dataset.veil;
+    if (name === undefined || going === 'back') return;
+    const row = [...document.querySelectorAll('a[data-morph-row]')].find(a => sibling(a.href) === name);
+    if (!row) return lift();
+    going = 'back';
+    try {
+      cover(row, false).then(lift, () => {});
+    } catch {
+      lift();
+    }
+  }
+
+  addEventListener('click', event => {
+    const row = event.target.closest?.('a[data-morph-row]');
+    const name = row && sibling(row.href);
+    if (!name || event.defaultPrevented || event.button !== 0) return;
+    if (event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
+    event.preventDefault();
+    if (going === 'out') return;
+    going = 'out';
+    root.dataset.veil = name;
+    const go = () => {
+      location.assign(row.href);
+      // If the visit is cancelled, the page comes back.
+      setTimeout(uncover, 3000);
+    };
+    try {
+      cover(row, true).then(go, () => {});
+    } catch {
+      go();
+    }
+  });
+
+  // Arriving from a sibling, the page starts under the sibling's colour.
+  const from = sibling(document.referrer);
+  if (from && performance.getEntriesByType('navigation')[0]?.type === 'navigate') {
+    root.dataset.veil = from;
+    if (document.readyState === 'loading') addEventListener('DOMContentLoaded', uncover);
+    else uncover();
+  }
+
+  // The browser's back button restores this page as it was left: covered.
+  addEventListener('pageshow', event => {
+    if (event.persisted) uncover();
+  });
 })();

@@ -6,7 +6,10 @@
 
    morph.js names those parts and says where the row is. Without it, and under reduced motion, the
    two pages crossfade in place. A browser without cross-document view transitions changes pages
-   as it always did. */
+   as it always did.
+
+   A row may also open a sibling site, which is another origin. The browser carries nothing across,
+   so the row's plane makes the trip by itself: see the cover at the end of this file. */
 @view-transition {
   navigation: auto;
 }
@@ -117,4 +120,29 @@
 ::view-transition-new(*.morph-part):only-child {
   animation-duration: 90ms;
   animation-timing-function: linear;
+}
+
+/* The cover. Leaving for a sibling site, the row's plane grows over this page and turns the
+   sibling's colour; coming back, the page starts under that colour and it collapses into the row.
+   morph.js sets data-veil to the sibling's name and moves the plane. Each sibling has its colour
+   here: the plane its own page rests on, in every scheme and contrast it builds. */
+:root {
+  --plane-yukigumo: light-dark(oklch(0.763 0.062 294), oklch(0.25 0.045 285));
+}
+
+@media (prefers-contrast: more) {
+  :root {
+    --plane-yukigumo: light-dark(oklch(0.84 0.045 294), oklch(0.17 0.035 285));
+  }
+}
+
+html[data-veil]::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  z-index: 30;
+}
+
+html[data-veil='yukigumo']::before {
+  background: var(--plane-yukigumo);
 }

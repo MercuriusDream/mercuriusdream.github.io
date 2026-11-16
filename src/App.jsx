@@ -1,5 +1,6 @@
 // The rows, in the order they are shown.
-// A sibling is another site of mine: it opens in this tab, and the two pages hand over to each other.
+// A sibling is another site of mine. It opens in this tab, and the row's plane carries the page
+// there and back. Pages on this origin open the same way. See public/morph.js.
 const LINKS = [
   { name: 'TideSurf', href: 'https://github.com/tidesurf/core' },
   { name: 'Project Yukigumo', href: 'https://yukigumo.mercuriusdream.com/', sibling: true },
@@ -23,21 +24,6 @@ function Arrow() {
   );
 }
 
-const LEAVE_MS = 170;
-
-// A sibling site is a different origin, so the browser cannot carry this page into it.
-// Both pages rest on this page's plane instead: this one fades to it before leaving,
-// and the sibling starts on it. See the veil rules in styles.css.
-function leaveTo(event, href) {
-  if (event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
-  event.preventDefault();
-  const root = document.documentElement;
-  root.dataset.veil = '';
-  setTimeout(() => location.assign(href), LEAVE_MS);
-  // If the visit is cancelled, the page comes back.
-  setTimeout(() => root.removeAttribute('data-veil'), 3000);
-}
-
 function ExternalLink({ href, children, className = '', label, sibling = false }) {
   const newTab = /^https?:/.test(href) && !sibling;
   return (
@@ -45,10 +31,9 @@ function ExternalLink({ href, children, className = '', label, sibling = false }
       href={href}
       className={className}
       aria-label={label}
-      data-morph-row={href.startsWith('/') ? '' : undefined}
+      data-morph-row={sibling || href.startsWith('/') ? '' : undefined}
       target={newTab ? '_blank' : undefined}
       rel={newTab ? 'noopener noreferrer' : undefined}
-      onClick={sibling ? event => leaveTo(event, href) : undefined}
     >
       {children}
     </a>
