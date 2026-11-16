@@ -13,6 +13,9 @@
 // A row may also open a sibling site: a site of mine one level down, like
 // yukigumo.mercuriusdream.com. That is another origin, and the browser carries nothing across.
 // The row's plane makes the trip by itself. See "Sibling sites" below.
+//
+// A morph starts when the next page has a frame to show, so the next page is made ready before
+// its link is pressed. See "Ahead of the press" at the end.
 (() => {
   const NOTE = 'morph';
   const EASE = 'cubic-bezier(0.2, 0, 0, 1)';
@@ -333,5 +336,85 @@
   // The browser's back button restores this page as it was left: covered.
   addEventListener('pageshow', event => {
     if (event.persisted) uncover();
+  });
+
+  // Ahead of the press.
+  //
+  // A morph cannot start before the next page has a frame to show. If that page still has to be
+  // fetched, the press waits for the network and the morph comes late. So every page a link here
+  // opens with a morph is made ready beforehand: once when this page has settled, and again when
+  // the pointer or the focus reaches the link, because what was fetched goes stale in minutes.
+  //
+  // Ready is two things. A page on this origin is drawn ahead of time where the browser does that
+  // (speculation rules), and the press swaps it in whole. And for every page, sibling sites
+  // included, the page and what its first frame waits for are fetched into the cache: its
+  // stylesheets, its scripts, and what it preloads.
+  const FIRST_FRAME = 'link[rel~="stylesheet"][href], link[rel~="preload"][href], link[rel~="modulepreload"][href], script[src]';
+  const AGAIN_AFTER = 5000;
+  const readied = new Map();
+  let ahead = null;
+
+  // The page a link opens with a morph. Null for every other link.
+  function opens(a) {
+    if (!(a instanceof HTMLAnchorElement) || a.target === '_blank' || a.hasAttribute('download')) return null;
+    if (a.origin === location.origin) return a.pathname === location.pathname ? null : a.origin + a.pathname;
+    return a.matches('[data-morph-row]') && sibling(a.href) !== null ? a.href : null;
+  }
+
+  async function ready(page) {
+    if (navigator.connection?.saveData || Date.now() - readied.get(page) < AGAIN_AFTER) return;
+    readied.set(page, Date.now());
+    try {
+      const response = await fetch(page);
+      if (!response.ok) return;
+      const markup = new DOMParser().parseFromString(await response.text(), 'text/html');
+      for (const el of markup.querySelectorAll(FIRST_FRAME)) {
+        if (el.media && !matchMedia(el.media).matches) continue;
+        const url = new URL(el.getAttribute('href') ?? el.getAttribute('src'), response.url);
+        fetch(url, { mode: 'no-cors' }).catch(() => {});
+      }
+    } catch {}
+  }
+
+  function drawAhead(pages) {
+    ahead?.remove();
+    ahead = null;
+    if (!pages.length || !HTMLScriptElement.supports?.('speculationrules')) return;
+    ahead = document.createElement('script');
+    ahead.type = 'speculationrules';
+    ahead.textContent = JSON.stringify({ prerender: [{ source: 'list', urls: pages }] });
+    document.head.append(ahead);
+  }
+
+  function readyAll() {
+    const pages = [...new Set([...document.links].map(opens).filter(Boolean))];
+    drawAhead(pages.filter(page => new URL(page).origin === location.origin));
+    pages.forEach(ready);
+  }
+
+  // After this page's own loading, and after its own morph or its plane's collapse, so that
+  // nothing here competes with them. A page that is itself only drawn ahead, or sits in a tab
+  // nobody is looking at, has no frames: it waits here until it is shown.
+  async function settled() {
+    if (document.readyState !== 'complete') await new Promise(done => addEventListener('load', done, { once: true }));
+    await new Promise(requestAnimationFrame);
+    await running?.finished.catch(() => {});
+    await Promise.allSettled(covering.map(animation => animation.finished));
+    await new Promise(done => (window.requestIdleCallback ?? setTimeout)(done));
+  }
+
+  settled().then(readyAll);
+
+  function nearing(event) {
+    const page = opens(event.target.closest?.('a[href]'));
+    if (page) ready(page);
+  }
+
+  addEventListener('pointerover', nearing, { passive: true });
+  addEventListener('focusin', nearing);
+
+  // The browser's back button restores this page with what it had made ready, however long ago.
+  addEventListener('pageshow', event => {
+    if (event.persisted) settled().then(readyAll);
   });
 })();
