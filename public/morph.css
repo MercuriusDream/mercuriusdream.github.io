@@ -128,11 +128,14 @@
    here: the plane its own page rests on, in every scheme and contrast it builds. */
 :root {
   --plane-yukigumo: light-dark(oklch(0.763 0.062 294), oklch(0.25 0.045 285));
+  /* csat rests on this site's own base plane. */
+  --plane-csat: light-dark(oklch(0.965 0.003 250), oklch(0.2 0.004 250));
 }
 
 @media (prefers-contrast: more) {
   :root {
     --plane-yukigumo: light-dark(oklch(0.84 0.045 294), oklch(0.17 0.035 285));
+    --plane-csat: light-dark(oklch(0.97 0.002 250), oklch(0.16 0.003 250));
   }
 }
 
@@ -145,4 +148,8 @@ html[data-veil]::before {
 
 html[data-veil='yukigumo']::before {
   background: var(--plane-yukigumo);
+}
+
+html[data-veil='csat']::before {
+  background: var(--plane-csat);
 }

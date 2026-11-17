@@ -6,6 +6,7 @@ const LINKS = [
   { name: 'Project Yukigumo', href: 'https://yukigumo.mercuriusdream.com/', sibling: true },
   { name: 'CVE-2026-106340', href: 'https://nvd.nist.gov/vuln/detail/cve-2026-106340' },
   { name: 'Machines of Loving Export Controls', href: '/loving-controls/' },
+  { name: 'CSAT-benchmark-smol', href: 'https://csat.mercuriusdream.com/', sibling: true },
 ];
 
 const SOCIALS = [
