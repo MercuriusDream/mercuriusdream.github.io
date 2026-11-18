@@ -172,3 +172,14 @@ html[data-veil='csat']::before {
   white-space: nowrap;
   mix-blend-mode: plus-lighter;
 }
+
+/* The frame morph.js lays a sibling's page out in, to measure where its heading is. It is never
+   seen and takes no input. */
+.morph-measure {
+  position: fixed;
+  top: 0;
+  left: 0;
+  border: 0;
+  visibility: hidden;
+  pointer-events: none;
+}

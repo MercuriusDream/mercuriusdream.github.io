@@ -238,14 +238,18 @@
   // The plane is html::before. It is drawn while data-veil holds the sibling's name, and morph.css
   // gives each sibling its colour. Under reduced motion it fades where it is.
   //
-  // A sibling whose page is headed with the row's title takes the title across too. Nothing on
-  // screen survives the change of origin, so the title's place goes in the address. The page being
-  // left keeps its title where it is, over the plane, and adds #title=x,y,size,weight to the
-  // address it opens, where x and y are where the title's ink starts on screen. The page arriving
-  // draws its own title there, in that size and weight, and moves it into place while the plane
-  // does its part; then the title itself takes over. A fragment is the one part of an address that
-  // neither server nor cache sees, and the page arriving takes it off the address at once. Under
-  // reduced motion the title stays where it is.
+  // A sibling whose page is headed with the row's title takes the title across too, and it moves
+  // as it does into a page on this origin: while the plane grows, from the row to the heading. That
+  // heading's place is measured ahead of the press (see "Where a sibling puts the title" below).
+  // Nothing on screen survives the change of origin, so where the title stopped goes in the
+  // address: the page being left adds #title=x,y,size,weight to the address it opens, where x and
+  // y are where the title's ink starts on screen. The page arriving draws its own title there, in
+  // that size and weight, moves it the rest of the way if there is any, and then the title itself
+  // takes over. Coming back, the sibling sends its heading the same way, and it travels into the
+  // row while the plane closes. A fragment is the one part of an address that neither server nor
+  // cache sees, and the page arriving takes it off the address at once. Without a measurement the
+  // title waits over the plane and the sibling's page moves it. Under reduced motion it stays where
+  // it is.
   const COVER = '::before';
   let covering = [];
   let going = null; // 'out' while the plane grows and the visit is under way, 'back' while it collapses
@@ -382,19 +386,71 @@
   }
 
   // Leaving for a sibling: the address to open. When the sibling takes the title across, the title
-  // stays where it is over the growing plane, and its place and type go with the address.
+  // travels over the growing plane to where the sibling's heading will be, and lands as the plane
+  // fills the screen. Its place and type when it stops go with the address.
   function send(row) {
     const title = titleOf(row);
     if (!title || still.matches) return row.href;
     const { ink } = measure(title);
     if (!onScreen(ink)) return row.href;
     const style = getComputedStyle(title);
-    draw(hold(title), title, ink);
+    const layer = hold(title);
+    const old = draw(layer, title, ink);
+    let stop = { ink, size: parseFloat(style.fontSize), weight: style.fontWeight };
+    const heading = headings.get(row.href);
+    if (heading?.view === view()) {
+      fly(old, draw(layer, title, heading.ink, heading), ink, heading.ink, reach(rect(row.getBoundingClientRect())).duration);
+      stop = heading;
+    }
     // The numbers go as they are: a place rounded by even a hundredth of a pixel can set the
     // letters on another fraction of a pixel there.
     const url = new URL(row.href);
-    url.hash = `title=${ink[0]},${ink[1]},${parseFloat(style.fontSize)},${style.fontWeight}`;
+    url.hash = `title=${stop.ink[0]},${stop.ink[1]},${stop.size},${stop.weight}`;
     return url.href;
+  }
+
+  // Where a sibling puts the title. Its page is laid out once, unseen and without its scripts, in a
+  // frame the size of this window, and its heading measured there: where its ink starts, and its
+  // size and weight. A page whose heading is not one line is left alone. The frame goes as soon as
+  // the heading is measured, and a window of another size is measured again.
+  const headings = new Map();
+  const view = () => `${innerWidth}x${innerHeight}`;
+
+  async function measureHeading(page, markup, base) {
+    if (headings.get(page)?.view === view()) return;
+    for (const script of markup.querySelectorAll('script')) script.remove();
+    const at = markup.createElement('base');
+    at.href = base;
+    markup.head.prepend(at);
+    const frame = document.createElement('iframe');
+    frame.className = 'morph-measure';
+    frame.setAttribute('sandbox', 'allow-same-origin');
+    frame.setAttribute('aria-hidden', 'true');
+    frame.tabIndex = -1;
+    frame.style.width = `${innerWidth}px`;
+    frame.style.height = `${innerHeight}px`;
+    const loaded = new Promise(done => frame.addEventListener('load', done, { once: true }));
+    frame.srcdoc = `<!doctype html>${markup.documentElement.outerHTML}`;
+    const size = view();
+    document.body.append(frame);
+    try {
+      await loaded;
+      const doc = frame.contentDocument;
+      const heading = doc.querySelector('h1');
+      if (!heading) return;
+      // Laid out once so its fonts are asked for, then measured in them.
+      heading.getBoundingClientRect();
+      await doc.fonts.ready;
+      const range = doc.createRange();
+      range.selectNodeContents(heading);
+      const lines = range.getClientRects();
+      const style = frame.contentWindow.getComputedStyle(heading);
+      if (lines.length === 1 && size === view()) {
+        headings.set(page, { view: size, ink: [lines[0].left, lines[0].top], size: parseFloat(style.fontSize), weight: style.fontWeight });
+      }
+    } finally {
+      frame.remove();
+    }
   }
 
   // Arriving from a sibling with its title: it starts where the sibling's page left it, in that
@@ -412,10 +468,16 @@
       held.moving.push(old.copy.animate({ opacity: [1, 0] }, { duration: 90, easing: 'linear', fill: 'both' }));
       return;
     }
-    const own = draw(layer, title, to);
+    fly(old, draw(layer, title, to), from.ink, to, reach(rect(row.getBoundingClientRect())).duration);
+  }
+
+  // Two copies of the title on one trip, from one place to another, over the plane's time and on
+  // its curve. The old copy grows or shrinks to the new one's size as it fades, and the new one
+  // from the old one's size as it comes in, as the two pictures of a part do in a morph here.
+  function fly(old, own, from, to, duration) {
     const k = own.height / old.height;
-    const [x, y] = [to[0] - from.ink[0], to[1] - from.ink[1]];
-    const timing = { duration: reach(rect(row.getBoundingClientRect())).duration, easing: EASE, fill: 'both' };
+    const [x, y] = [to[0] - from[0], to[1] - from[1]];
+    const timing = { duration, easing: EASE, fill: 'both' };
     held.moving.push(
       old.copy.animate({ transform: ['none', `translate(${x}px, ${y}px) scale(${k})`], opacity: [1, 0] }, timing),
       own.copy.animate({ transform: [`translate(${-x}px, ${-y}px) scale(${1 / k})`, 'none'], opacity: [0, 1] }, timing),
@@ -498,6 +560,8 @@
         const url = new URL(el.getAttribute('href') ?? el.getAttribute('src'), response.url);
         fetch(url, { mode: 'no-cors' }).catch(() => {});
       }
+      const row = [...document.querySelectorAll('a[data-morph-row]')].find(a => a.href === page);
+      if (row && titleOf(row) && sibling(page) !== null) await measureHeading(page, markup, response.url);
     } catch {}
   }
 
