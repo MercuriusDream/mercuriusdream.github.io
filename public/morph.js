@@ -5,6 +5,7 @@
 //   data-morph-row            a link that opens a page on this origin, or a sibling site.
 //   data-morph-part="title"   inside a row: a part only while its row is the one opening or closing.
 //   data-morph-turn="180"     the way an arrow points, in degrees clockwise from right.
+//   data-morph-across="title" on a row that opens a sibling site: the parts its page has too.
 //
 // The page being left writes a note: where its row is, and where each of its parts on screen sits.
 // The page being shown reads the note, names its matching parts, and tells morph.css where the
@@ -12,7 +13,8 @@
 //
 // A row may also open a sibling site: a site of mine one level down, like
 // yukigumo.mercuriusdream.com. That is another origin, and the browser carries nothing across.
-// The row's plane makes the trip by itself. See "Sibling sites" below.
+// The row's plane makes the trip by itself, and the row's title with it where the sibling's page
+// has it too. See "Sibling sites" below.
 //
 // A morph starts when the next page has a frame to show, so the next page is made ready before
 // its link is pressed. See "Ahead of the press" at the end.
@@ -235,9 +237,28 @@
   //
   // The plane is html::before. It is drawn while data-veil holds the sibling's name, and morph.css
   // gives each sibling its colour. Under reduced motion it fades where it is.
+  //
+  // A sibling whose page is headed with the row's title takes the title across too. Nothing on
+  // screen survives the change of origin, so the title's place goes in the address. The page being
+  // left keeps its title where it is, over the plane, and adds #title=x,y,size,weight to the
+  // address it opens, where x and y are where the title's ink starts on screen. The page arriving
+  // draws its own title there, in that size and weight, and moves it into place while the plane
+  // does its part; then the title itself takes over. A fragment is the one part of an address that
+  // neither server nor cache sees, and the page arriving takes it off the address at once. Under
+  // reduced motion the title stays where it is.
   const COVER = '::before';
   let covering = [];
   let going = null; // 'out' while the plane grows and the visit is under way, 'back' while it collapses
+  let held = null; // while a title is carried: the copies over the plane, and the title they stand for
+
+  // The title this page was opened with, if any.
+  const TITLE = /^#title=(-?[\d.]+),(-?[\d.]+),([\d.]+),(\d+)$/;
+  let carried = null;
+  const sent = TITLE.exec(location.hash);
+  if (sent) {
+    history.replaceState(history.state, '', location.pathname + location.search);
+    carried = { ink: [Number(sent[1]), Number(sent[2])], size: Number(sent[3]), weight: sent[4] };
+  }
 
   // The sibling a url belongs to: "yukigumo" for yukigumo.mercuriusdream.com. Null for anything else.
   function sibling(url) {
@@ -255,6 +276,7 @@
     covering = [];
     going = null;
     root.removeAttribute('data-veil');
+    drop();
   }
 
   function cover(row, opening) {
@@ -286,17 +308,118 @@
     return Promise.all(covering.map(animation => animation.finished));
   }
 
-  function uncover() {
+  // The title arriving with this page, if it came with one, settles into the row as the plane
+  // closes; lift() then gives the row its own title back.
+  function uncover(title) {
     const name = root.dataset.veil;
     if (name === undefined || going === 'back') return;
+    drop();
     const row = [...document.querySelectorAll('a[data-morph-row]')].find(a => sibling(a.href) === name);
     if (!row) return lift();
     going = 'back';
     try {
       cover(row, false).then(lift, () => {});
+      if (title) land(row, title);
     } catch {
       lift();
     }
+  }
+
+  // The row's title, when the sibling it opens takes it across.
+  function titleOf(row) {
+    const across = (row.dataset.morphAcross ?? '').split(' ');
+    return across.includes('title') ? row.querySelector('[data-morph-part="title"]') : null;
+  }
+
+  // The copies of a carried title are drawn on a layer of their own over the plane (.morph-title in
+  // morph.css), and the title itself waits under it, unseen.
+  function hold(title) {
+    drop();
+    const layer = document.createElement('div');
+    layer.className = 'morph-title';
+    layer.setAttribute('aria-hidden', 'true');
+    document.body.append(layer);
+    title.style.visibility = 'hidden';
+    held = { layer, title, moving: [] };
+    return layer;
+  }
+
+  function drop() {
+    if (!held) return;
+    for (const animation of held.moving) animation.cancel();
+    held.layer.remove();
+    held.title.style.removeProperty('visibility');
+    if (!held.title.getAttribute('style')) held.title.removeAttribute('style');
+    held = null;
+  }
+
+  // A copy of the title, in the title's own type or in another size and weight, with its ink
+  // starting at `at`. It scales from where its ink starts. A moving copy is drawn on whole pixels,
+  // so its box is put on whole pixels and its letters are set off inside it by the rest: they then
+  // fall where the title's own do, not a fraction of a pixel to the side.
+  const TYPE = ['font-family', 'font-size', 'font-weight', 'font-style', 'font-stretch', 'font-optical-sizing',
+    'font-feature-settings', 'font-variation-settings', 'font-kerning', 'line-height', 'letter-spacing',
+    'word-spacing', 'text-rendering', '-webkit-font-smoothing', 'color'];
+
+  function draw(layer, title, at, type) {
+    const style = getComputedStyle(title);
+    const copy = document.createElement('span');
+    copy.textContent = title.textContent;
+    for (const property of TYPE) copy.style.setProperty(property, style.getPropertyValue(property));
+    if (type) {
+      copy.style.fontSize = `${type.size}px`;
+      copy.style.fontWeight = type.weight;
+    }
+    layer.append(copy);
+    const { box, ink } = measure(copy);
+    const [x, y] = [at[0] - (ink[0] - box[0]), at[1] - (ink[1] - box[1])];
+    const [left, top] = [x, y].map(n => Math.floor(n * devicePixelRatio) / devicePixelRatio);
+    copy.style.left = `${left}px`;
+    copy.style.top = `${top}px`;
+    copy.style.padding = `${y - top}px 0 0 ${x - left}px`;
+    copy.style.transformOrigin = `${at[0] - left}px ${at[1] - top}px`;
+    return { copy, height: ink[3] };
+  }
+
+  // Leaving for a sibling: the address to open. When the sibling takes the title across, the title
+  // stays where it is over the growing plane, and its place and type go with the address.
+  function send(row) {
+    const title = titleOf(row);
+    if (!title || still.matches) return row.href;
+    const { ink } = measure(title);
+    if (!onScreen(ink)) return row.href;
+    const style = getComputedStyle(title);
+    draw(hold(title), title, ink);
+    // The numbers go as they are: a place rounded by even a hundredth of a pixel can set the
+    // letters on another fraction of a pixel there.
+    const url = new URL(row.href);
+    url.hash = `title=${ink[0]},${ink[1]},${parseFloat(style.fontSize)},${style.fontWeight}`;
+    return url.href;
+  }
+
+  // Arriving from a sibling with its title: it starts where the sibling's page left it, in that
+  // page's size and weight, and travels into the row's title as the plane closes into the row. Two
+  // copies make the trip, one in each page's type. They move by the same rule, so they stay one
+  // title, and the sibling's type gives way to this page's on the way, as a shared part does in a
+  // morph between two pages here. A title with nowhere on screen to go fades where it is.
+  function land(row, from) {
+    const title = titleOf(row);
+    if (!title || still.matches) return;
+    const to = measure(title).ink;
+    const layer = hold(title);
+    const old = draw(layer, title, from.ink, from);
+    if (!onScreen(to)) {
+      held.moving.push(old.copy.animate({ opacity: [1, 0] }, { duration: 90, easing: 'linear', fill: 'both' }));
+      return;
+    }
+    const own = draw(layer, title, to);
+    const k = own.height / old.height;
+    const [x, y] = [to[0] - from.ink[0], to[1] - from.ink[1]];
+    const timing = { duration: reach(rect(row.getBoundingClientRect())).duration, easing: EASE, fill: 'both' };
+    held.moving.push(
+      old.copy.animate({ transform: ['none', `translate(${x}px, ${y}px) scale(${k})`], opacity: [1, 0] }, timing),
+      own.copy.animate({ transform: [`translate(${-x}px, ${-y}px) scale(${1 / k})`, 'none'], opacity: [0, 1] }, timing),
+    );
   }
 
   addEventListener('click', event => {
@@ -308,8 +431,9 @@
     if (going === 'out') return;
     going = 'out';
     root.dataset.veil = name;
+    const href = send(row);
     const go = () => {
-      location.assign(row.href);
+      location.assign(href);
       // If the visit is cancelled, the page comes back.
       setTimeout(uncover, 3000);
     };
@@ -322,12 +446,13 @@
 
   // Arriving from a sibling, the page starts under the sibling's colour. The plane collapses as
   // soon as its row is on the page, which is the first frame: it does not wait for the scripts.
+  // A title that came along starts on the same frame.
   const from = sibling(document.referrer);
   if (from && performance.getEntriesByType('navigation')[0]?.type === 'navigate') {
     root.dataset.veil = from;
     const arrive = () => {
       const parsed = [...document.querySelectorAll('a[data-morph-row]')].some(a => sibling(a.href) === from);
-      if (parsed || document.readyState !== 'loading') uncover();
+      if (parsed || document.readyState !== 'loading') uncover(carried);
       else requestAnimationFrame(arrive);
     };
     requestAnimationFrame(arrive);

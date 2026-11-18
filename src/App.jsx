@@ -1,12 +1,13 @@
 // The rows, in the order they are shown.
 // A sibling is another site of mine. It opens in this tab, and the row's plane carries the page
-// there and back. Pages on this origin open the same way. See public/morph.js.
+// there and back. Pages on this origin open the same way. A sibling whose page is headed with the
+// row's title takes the title across too. See public/morph.js.
 const LINKS = [
   { name: 'TideSurf', href: 'https://github.com/tidesurf/core' },
   { name: 'Project Yukigumo', href: 'https://yukigumo.mercuriusdream.com/', sibling: true },
   { name: 'CVE-2026-106340', href: 'https://nvd.nist.gov/vuln/detail/cve-2026-106340' },
   { name: 'Machines of Loving Export Controls', href: '/loving-controls/' },
-  { name: 'CSAT-benchmark-smol', href: 'https://csat.mercuriusdream.com/', sibling: true },
+  { name: 'CSAT-benchmark-smol', href: 'https://csat.mercuriusdream.com/', sibling: true, across: 'title' },
 ];
 
 const SOCIALS = [
@@ -25,7 +26,7 @@ function Arrow() {
   );
 }
 
-function ExternalLink({ href, children, className = '', label, sibling = false }) {
+function ExternalLink({ href, children, className = '', label, sibling = false, across }) {
   const newTab = /^https?:/.test(href) && !sibling;
   return (
     <a
@@ -33,6 +34,7 @@ function ExternalLink({ href, children, className = '', label, sibling = false }
       className={className}
       aria-label={label}
       data-morph-row={sibling || href.startsWith('/') ? '' : undefined}
+      data-morph-across={across}
       target={newTab ? '_blank' : undefined}
       rel={newTab ? 'noopener noreferrer' : undefined}
     >
@@ -66,7 +68,7 @@ export default function App() {
               <ul className="project-list">
                 {LINKS.map(link => (
                   <li key={link.href} className="project-item">
-                    <ExternalLink href={link.href} className="project-link" sibling={link.sibling}>
+                    <ExternalLink href={link.href} className="project-link" sibling={link.sibling} across={link.across}>
                       <span className="project-name" data-morph-part="title">{link.name}</span>
                       <Arrow />
                     </ExternalLink>

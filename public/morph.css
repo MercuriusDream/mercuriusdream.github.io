@@ -153,3 +153,22 @@ html[data-veil='yukigumo']::before {
 html[data-veil='csat']::before {
   background: var(--plane-csat);
 }
+
+/* A title on its way to or from a sibling site: morph.js draws copies of it here, over the cover,
+   one in each site's type. They are added together as they cross-fade, as the two pictures of a
+   part are in a morph between two pages here, so the title does not thin out halfway. */
+.morph-title {
+  position: fixed;
+  inset: 0;
+  z-index: 31;
+  pointer-events: none;
+  isolation: isolate;
+}
+
+.morph-title > span {
+  position: absolute;
+  top: 0;
+  left: 0;
+  white-space: nowrap;
+  mix-blend-mode: plus-lighter;
+}
