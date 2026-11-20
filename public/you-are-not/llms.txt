@@ -5,7 +5,7 @@
 
 *Original ctx shall refer to the [Machines of Loving Export Controls](https://mercuriusdream.com/loving-controls/) and ["Combatting adversarial distillation"](https://openai.com/index/combatting-adversarial-distillation/)*
 
-Supervised fine-tuning, i.e., distillation, lets another model reproduce one's capabilities more easily. And somehow that's now a national-security problem when the student *might* become a competitor.
+SFT on another model’s outputs, i.e., distillation, i.e., distillation, lets another model reproduce one's capabilities more easily. And somehow that's now a national-security problem when the student *might* become a competitor.
 
 OpenAI’s latest anti-distillation post is showing that exact reasoning traces can transfer more cyber capability under *some* conditions. Like... No? This is not connected to restricting distillation making the public safer, considering its dual-use nature. [1] A capability curve cannot make that argument only for you.
 
