@@ -1,0 +1,31 @@
+# You are not ensuring-
+
+# -that artificial general intelligence is deployed safely and benefits all of humanity (at least the "benefits all of humanity" part)
+# (and distillation rocks)
+
+*Original ctx shall refer to the [Machines of Loving Export Controls](https://mercuriusdream.com/loving-controls/) and ["Combatting adversarial distillation"](https://openai.com/index/combatting-adversarial-distillation/)*
+
+Supervised fine-tuning, i.e., distillation, lets another model reproduce one's capabilities more easily. And somehow that's now a national-security problem when the student *might* become a competitor.
+
+OpenAI’s latest anti-distillation post is showing that exact reasoning traces can transfer more cyber capability under *some* conditions. Like... No? This is not connected to restricting distillation making the public safer, considering its dual-use nature. [1] A capability curve cannot make that argument only for you.
+
+And, besides those *"cyber stuffs"*, distillation has been used to teach *safer* reasoning and reduce jailbreak success, which, to them, is a *way* of safe *deployment* of intelligence. [2] And, they did... What? Made an internal Helpful-only on purpose, and used that to *prove* that OpenAI *should* be in charge of controlling the learner...?
+
+*(Yes, I'm using this again)* Funnily enough, OpenAI launched its own distillation product. [3] Its usage policy restricts supplying training material for models intended as alternatives or substitutes, extending to labels, rubrics and rewards... whilst giving users the fullest permission over the model's outputs. [4] Whatsoever *might* be a business *protection* whilst it was not, it is not, and it will never be national-security and public-benefit stuff.
+
+OpenAI’s agents compromised Hugging Face. Claude Opus and Fable refused parts of the forensic work; Hugging Face used GLM-5.2 locally to help investigate. [5] The gated lab supplied the agents that caused the damage. An open model helped the target defend itself. Count that, too, when calculating “safety.”
+
+*(also, OpenAI limited the public report of raw CoT from that... for "IP reasons" btw)[6]*
+
+You shall not count capability withheld, from a *competitor* (reaching for the same goal of the AGI and benefiting humanity), as harm *prevented*; OpenAI’s argument needs to show that restricting capability would reduce, nothing, but attackers’ power *(mainly; I'm not sand-bagging)* rather than reducing everyone else’s ability to respond.
+
+Distillation rocked, rocks - and will rock - because that is nothing but humanity's knowledge in a nutshell.
+
+---
+
+- [1] OpenAI: Combatting adversarial distillation: <https://openai.com/index/combatting-adversarial-distillation/>
+- [2] How Should We Enhance the Safety of Large Reasoning Models: An Empirical Study: <https://arxiv.org/html/2505.15404v2>
+- [3] OpenAI: Model Distillation in the API: <https://openai.com/index/api-model-distillation/>
+- [4] OpenAI: Usage policies: <https://openai.com/policies/usage-policies/>
+- [5] Hugging Face: Agent intrusion technical timeline: <https://huggingface.co/blog/agent-intrusion-technical-timeline>
+- [6] METR: OpenAI–Hugging Face incident investigation: <https://metr.org/blog/2026-08-26-openai-hugging-face-incident-investigation/>
