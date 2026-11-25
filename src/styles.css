@@ -31,6 +31,7 @@
   --ink-1: light-dark(oklch(0.24 0.01 250), oklch(0.95 0.004 250));
   --ink-2: light-dark(oklch(0.42 0.01 250), oklch(0.8 0.006 250));
   --ink-3: light-dark(oklch(0.45 0.01 250), oklch(0.78 0.008 250));
+  --ink-muted: light-dark(oklch(0.48 0.01 250), oklch(0.67 0.008 250));
   --ink-boundary: light-dark(oklch(0.55 0.01 250), oklch(0.67 0.01 250));
   --ink-inverse: light-dark(oklch(0.985 0.002 250), oklch(0.2 0.004 250));
   --signal-focus: light-dark(oklch(0.55 0.18 255), oklch(0.74 0.13 255));
@@ -45,6 +46,7 @@
   --space-8: 4rem;
   --space-9: 6rem;
   --control-height: 2.75rem;
+  --work-height: 2.5rem;
   --inset-control: var(--space-4);
   --inset-control-compact: var(--space-3);
   --radius-floor: 0.1875rem;
@@ -58,8 +60,15 @@
   --font-zh: 'Zalando Sans', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', 'Noto Sans CJK SC', sans-serif;
   --text-display: 400 clamp(4.5rem, 8vw, 7.5rem) / 1 var(--font-ja);
   --text-body: 400 1.0625rem / 1.6 var(--font);
+  --text-work: 400 0.96875rem / 1.4 var(--font);
   --text-ruby: 400 0.16em / 1.5 var(--font-ja);
   --portrait-opacity: 0.9;
+}
+
+@media (pointer: coarse) {
+  :root {
+    --work-height: var(--control-height);
+  }
 }
 
 @media (prefers-contrast: more) {
@@ -72,6 +81,7 @@
     --ink-1: light-dark(oklch(0.14 0.008 250), oklch(0.99 0.002 250));
     --ink-2: light-dark(oklch(0.26 0.008 250), oklch(0.92 0.004 250));
     --ink-3: light-dark(oklch(0.32 0.008 250), oklch(0.91 0.005 250));
+    --ink-muted: light-dark(oklch(0.28 0.008 250), oklch(0.9 0.005 250));
     --ink-boundary: light-dark(oklch(0.38 0.008 250), oklch(0.79 0.006 250));
     --signal-focus: light-dark(oklch(0.45 0.14 255), oklch(0.8 0.1 255));
     --focus-width: 3px;
@@ -167,10 +177,12 @@ img {
   --title-size: clamp(4.5rem, min(var(--stage-h) * 0.16, 10vw), 9rem);
   /* From the top of the title's box, ruby included, to the middle of its glyphs. */
   --title-center: calc(var(--title-size) * 0.69);
-  /* Title, project links, and social links, including their gaps. --rows is set from the list itself. */
+  /* Title, work buttons, essay rows, and social links, including their gaps. */
   --profile-h: calc(
-    var(--title-size) * 1.17 + var(--space-8) + var(--control-height) * (var(--rows) + 1) + 2px *
-      (var(--rows) - 1) + var(--space-5)
+    var(--title-size) * 1.17 + var(--space-8) + var(--work-height) * var(--work-rows) +
+      var(--space-2) * (var(--work-rows) - 1) + var(--space-6) +
+      var(--control-height) * var(--essay-rows) + 2px * (var(--essay-rows) - 1) +
+      var(--space-6) + var(--control-height)
   );
   --eye-line: calc(var(--stage-h) * 0.48 - var(--profile-h) / 2 + var(--title-center));
   position: relative;
@@ -228,22 +240,73 @@ h1 rt {
 .link-groups {
   display: flex;
   flex-direction: column;
-  gap: var(--space-5);
+  gap: var(--space-6);
 }
 
-/* Planes hang outside the ink line, so every label starts on the title's edge. */
-.project-list {
+/* Work: compact raised planes sized to their labels. Planes hang outside the ink line,
+   so the first label on every row starts on the title's edge. */
+.work-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+  margin-inline: calc(var(--inset-control-compact) * -1);
+}
+
+.work-item {
+  display: flex;
+}
+
+.work-link {
+  position: relative;
+  isolation: isolate;
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  min-height: var(--work-height);
+  padding: var(--space-2) var(--inset-control-compact);
+  border-radius: var(--radius-floor);
+  color: var(--ink-1);
+  font: var(--text-work);
+}
+
+.work-name {
+  white-space: nowrap;
+}
+
+.work-link::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  border-radius: inherit;
+  background: var(--plane-raised);
+  box-shadow: inset 0 0 0 var(--control-edge-width) var(--ink-boundary);
+  transition: background-color var(--dur-feedback) linear;
+}
+
+.work-link:hover::before,
+.work-link:focus-visible::before {
+  background: var(--plane-control);
+}
+
+.work-link:active::before {
+  background: var(--plane-control-hover);
+}
+
+.work-link:focus-visible {
+  z-index: 1;
+  outline-offset: calc(var(--focus-width) * -1);
+}
+
+/* Essays: flat rows resting directly on the base plane, separated from work by space alone.
+   Hover planes hang outside the ink line so titles start directly under 霧雲. */
+.essay-list {
   display: grid;
   gap: 2px;
   margin-inline: calc(var(--inset-control-compact) * -1);
 }
 
-.project-item {
-  display: grid;
-  gap: 2px;
-}
-
-.project-link {
+.essay-link {
   position: relative;
   isolation: isolate;
   display: grid;
@@ -257,47 +320,71 @@ h1 rt {
   font: var(--text-body);
 }
 
-.project-link::before {
+.essay-link::before {
   content: '';
   position: absolute;
   inset: 0;
   z-index: -1;
   border-radius: inherit;
-  background: var(--plane-raised);
-  box-shadow: inset 0 0 0 var(--control-edge-width) var(--ink-boundary);
+  background: transparent;
   transition: background-color var(--dur-feedback) linear;
 }
 
-.project-link:hover::before,
-.project-link:focus-visible::before {
+.essay-link:hover::before,
+.essay-link:focus-visible::before {
   background: var(--plane-control);
 }
 
-.project-link:active::before {
+.essay-link:active::before {
   background: var(--plane-control-hover);
 }
 
-.project-link:focus-visible {
+.essay-link:focus-visible {
   z-index: 1;
   outline-offset: calc(var(--focus-width) * -1);
 }
 
-.project-link svg {
+.essay-title {
+  min-width: 0;
+}
+
+.link-arrow {
   width: var(--space-4);
   height: var(--space-4);
-  color: var(--ink-2);
+  flex: none;
+  color: var(--ink-muted);
   fill: none;
   stroke: currentColor;
   stroke-linecap: round;
   stroke-linejoin: round;
   stroke-width: 1.2;
-  transform-origin: bottom left;
-  transition: transform var(--dur-fade) ease-out;
+  transition:
+    transform var(--dur-fade) ease-out,
+    color var(--dur-feedback) linear;
 }
 
-.project-link:hover svg,
-.project-link:focus-visible svg {
-  transform: scale(1.1);
+.work-link .link-arrow {
+  width: 0.875rem;
+  height: 0.875rem;
+}
+
+.work-link:hover .link-arrow,
+.work-link:focus-visible .link-arrow,
+.essay-link:hover .link-arrow,
+.essay-link:focus-visible .link-arrow {
+  color: var(--ink-1);
+}
+
+.work-link:hover .link-arrow-external,
+.work-link:focus-visible .link-arrow-external {
+  transform: translate(1.5px, -1.5px);
+}
+
+.work-link:hover .link-arrow-internal,
+.work-link:focus-visible .link-arrow-internal,
+.essay-link:hover .link-arrow-internal,
+.essay-link:focus-visible .link-arrow-internal {
+  transform: translateX(2px);
 }
 
 .social-list {
@@ -434,8 +521,12 @@ h1 rt {
 
   .profile {
     order: 1;
-    padding-top: var(--space-9);
+    padding-top: var(--space-8);
     padding-bottom: 0;
+  }
+
+  .identity {
+    margin-bottom: var(--space-6);
   }
 
   h1 {
@@ -494,12 +585,16 @@ h1 rt {
     scroll-behavior: auto !important;
   }
 
-  .project-link svg {
+  .link-arrow {
     transition: none;
   }
 
-  .project-link:hover svg,
-  .project-link:focus-visible svg {
+  .work-link:hover .link-arrow-external,
+  .work-link:focus-visible .link-arrow-external,
+  .work-link:hover .link-arrow-internal,
+  .work-link:focus-visible .link-arrow-internal,
+  .essay-link:hover .link-arrow-internal,
+  .essay-link:focus-visible .link-arrow-internal {
     transform: none;
   }
 }

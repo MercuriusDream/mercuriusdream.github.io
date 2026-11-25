@@ -1,14 +1,19 @@
-// The rows, in the order they are shown.
-// A sibling is another site of mine. It opens in this tab, and the row's plane carries the page
-// there and back. Pages on this origin open the same way. A sibling whose page is headed with the
-// row's title takes the title across too. See public/morph.js.
-const LINKS = [
+// Work: projects, benchmarks, and advisories, in the order they are shown.
+// A sibling is another site of mine. It opens in this tab, and its button's plane carries the page
+// there and back. A sibling whose page is headed with the button's title takes the title across too.
+// See public/morph.js.
+const WORK = [
   { name: 'TideSurf', href: 'https://github.com/tidesurf/core' },
   { name: 'Project Yukigumo', href: 'https://yukigumo.mercuriusdream.com/', sibling: true },
   { name: 'CVE-2026-106340', href: 'https://nvd.nist.gov/vuln/detail/cve-2026-106340' },
-  { name: 'Machines of Loving Export Controls', href: '/loving-controls/' },
-  { name: 'You are not ensuring', href: '/you-are-not/' },
   { name: 'CSAT-benchmark-smol', href: 'https://csat.mercuriusdream.com/', sibling: true, across: 'title' },
+];
+
+// Essays on this origin, newest first. Opening one morphs its row into the page and turns its
+// arrow round into the way back.
+const ESSAYS = [
+  { name: 'You are not ensuring', href: '/you-are-not/' },
+  { name: 'Machines of Loving Export Controls', href: '/loving-controls/' },
 ];
 
 const SOCIALS = [
@@ -18,16 +23,31 @@ const SOCIALS = [
   { name: 'Email', href: 'mailto:mercuriusdream@mercuriusdream.com' },
 ];
 
-// It points up and to the right. On the page it opens, it has turned round into the way back.
-function Arrow() {
+// External destinations point up and right; pages opened in this tab point right.
+// On an essay page, the right arrow turns 180° round into the way back.
+function Arrow({ internal = false, morph = false }) {
+  if (internal) {
+    return (
+      <svg
+        className="link-arrow link-arrow-internal"
+        viewBox="0 0 16 16"
+        aria-hidden="true"
+        data-morph-part={morph ? 'arrow' : undefined}
+        data-morph-turn={morph ? '0' : undefined}
+      >
+        <path d="M3 8h10M9 4l4 4-4 4" />
+      </svg>
+    );
+  }
+
   return (
-    <svg viewBox="0 0 16 16" aria-hidden="true" data-morph-part="arrow" data-morph-turn="-45">
-      <path d="M4 12 12 4M5 4h7v7" />
+    <svg className="link-arrow link-arrow-external" viewBox="0 0 16 16" aria-hidden="true">
+      <path d="M4.5 11.5 11.5 4.5M5.5 4.5h6v6" />
     </svg>
   );
 }
 
-function ExternalLink({ href, children, className = '', label, sibling = false, across }) {
+function SiteLink({ href, children, className = '', label, sibling = false, across }) {
   const newTab = /^https?:/.test(href) && !sibling;
   return (
     <a
@@ -49,7 +69,10 @@ export default function App() {
     <div className="app">
       <a className="skip-link" href="#main">Skip to content</a>
 
-      <div className="stage" style={{ '--rows': LINKS.length }}>
+      <div
+        className="stage"
+        style={{ '--work-rows': Math.ceil(WORK.length / 2), '--essay-rows': ESSAYS.length }}
+      >
         <div className="portrait" aria-hidden="true">
           <img src="/portrait.svg" alt="" />
         </div>
@@ -65,14 +88,34 @@ export default function App() {
           </section>
 
           <nav className="link-groups" aria-label="Personal links">
-            <section className="link-group" aria-label="Projects">
-              <ul className="project-list">
-                {LINKS.map(link => (
-                  <li key={link.href} className="project-item">
-                    <ExternalLink href={link.href} className="project-link" sibling={link.sibling} across={link.across}>
-                      <span className="project-name" data-morph-part="title">{link.name}</span>
-                      <Arrow />
-                    </ExternalLink>
+            <section className="link-group" aria-label="Work">
+              <ul className="work-list">
+                {WORK.map(item => (
+                  <li key={item.href} className="work-item">
+                    <SiteLink
+                      href={item.href}
+                      className="work-link"
+                      sibling={item.sibling}
+                      across={item.across}
+                    >
+                      <span className="work-name" data-morph-part={item.across ? 'title' : undefined}>
+                        {item.name}
+                      </span>
+                      <Arrow internal={Boolean(item.sibling)} />
+                    </SiteLink>
+                  </li>
+                ))}
+              </ul>
+            </section>
+
+            <section className="link-group" aria-label="Essays">
+              <ul className="essay-list">
+                {ESSAYS.map(essay => (
+                  <li key={essay.href} className="essay-item">
+                    <SiteLink href={essay.href} className="essay-link">
+                      <span className="essay-title" data-morph-part="title">{essay.name}</span>
+                      <Arrow internal morph />
+                    </SiteLink>
                   </li>
                 ))}
               </ul>
@@ -82,9 +125,9 @@ export default function App() {
               <ul className="social-list">
                 {SOCIALS.map(social => (
                   <li key={social.name}>
-                    <ExternalLink href={social.href} className="social-link">
+                    <SiteLink href={social.href} className="social-link">
                       {social.name}
-                    </ExternalLink>
+                    </SiteLink>
                   </li>
                 ))}
               </ul>
@@ -94,12 +137,12 @@ export default function App() {
 
         <footer className="site-footer">
           <span className="account-handle">@mercuriusdream</span>
-          <ExternalLink href="https://icp.gov.moe/?keyword=20260535" className="icp-link">
+          <SiteLink href="https://icp.gov.moe/?keyword=20260535" className="icp-link">
             <span lang="zh-CN">萌ICP备20260535号</span>
-          </ExternalLink>
-          <ExternalLink href="https://mizukiakiyama.com" className="egg-link" label="Smirnova Oyama is cute">
+          </SiteLink>
+          <SiteLink href="https://mizukiakiyama.com" className="egg-link" label="Smirnova Oyama is cute">
             <span className="emoji">🍥</span>
-          </ExternalLink>
+          </SiteLink>
         </footer>
       </div>
     </div>
